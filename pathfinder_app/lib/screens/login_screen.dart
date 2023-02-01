@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 
 import '../reusable_widgets/reusable_widget.dart';
@@ -31,9 +32,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 reusableTextField("Password", Icons.lock_outline, true,
                     _passwordTextController),
+                const SizedBox(
+                  height: 20,
+                ),
+                loginButton(context, true, () {}),
+                signupOption()
               ],
             ),
           )),
     );
+  }
+
+  Row signupOption() {
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      const Text("Don't have account?", style: TextStyle(color: Colors.grey)),
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SignupScreen()));
+        },
+        child: const Text(
+          " Sign up",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      )
+    ]);
   }
 }

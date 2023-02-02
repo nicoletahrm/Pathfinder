@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../reusable_widgets/reusable_widget.dart';
 
@@ -19,9 +20,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          decoration: BoxDecoration(color: hexStringToColor("#fed8c3")),
+        backgroundColor: hexStringToColor("#fed8c3"),
+        body: SafeArea(
+          //decoration: BoxDecoration(color: hexStringToColor("#fed8c3")),
           child: SingleChildScrollView(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Column(
               children: <Widget>[
                 logoWidget("assets/images/logo.png"),
@@ -40,22 +44,26 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           )),
-    );
+        ));
   }
 
   Row signupOption() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      const Text("Don't have account?", style: TextStyle(color: Colors.grey)),
+      Text("Don't have an account?",
+          style: GoogleFonts.poppins(
+              fontSize: 18, color: hexStringToColor("#8d8d8d"))),
       GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SignupScreen()));
-        },
-        child: const Text(
-          " Sign up",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-      )
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const SignupScreen()));
+          },
+          child: Text(
+            " Sign up",
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              color: hexStringToColor("#44564a"),
+            ),
+          ))
     ]);
   }
 }

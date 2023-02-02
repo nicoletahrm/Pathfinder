@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../reusable_widgets/reusable_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   logo("assets/images/logo1.png"),
                   Container(
-                    height: 535,
+                    height: 545,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: hexStringToColor("#ffffff"),
@@ -105,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
       GestureDetector(
           onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const SignupScreen()));
+                MaterialPageRoute(builder: (context) => const SignUpScreen()));
           },
           child: Text(
             " Sign up",

@@ -20,7 +20,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
     cursorColor: Colors.black,
-    cursorHeight: 18,
+    cursorHeight: 20,
     style: GoogleFonts.poppins(fontSize: 18),
     decoration: InputDecoration(
       prefixIcon: Icon(
@@ -47,7 +47,6 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
       width: MediaQuery.of(context).size.width,
       height: 60,
       margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.0)),
       child: ElevatedButton(
         onPressed: () {
           onTop();
@@ -68,3 +67,28 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
                 fontWeight: FontWeight.bold)),
       ));
 }
+
+// Container uploadImage(BuildContext context, Function onTop) {
+//   return Container(
+//       width: MediaQuery.of(context).size.width,
+//       height: 60,
+//       margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+//       child: ElevatedButton(
+//         onPressed: () {
+//           onTop();
+//         },
+//         style: ButtonStyle(
+//             backgroundColor: MaterialStateProperty.resolveWith((states) {
+//               if (states.contains(MaterialState.pressed)) {
+//                 return Colors.black26;
+//               }
+//               return hexStringToColor("#fed8c3");
+//             }),
+//             shape: MaterialStateProperty.all(RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(12.0)))),
+//         child: IconButton(
+//           icon: const Icon(Icons.image),
+//           onPressed: () {},
+//         ),
+//       ));
+// }

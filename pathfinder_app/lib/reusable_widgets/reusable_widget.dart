@@ -4,12 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 Transform logo(String imageName) {
   return Transform.translate(
-      offset: const Offset(0, -353),
+      offset: const Offset(0, -360),
       child: Image.asset(
         imageName,
-        scale: 3.0,
+        scale: 4.5,
         width: double.infinity,
-        //color: Colors.white,
       ));
 }
 
@@ -32,7 +31,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
       labelStyle: const TextStyle(color: Colors.black45, fontSize: 18),
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
-      fillColor: hexStringToColor("#e1e8e3"),
+      fillColor: hexStringToColor("#f0f3f1"),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
           borderSide: const BorderSide(width: 0, style: BorderStyle.none)),

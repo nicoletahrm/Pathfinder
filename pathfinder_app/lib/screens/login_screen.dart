@@ -14,16 +14,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: hexStringToColor("#fed8c3"),
+      backgroundColor: hexStringToColor("#44564a"),
       body: ListView(
-        //padding: const EdgeInsets.fromLTRB(0, 400, 0, 0),
         shrinkWrap: false,
         reverse: true,
         children: [
@@ -32,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Stack(
                 children: [
-                  logo("assets/images/logo.png"),
+                  logo("assets/images/logo1.png"),
                   Container(
                     height: 535,
                     width: double.infinity,
@@ -68,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     "Username",
                                     Icons.person_outline,
                                     false,
-                                    _emailTextController),
+                                    _usernameTextController),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -81,9 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 20,
                                 ),
                                 loginButton(context, true, () {}),
-                                const SizedBox(
-                                  height: 100,
-                                ),
                                 signUpOption(),
                               ],
                             ),

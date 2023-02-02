@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Image logoWidget(String imageName) {
-  return Image.asset(
-    imageName,
-    fit: BoxFit.fitWidth,
-    width: 160,
-    height: 340,
-  );
+Transform logo(String imageName) {
+  return Transform.translate(
+      offset: const Offset(0, -353),
+      child: Image.asset(
+        imageName,
+        scale: 3.0,
+        width: double.infinity,
+        //color: Colors.white,
+      ));
 }
 
 TextField reusableTextField(String text, IconData icon, bool isPasswordType,
@@ -19,7 +21,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
     cursorColor: Colors.black,
-    //style: const TextStyle(color: Colors.black, fontSize: 18),
+    cursorHeight: 18,
     style: GoogleFonts.poppins(fontSize: 18),
     decoration: InputDecoration(
       prefixIcon: Icon(
@@ -30,7 +32,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
       labelStyle: const TextStyle(color: Colors.black45, fontSize: 18),
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
-      fillColor: Colors.white.withOpacity(0.9),
+      fillColor: hexStringToColor("#e1e8e3"),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
           borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
@@ -56,14 +58,14 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
               if (states.contains(MaterialState.pressed)) {
                 return Colors.black26;
               }
-              return hexStringToColor("#8d8d8d");
+              return hexStringToColor("#44564a");
             }),
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)))),
         child: Text(isLogin ? 'LOG IN' : 'SIGN UP',
             style: GoogleFonts.poppins(
                 fontSize: 18,
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.bold)),
       ));
 }

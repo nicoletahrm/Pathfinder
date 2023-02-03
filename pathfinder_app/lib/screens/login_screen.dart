@@ -1,4 +1,8 @@
+// ignore_for_file: avoid_print
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/screens/home_screen.dart';
 import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
 
   @override
@@ -62,11 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                reusableTextField(
-                                    "Username",
-                                    Icons.person_outline,
-                                    false,
-                                    _usernameTextController),
+                                reusableTextField("E-mail", Icons.mail, false,
+                                    _emailTextController),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -78,7 +79,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                loginButton(context, true, () {}),
+                                loginButton(context, true, () {
+                                  FirebaseAuth.instance
+                                      .signInWithEmailAndPassword(
+                                    email: _emailTextController.text,
+                                    password: _passwordTextController.text,
+                                  )
+                                      .then((value) {
+                                    print("Sign in.");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomeScreen()));
+                                  });
+                                }),
                                 signUpOption(),
                               ],
                             ),

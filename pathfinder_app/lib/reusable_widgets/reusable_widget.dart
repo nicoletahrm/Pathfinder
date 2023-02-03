@@ -20,7 +20,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
     cursorColor: Colors.black,
-    cursorHeight: 20,
+    cursorHeight: 25,
     style: GoogleFonts.poppins(fontSize: 18),
     decoration: InputDecoration(
       prefixIcon: Icon(

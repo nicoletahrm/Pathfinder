@@ -1,8 +1,12 @@
+// ignore_for_file: avoid_print
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../reusable_widgets/reusable_widget.dart';
+import 'package:pathfinder_app/screens/home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -33,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   logo("assets/images/logo1.png"),
                   Container(
-                    height: 550,
+                    height: 545,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: hexStringToColor("#ffffff"),
@@ -71,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                reusableTextField("E-mail", Icons.mail, true,
+                                reusableTextField("E-mail", Icons.mail, false,
                                     _emailTextController),
                                 const SizedBox(
                                   height: 20,
@@ -84,7 +88,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                loginButton(context, false, () {}),
+                                loginButton(context, false, () {
+                                  FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                    email: _emailTextController.text,
+                                    password: _passwordTextController.text,
+                                  )
+                                      .then((value) {
+                                    print("Created new account.");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomeScreen()));
+                                  });
+                                }),
                                 signUpOption(),
                               ],
                             ),

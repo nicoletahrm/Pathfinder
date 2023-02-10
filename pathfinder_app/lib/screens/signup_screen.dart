@@ -37,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   logo("assets/images/logo1.png"),
                   Container(
-                    height: 545,
+                    height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: hexStringToColor("#ffffff"),
@@ -103,7 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 const HomeScreen()));
                                   });
                                 }),
-                                signUpOption(),
+                                signUpOption(false),
                               ],
                             ),
                           ),
@@ -120,9 +120,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Row signUpOption() {
+  Row signUpOption(bool isLogin) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text("Already have an account?",
+      Text(isLogin ? "Don't have an account? " : "Already have an account? ",
           style: GoogleFonts.poppins(
               fontSize: 15, color: hexStringToColor("#44564a"))),
       GestureDetector(
@@ -131,7 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MaterialPageRoute(builder: (context) => const LoginScreen()));
           },
           child: Text(
-            " Log in",
+            isLogin ? 'Sign Up' : 'Log In',
             style: GoogleFonts.poppins(
               fontSize: 15,
               color: hexStringToColor("#44564a"),

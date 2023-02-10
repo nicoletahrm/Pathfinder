@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/home_screen.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +21,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
 
+ String _errorMessage = "";
+
+ void validateEmail(String val) {
+    if (val.isEmpty) {
+      setState(() {
+        _errorMessage = "Email can not be empty";
+      });
+    } else if (!EmailValidator.validate(val, true)) {
+      setState(() {
+        _errorMessage = "Invalid Email Address";
+      });
+    } else {
+      setState(() {
+        _errorMessage = "";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   logo("assets/images/logo1.png"),
                   Container(
-                    height: 545,
+                    height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: hexStringToColor("#ffffff"),
@@ -68,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 reusableTextField("E-mail", Icons.mail, false,
                                     _emailTextController),
+
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -94,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 const HomeScreen()));
                                   });
                                 }),
-                                signUpOption(),
+                                signUpOption(true),
                               ],
                             ),
                           ),
@@ -111,9 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Row signUpOption() {
+  Row signUpOption(bool isLogin) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text("Don't have an account?",
+      Text(isLogin ? "Don't have an account? " : "Already have an account? ",
           style: GoogleFonts.poppins(
               fontSize: 15, color: hexStringToColor("#44564a"))),
       GestureDetector(
@@ -122,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 MaterialPageRoute(builder: (context) => const SignUpScreen()));
           },
           child: Text(
-            " Sign up",
+            isLogin ? 'Sign Up' : 'Log In',
             style: GoogleFonts.poppins(
               fontSize: 15,
               color: hexStringToColor("#44564a"),

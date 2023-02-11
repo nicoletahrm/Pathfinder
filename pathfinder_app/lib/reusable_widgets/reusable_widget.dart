@@ -13,8 +13,9 @@ Transform logo(String imageName) {
 }
 
 TextField reusableTextField(String text, IconData icon, bool isPasswordType,
-    TextEditingController controller) {
+    TextEditingController controller, Function() onChanged) {
   return TextField(
+    onChanged: onChanged(),
     controller: controller,
     obscureText: isPasswordType,
     enableSuggestions: !isPasswordType,
@@ -39,6 +40,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     keyboardType: isPasswordType
         ? TextInputType.visiblePassword
         : TextInputType.emailAddress,
+    
   );
 }
 
@@ -67,6 +69,11 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
                 fontWeight: FontWeight.bold)),
       ));
 }
+
+
+
+
+
 
 // Container uploadImage(BuildContext context, Function onTop) {
 //   return Container(

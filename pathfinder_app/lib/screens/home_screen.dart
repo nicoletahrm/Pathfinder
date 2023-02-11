@@ -13,12 +13,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
       child: ElevatedButton(
-        child: const Text("Logout"),
+        child: Text("${user?.email!}"),
         onPressed: () {
           FirebaseAuth.instance.signOut().then((value) {
             print("Sign out");

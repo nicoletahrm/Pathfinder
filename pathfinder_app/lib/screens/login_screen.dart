@@ -69,6 +69,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,
                     decoration: BoxDecoration(
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     offset: const Offset(0, -15),
+                      //     blurRadius: 10,
+                      //     color: Colors.black.withOpacity(0.3),
+                      //   ),
+                      // ],
                       color: hexStringToColor("#ffffff"),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(40),

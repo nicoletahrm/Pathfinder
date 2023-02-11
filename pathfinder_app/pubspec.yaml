@@ -37,7 +37,8 @@ dependencies:
   google_fonts: ^4.0.1
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.5
-  email_validator: '^2.1.16'
+  email_validator: "^2.1.16"
+  fluttericon: ^2.0.0
 
 dev_dependencies:
   flutter_test:

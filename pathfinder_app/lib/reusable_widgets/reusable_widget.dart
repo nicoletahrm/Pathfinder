@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:pathfinder_app/screens/home_screen.dart';
+
+import 'package:fluttericon/iconic_icons.dart';
+
 Transform logo(String imageName) {
   return Transform.translate(
       offset: const Offset(0, -360),
@@ -40,7 +44,6 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     keyboardType: isPasswordType
         ? TextInputType.visiblePassword
         : TextInputType.emailAddress,
-    
   );
 }
 
@@ -68,6 +71,69 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
                 color: Colors.white,
                 fontWeight: FontWeight.bold)),
       ));
+}
+
+Container homeNavBar(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 14),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          offset: const Offset(0, -15),
+          blurRadius: 20,
+          color: const Color(0xFFDADADA).withOpacity(0.15),
+        ),
+      ],
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(40),
+        topRight: Radius.circular(40),
+      ),
+    ),
+    child: SafeArea(
+        top: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.home_outlined,
+                size: 30,
+                color: Colors.black54,
+              ),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.place_outlined,
+                size: 30,
+                color: Colors.black54,
+              ),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.hiking_outlined,
+                size: 30,
+                color: Colors.black54,
+              ),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.perm_identity_outlined,
+                size: 30,
+                color: Colors.black54,
+              ),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+            ),
+          ],
+        )),
+  );
 }
 
 

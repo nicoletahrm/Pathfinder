@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
@@ -35,16 +36,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future signUp() async {
     if (passwordConfirmed()) {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        //create user
         email: _emailTextController.text,
         password: _passwordTextController.text,
       );
-    }
 
-    //add user details
+      //add user details
+      addUserDetails(_usernameTextController.text, _emailTextController.text);
+    }
   }
 
-  Future addUserDetails() async {}
+  Future addUserDetails(String username, String email) async {
+    await FirebaseFirestore.instance.collection("user").add({
+      'username': username,
+      'email': email,
+    });
+  }
 
   bool passwordConfirmed() {
     if (_passwordTextController.text == _confirmPasswordTextController.text) {
@@ -133,19 +139,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   height: 20,
                                 ),
                                 loginButton(context, false, () {
-                                  FirebaseAuth.instance
-                                      .createUserWithEmailAndPassword(
-                                    email: _emailTextController.text,
-                                    password: _passwordTextController.text,
-                                  )
-                                      .then((value) {
-                                    print("Created new account.");
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const HomeScreen()));
-                                  });
+                                  signUp().then((value) => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen())));
                                 }),
                                 signUpOption(false),
                               ],

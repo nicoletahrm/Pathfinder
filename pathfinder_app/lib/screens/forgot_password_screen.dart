@@ -1,63 +1,51 @@
 // ignore_for_file: avoid_print
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../reusable_widgets/reusable_widget.dart';
-import 'package:pathfinder_app/screens/home_screen.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _ForgotPasswordScreen createState() => _ForgotPasswordScreen();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _usernameTextController = TextEditingController();
+class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
   final TextEditingController _emailTextController = TextEditingController();
-  final TextEditingController _passwordTextController = TextEditingController();
-  final TextEditingController _confirmPasswordTextController =
-      TextEditingController();
 
   @override
   void dispose() {
-    _usernameTextController.dispose();
     _emailTextController.dispose();
-    _passwordTextController.dispose();
-    _confirmPasswordTextController.dispose();
     super.dispose();
   }
 
-  Future signUp() async {
-    if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailTextController.text,
-        password: _passwordTextController.text,
-      );
-
-      //add user details
-      addUserDetails(_usernameTextController.text, _emailTextController.text);
-    }
-  }
-
-  Future addUserDetails(String username, String email) async {
-    await FirebaseFirestore.instance.collection("user").add({
-      'username': username,
-      'email': email,
-    });
-  }
-
-  bool passwordConfirmed() {
-    if (_passwordTextController.text == _confirmPasswordTextController.text) {
-      return true;
-    } else {
-      return false;
-    }
+  Future forgotPassword() async {
+    //try {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: _emailTextController.text.trim());
+    // ignore: use_build_context_synchronously
+    // showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return const AlertDialog(
+    //         content: Text('Password reset link sent! Check your email.'),
+    //       );
+    //     });
+    //} on FirebaseAuthException catch (ex) {
+    // print(ex);
+    // showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return AlertDialog(
+    //         content: Text(ex.message.toString()),
+    //       );
+    //     });
+    //}
   }
 
   @override
@@ -74,9 +62,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             children: [
               Stack(
                 children: [
-                  //logo("assets/images/logo1.png"),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: hexStringToColor("#ffffff"),
@@ -91,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Sign Up",
+                            "Forgot password",
                             style: GoogleFonts.poppins(
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
@@ -106,46 +93,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                reusableTextField(
-                                    "Username",
-                                    Icons.person_outline,
-                                    false,
-                                    _usernameTextController,
-                                    (() {})),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                reusableTextField("E-mail", Icons.mail, false,
+                                reusableTextField("E-mail", Icons.email, false,
                                     _emailTextController, (() {})),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                reusableTextField(
-                                    "Password",
-                                    Icons.lock_outline,
-                                    true,
-                                    _passwordTextController,
-                                    (() {})),
-                                const SizedBox(
-                                  height: 20,
+                                resetPasswordButton(context, forgotPassword()),
+                                Padding(
+                                  padding: const EdgeInsets.all(0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const LoginScreen()));
+                                            },
+                                            child: Text(
+                                              'Log In',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                color:
+                                                    hexStringToColor("#44564a"),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ))
+                                      ]),
                                 ),
-                                reusableTextField(
-                                    "Confirm password",
-                                    Icons.lock_outline,
-                                    true,
-                                    _confirmPasswordTextController,
-                                    (() {})),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                loginButton(context, false, () {
-                                  signUp().then((value) => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomeScreen())));
-                                }),
-                                signUpOption(false),
                               ],
                             ),
                           ),

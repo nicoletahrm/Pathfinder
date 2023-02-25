@@ -2,7 +2,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/screens/login_screen.dart';
 import '../reusable_widgets/reusable_widget.dart';
 
 class ProfileScreen extends StatefulWidget {

@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/screens/forgot_password_screen.dart';
 import 'package:pathfinder_app/screens/home_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:pathfinder_app/screens/signup_screen.dart';
@@ -69,13 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     offset: const Offset(0, -15),
-                      //     blurRadius: 10,
-                      //     color: Colors.black.withOpacity(0.3),
-                      //   ),
-                      // ],
                       color: hexStringToColor("#ffffff"),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(40),
@@ -141,8 +135,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
+                                Padding(
+                                  padding: const EdgeInsets.all(0),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const ForgotPasswordScreen()));
+                                            },
+                                            child: Text(
+                                              'Forgot password?',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                color:
+                                                    hexStringToColor("#44564a"),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ))
+                                      ]),
                                 ),
                                 loginButton(context, true, () {
                                   try {

@@ -135,3 +135,29 @@ Container homeNavBar(BuildContext context) {
         )),
   );
 }
+
+Container resetPasswordButton(BuildContext context, Future onTop) {
+  return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 60,
+      margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+      child: ElevatedButton(
+        onPressed: () {
+          onTop;
+        },
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.pressed)) {
+                return Colors.black26;
+              }
+              return hexStringToColor("#44564a");
+            }),
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)))),
+        child: Text('Reset password',
+            style: GoogleFonts.poppins(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.bold)),
+      ));
+}

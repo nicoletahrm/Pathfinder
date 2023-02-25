@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/screens/profile_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:pathfinder_app/screens/home_screen.dart';
-
-import 'package:fluttericon/iconic_icons.dart';
 
 Transform logo(String imageName) {
   return Transform.translate(
@@ -128,41 +126,12 @@ Container homeNavBar(BuildContext context) {
                 size: 30,
                 color: Colors.black54,
               ),
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen())),
             ),
           ],
         )),
   );
 }
-
-
-
-
-
-
-// Container uploadImage(BuildContext context, Function onTop) {
-//   return Container(
-//       width: MediaQuery.of(context).size.width,
-//       height: 60,
-//       margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-//       child: ElevatedButton(
-//         onPressed: () {
-//           onTop();
-//         },
-//         style: ButtonStyle(
-//             backgroundColor: MaterialStateProperty.resolveWith((states) {
-//               if (states.contains(MaterialState.pressed)) {
-//                 return Colors.black26;
-//               }
-//               return hexStringToColor("#fed8c3");
-//             }),
-//             shape: MaterialStateProperty.all(RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(12.0)))),
-//         child: IconButton(
-//           icon: const Icon(Icons.image),
-//           onPressed: () {},
-//         ),
-//       ));
-// }
-

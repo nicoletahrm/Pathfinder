@@ -20,6 +20,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _confirmPasswordTextController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameTextController.dispose();
+    _emailTextController.dispose();
+    _passwordTextController.dispose();
+    _confirmPasswordTextController.dispose();
+    super.dispose();
+  }
+
+  Future signUp() async {
+    if (passwordConfirmed()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //create user
+        email: _emailTextController.text,
+        password: _passwordTextController.text,
+      );
+    }
+
+    //add user details
+  }
+
+  Future addUserDetails() async {}
+
+  bool passwordConfirmed() {
+    if (_passwordTextController.text == _confirmPasswordTextController.text) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +119,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     Icons.lock_outline,
                                     true,
                                     _passwordTextController,
+                                    (() {})),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                reusableTextField(
+                                    "Confirm password",
+                                    Icons.lock_outline,
+                                    true,
+                                    _confirmPasswordTextController,
                                     (() {})),
                                 const SizedBox(
                                   height: 20,

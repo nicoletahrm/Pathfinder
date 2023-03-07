@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../reusable_widgets/reusable_widget.dart';
+import '../reusable_widgets/nav_bar.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
@@ -29,31 +29,45 @@ class MapScreenState extends State<MapScreen> {
           mapType: MapType.normal,
           initialCameraPosition: initialCameraPosition,
           markers: markers,
-          zoomControlsEnabled: false,
+          zoomControlsEnabled: true,
           onMapCreated: (GoogleMapController mapController) {
             _mapController = mapController;
+            position();
           },
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            Position position = await _getCurrentLocation();
+        // floatingActionButton: FloatingActionButton.extended(
+        //   onPressed: () async {
+        //     Position position = await _getCurrentLocation();
 
-            _mapController.animateCamera(CameraUpdate.newCameraPosition(
-                CameraPosition(
-                    target: LatLng(position.latitude, position.longitude))));
+        //     _mapController.animateCamera(CameraUpdate.newCameraPosition(
+        //         CameraPosition(
+        //             target: LatLng(position.latitude, position.longitude))));
 
-            markers.clear();
+        //     markers.clear();
 
-            markers.add(Marker(
-                markerId: const MarkerId('currentLocation'),
-                position: LatLng(position.latitude, position.longitude)));
+        //     markers.add(Marker(
+        //         markerId: const MarkerId('currentLocation'),
+        //         position: LatLng(position.latitude, position.longitude)));
 
-            setState(() {});
-          },
-          label: const Text('Current location'),
-          icon: const Icon(Icons.location_history),
-        ),
-        bottomNavigationBar: homeNavBar(context));
+        //     setState(() {});
+        //   },
+        //   label: const Text('Current location'),
+        //   icon: const Icon(Icons.location_history),
+        // ),
+        bottomNavigationBar: const CustomBottomNavBar());
+  }
+
+  void position() async {
+    Position position = await _getCurrentLocation();
+
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(position.latitude, position.longitude))));
+
+    markers.clear();
+
+    markers.add(Marker(
+        markerId: const MarkerId('currentLocation'),
+        position: LatLng(position.latitude, position.longitude)));
   }
 
   Future<Position> _getCurrentLocation() async {

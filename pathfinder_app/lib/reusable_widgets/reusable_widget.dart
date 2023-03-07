@@ -74,100 +74,75 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
       ));
 }
 
-Future<Position> _getCurrentLocation() async {
-  bool serviceEnable = await Geolocator.isLocationServiceEnabled();
-
-  if (serviceEnable) {
-    return Future.error('Location services are disable.');
-  }
-
-  LocationPermission permission = await Geolocator.checkPermission();
-
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-
-    if (permission == LocationPermission.denied) {
-      return Future.error('Location permision are denied.');
-    }
-  }
-
-  if (permission == LocationPermission.deniedForever) {
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permission.');
-  }
-
-  return await Geolocator.getCurrentPosition();
-}
-
-Container homeNavBar(BuildContext context) {
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 14),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      boxShadow: [
-        BoxShadow(
-          offset: const Offset(0, -15),
-          blurRadius: 20,
-          color: const Color(0xFFDADADA).withOpacity(0.15),
-        ),
-      ],
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(40),
-        topRight: Radius.circular(40),
-      ),
-    ),
-    child: SafeArea(
-        top: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: const Icon(
-                Icons.home_outlined,
-                size: 30,
-                color: Colors.black54,
-              ),
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen())),
-            ),
-            IconButton(
-                icon: const Icon(
-                  Icons.place_outlined,
-                  size: 30,
-                  color: Colors.black54,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MapScreen()));
-                  //_getCurrentLocation();
-                 // _liveLocation();
-                }),
-            IconButton(
-              icon: const Icon(
-                Icons.hiking_outlined,
-                size: 30,
-                color: Colors.black54,
-              ),
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen())),
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.perm_identity_outlined,
-                size: 30,
-                color: Colors.black54,
-              ),
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileScreen())),
-            ),
-          ],
-        )),
-  );
-}
+// Container homeNavBar(BuildContext context) {
+//   return Container(
+//     padding: const EdgeInsets.symmetric(vertical: 14),
+//     decoration: BoxDecoration(
+//       color: Colors.white,
+//       boxShadow: [
+//         BoxShadow(
+//           offset: const Offset(0, -15),
+//           blurRadius: 20,
+//           color: const Color(0xFFDADADA).withOpacity(0.15),
+//         ),
+//       ],
+//       borderRadius: const BorderRadius.only(
+//         topLeft: Radius.circular(40),
+//         topRight: Radius.circular(40),
+//       ),
+//     ),
+//     child: SafeArea(
+//         top: false,
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           children: [
+//             IconButton(
+//               icon: const Icon(
+//                 Icons.home_outlined,
+//                 size: 30,
+//                 color: Colors.black54,
+//               ),
+//               onPressed: () => Navigator.push(context,
+//                   MaterialPageRoute(builder: (context) => const HomeScreen())),
+//             ),
+//             IconButton(
+//                 icon: const Icon(
+//                   Icons.place_outlined,
+//                   size: 30,
+//                   color: Colors.black54,
+//                 ),
+//                 onPressed: () {
+//                   Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                           builder: (context) => const MapScreen()));
+//                   //_getCurrentLocation();
+//                   // _liveLocation();
+//                 }),
+//             IconButton(
+//               icon: const Icon(
+//                 Icons.hiking_outlined,
+//                 size: 30,
+//                 color: Colors.black54,
+//               ),
+//               onPressed: () => Navigator.push(context,
+//                   MaterialPageRoute(builder: (context) => const HomeScreen())),
+//             ),
+//             IconButton(
+//               icon: const Icon(
+//                 Icons.perm_identity_outlined,
+//                 size: 30,
+//                 color: Colors.black54,
+//               ),
+//               onPressed: () => Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                       builder: (context) => const ProfileScreen())),
+//             ),
+//           ],
+//         )),
+//   );
+// }
 
 Container resetPasswordButton(BuildContext context, Future onTop) {
   return Container(

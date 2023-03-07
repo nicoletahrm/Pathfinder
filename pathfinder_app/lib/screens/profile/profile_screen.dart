@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/profile/profile_picture.dart';
+import '../../reusable_widgets/nav_bar.dart';
 import '../../reusable_widgets/reusable_widget.dart';
 import '../../utils/colors_utils.dart';
 
@@ -44,6 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ])
       ])
-    ]));
+    ]),
+        bottomNavigationBar: const CustomBottomNavBar());
   }
 }

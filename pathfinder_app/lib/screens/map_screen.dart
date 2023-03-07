@@ -60,8 +60,8 @@ class MapScreenState extends State<MapScreen> {
   void position() async {
     Position position = await _getCurrentLocation();
 
-    _mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(position.latitude, position.longitude))));
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(position.latitude, position.longitude), zoom: 15)));
 
     markers.clear();
 
@@ -72,12 +72,11 @@ class MapScreenState extends State<MapScreen> {
 
   Future<Position> _getCurrentLocation() async {
     bool serviceEnable = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
 
     if (serviceEnable) {
       return Future.error('Location services are disable.');
     }
-
-    LocationPermission permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();

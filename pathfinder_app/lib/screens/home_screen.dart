@@ -3,8 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
-import '../reusable_widgets/nav_bar.dart';
-import '../reusable_widgets/reusable_widget.dart';
+import '../reusable_widgets/custom_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,6 +33,5 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         bottomNavigationBar: const CustomBottomNavBar());
-    //bottomNavigationBar: homeNavBar(context));
   }
 }

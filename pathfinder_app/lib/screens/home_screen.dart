@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
-        bottomNavigationBar: homeNavBar(context));
+        bottomNavigationBar: homeNavBar(context)
+      );
   }
 }

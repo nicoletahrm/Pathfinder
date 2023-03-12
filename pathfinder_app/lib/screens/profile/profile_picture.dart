@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../reusable_widgets/reusable_widget.dart';
 import '../../utils/colors_utils.dart';
 import '../home_screen.dart';
 

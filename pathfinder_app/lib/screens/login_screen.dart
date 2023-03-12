@@ -65,9 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Stack(
                 children: [
-                  logo("assets/images/logo1.png"),
+                  logo("assets/images/image4.jpg"),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: hexStringToColor("#ffffff"),
@@ -102,17 +102,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                   validateField(
                                       _emailTextController.text, "Email");
                                 })),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                  child: Text(
-                                    _errorMessage,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
+                                //Padding(
+                                // padding:
+                                //  const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                //child: Text(
+                                //_errorMessage,
+                                //style: GoogleFonts.poppins(
+                                //  fontSize: 12,
+                                //  color: Colors.red,
+                                //),
+                                //),
+                                //),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -124,17 +124,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                   validateField(
                                       _passwordTextController.text, "Password");
                                 })),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                  child: Text(
-                                    _errorMessage,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
+                                // Padding(
+                                //   padding:
+                                //       const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                //   child: Text(
+                                //     _errorMessage,
+                                //     style: GoogleFonts.poppins(
+                                //       fontSize: 12,
+                                //       color: Colors.red,
+                                //     ),
+                                //   ),
+                                //),
                                 Padding(
                                   padding: const EdgeInsets.all(0),
                                   child: Row(

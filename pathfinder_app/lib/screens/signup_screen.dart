@@ -74,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             children: [
               Stack(
                 children: [
-                  //logo("assets/images/logo1.png"),
+                  logo("assets/images/image4.jpg"),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.7,
                     width: double.infinity,

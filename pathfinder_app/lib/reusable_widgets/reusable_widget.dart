@@ -4,10 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 Transform logo(String imageName) {
   return Transform.translate(
-      offset: const Offset(0, -360),
+      offset: const Offset(0, -400),
       child: Image.asset(
         imageName,
-        scale: 4.5,
+        scale: 2.0,
         width: double.infinity,
       ));
 }
@@ -68,76 +68,6 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
                 fontWeight: FontWeight.bold)),
       ));
 }
-
-// Container homeNavBar(BuildContext context) {
-//   return Container(
-//     padding: const EdgeInsets.symmetric(vertical: 14),
-//     decoration: BoxDecoration(
-//       color: Colors.white,
-//       boxShadow: [
-//         BoxShadow(
-//           offset: const Offset(0, -15),
-//           blurRadius: 20,
-//           color: const Color(0xFFDADADA).withOpacity(0.15),
-//         ),
-//       ],
-//       borderRadius: const BorderRadius.only(
-//         topLeft: Radius.circular(40),
-//         topRight: Radius.circular(40),
-//       ),
-//     ),
-//     child: SafeArea(
-//         top: false,
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: [
-//             IconButton(
-//               icon: const Icon(
-//                 Icons.home_outlined,
-//                 size: 30,
-//                 color: Colors.black54,
-//               ),
-//               onPressed: () => Navigator.push(context,
-//                   MaterialPageRoute(builder: (context) => const HomeScreen())),
-//             ),
-//             IconButton(
-//                 icon: const Icon(
-//                   Icons.place_outlined,
-//                   size: 30,
-//                   color: Colors.black54,
-//                 ),
-//                 onPressed: () {
-//                   Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) => const MapScreen()));
-//                   //_getCurrentLocation();
-//                   // _liveLocation();
-//                 }),
-//             IconButton(
-//               icon: const Icon(
-//                 Icons.hiking_outlined,
-//                 size: 30,
-//                 color: Colors.black54,
-//               ),
-//               onPressed: () => Navigator.push(context,
-//                   MaterialPageRoute(builder: (context) => const HomeScreen())),
-//             ),
-//             IconButton(
-//               icon: const Icon(
-//                 Icons.perm_identity_outlined,
-//                 size: 30,
-//                 color: Colors.black54,
-//               ),
-//               onPressed: () => Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                       builder: (context) => const ProfileScreen())),
-//             ),
-//           ],
-//         )),
-//   );
-// }
 
 Container resetPasswordButton(BuildContext context, Future onTop) {
   return Container(

@@ -62,6 +62,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
             children: [
               Stack(
                 children: [
+                  logo("assets/images/image4.jpg"),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,

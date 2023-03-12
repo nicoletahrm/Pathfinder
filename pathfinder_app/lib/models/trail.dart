@@ -27,7 +27,7 @@ class Trail {
     this.reviews,
   });
 
-  List<Trail> demoRoutes = [
+  final List<Trail> demoRoutes = [
     Trail(
         id: 1,
         title: "Cabana Malaiesti",

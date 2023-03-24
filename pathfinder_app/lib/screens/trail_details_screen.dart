@@ -27,7 +27,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
 
     return Scaffold(
         backgroundColor: kLightColor,
-        body: Stack(
+        body: SingleChildScrollView(
+            child: Form(
+                child: Stack(
           children: [
             Hero(
               tag: "trail${widget.index}",
@@ -80,11 +82,13 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                       height: 8.0,
                     ),
                     Row(
-                        // List.generate(
-                        //   5,
-                        //   (index) => Icon(Icons.star, color: kRatingColor),
-                        // ),
-                        ),
+                      children:
+                          //alignment: Alignment.center,
+                          List.generate(
+                        5,
+                        (index) => const Icon(Icons.star, color: kRatingColor),
+                      ),
+                    ),
                     const SizedBox(
                       height: 12.0,
                     ),
@@ -96,16 +100,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             color: kLightColor,
                           )),
                     ),
-                    // const Positioned(
-                    //     child: Align(
-                    //   alignment: Alignment.center,
-                    //   child: Icon(Icons.heart_broken, color: Colors.white),
-                    // ))
                   ],
                 ),
               ),
             )
           ],
-        ));
+        ))));
   }
 }

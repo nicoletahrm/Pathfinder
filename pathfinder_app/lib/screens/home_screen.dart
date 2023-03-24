@@ -76,137 +76,139 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
         backgroundColor: kDefaultIconLightColor,
-        body: Container(
-            padding: const EdgeInsets.only(
-                top: 64.0, bottom: 0.0, left: 32.0, right: 32.0),
-            child: Column(children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "It's time for another hike!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 28.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "ProximaNovaBold",
+        body: SingleChildScrollView(
+          child: Container(
+              padding: const EdgeInsets.only(
+                  top: 64.0, bottom: 0.0, left: 32.0, right: 32.0),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        "It's time for another hike!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 28.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "ProximaNovaBold",
+                        ),
                       ),
-                    ),
-                  ]),
-              const SizedBox(
-                height: 30.0,
-              ),
-              reusableTextField("Search a place...", Icons.search_outlined,
-                  false, _homeTextController, (() {})),
-              const SizedBox(
-                height: 10.0,
-              ),
-              SizedBox(
-                height: 590.0,
-                //width: 900.0,
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: demoRoutes.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => TrailDetailsScreen(
-                                        index: index,
-                                        title: demoRoutes[index].title,
-                                        description:
-                                            demoRoutes[index].description,
-                                        coverImage:
-                                            demoRoutes[index].coverImage,
-                                        difficulty:
-                                            demoRoutes[index].difficulty)),
+                    ]),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                reusableTextField("Search a place...", Icons.search_outlined,
+                    false, _homeTextController, (() {})),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                SizedBox(
+                  height: 590.0,
+                  //width: 900.0,
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: demoRoutes.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                            onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => TrailDetailsScreen(
+                                          index: index,
+                                          title: demoRoutes[index].title,
+                                          description:
+                                              demoRoutes[index].description,
+                                          coverImage:
+                                              demoRoutes[index].coverImage,
+                                          difficulty:
+                                              demoRoutes[index].difficulty)),
+                                ),
+                            child: (Stack(children: <Widget>[
+                              Hero(
+                                tag: "trail$index",
+                                child: Container(
+                                    height: 160.0,
+                                    width: 700.0,
+                                    margin: const EdgeInsets.only(top: 20.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14.0),
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              demoRoutes[index].coverImage),
+                                          fit: BoxFit.cover),
+                                    )),
                               ),
-                          child: (Stack(children: <Widget>[
-                            Hero(
-                              tag: "trail$index",
-                              child: Container(
+                              Container(
                                   height: 160.0,
                                   width: 700.0,
-                                  margin: const EdgeInsets.only(top: 20.0),
+                                  margin: const EdgeInsets.only(top: 24.0),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14.0),
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            demoRoutes[index].coverImage),
-                                        fit: BoxFit.cover),
+                                    gradient: const LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black87,
+                                      ],
+                                      stops: [
+                                        0.6,
+                                        0.9,
+                                      ],
+                                    ),
                                   )),
-                            ),
-                            Container(
-                                height: 160.0,
-                                width: 700.0,
-                                margin: const EdgeInsets.only(top: 24.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14.0),
-                                  gradient: const LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black87,
-                                    ],
-                                    stops: [
-                                      0.6,
-                                      0.9,
-                                    ],
-                                  ),
-                                )),
-                            Positioned(
-                              bottom: 24.0,
-                              right: 24.0,
-                              child: GlassmorphicContainer(
-                                  height: 32.0,
-                                  width: 75.0,
-                                  blur: 2.0,
-                                  border: 0.0,
-                                  borderRadius: 8.0,
-                                  alignment: Alignment.center,
-                                  linearGradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      kLightColor.withOpacity(0.4),
-                                      kLightColor.withOpacity(0.4),
-                                    ],
-                                  ),
-                                  borderGradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      kLightColor.withOpacity(0.4),
-                                      kLightColor.withOpacity(0.4),
-                                    ],
-                                  ),
-                                  child: Align(
+                              Positioned(
+                                bottom: 24.0,
+                                right: 24.0,
+                                child: GlassmorphicContainer(
+                                    height: 32.0,
+                                    width: 75.0,
+                                    blur: 2.0,
+                                    border: 0.0,
+                                    borderRadius: 8.0,
                                     alignment: Alignment.center,
-                                    child: Text(
-                                        demoRoutes[index].difficulty.name,
-                                        style: const TextStyle(
-                                            fontSize: 18.0,
-                                            color: kLightColor,
-                                            fontWeight: FontWeight.bold)),
-                                  )),
-                            ),
-                            Positioned(
-                              bottom: 25.0,
-                              left: 24.0,
-                              width: size.width / 2.6,
-                              child: Text(demoRoutes[index].title,
-                                  style: const TextStyle(
-                                      fontSize: 24.0,
-                                      color: kLightColor,
-                                      fontFamily: "ProximaNovaBold",
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ])));
-                    }),
-              )
-            ])),
+                                    linearGradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        kLightColor.withOpacity(0.4),
+                                        kLightColor.withOpacity(0.4),
+                                      ],
+                                    ),
+                                    borderGradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        kLightColor.withOpacity(0.4),
+                                        kLightColor.withOpacity(0.4),
+                                      ],
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                          demoRoutes[index].difficulty.name,
+                                          style: const TextStyle(
+                                              fontSize: 18.0,
+                                              color: kLightColor,
+                                              fontWeight: FontWeight.bold)),
+                                    )),
+                              ),
+                              Positioned(
+                                bottom: 25.0,
+                                left: 24.0,
+                                width: size.width / 2.6,
+                                child: Text(demoRoutes[index].title,
+                                    style: const TextStyle(
+                                        fontSize: 24.0,
+                                        color: kLightColor,
+                                        fontFamily: "ProximaNovaBold",
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ])));
+                      }),
+                )
+              ])),
+        ),
         bottomNavigationBar: const CustomBottomNavBar());
   }
 }

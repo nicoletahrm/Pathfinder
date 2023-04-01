@@ -5,6 +5,7 @@ import 'package:pathfinder_app/utils/constant_colors.dart';
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
   final String title, description, coverImage;
+  final double rating;
   final Difficulty difficulty;
 
   const TrailDetailsScreen(
@@ -13,7 +14,8 @@ class TrailDetailsScreen extends StatefulWidget {
       required this.title,
       required this.description,
       required this.coverImage,
-      required this.difficulty});
+      required this.difficulty,
+      required this.rating});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -53,6 +55,17 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                     ],
                   ),
                 )),
+            GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: const Padding(
+                  padding: EdgeInsets.only(
+                    top: 64.0,
+                    bottom: 0.0,
+                    left: 28.0,
+                    right: 28.0,
+                  ),
+                  child: Icon(Icons.arrow_back),
+                )),
             Positioned(
               bottom: 0.0,
               child: Padding(
@@ -61,23 +74,29 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.title,
-                        style: const TextStyle(
-                            fontSize: 24.0,
-                            color: kLightColor,
-                            fontFamily: "ProximaNovaBold",
-                            fontWeight: FontWeight.bold)),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
                     Row(
-                      children:
-                          //alignment: Alignment.center,
-                          List.generate(
-                        5,
-                        (index) => const Icon(Icons.star, color: kRatingColor),
-                      ),
-                    ),
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(widget.title,
+                              style: const TextStyle(
+                                  fontSize: 24.0,
+                                  color: kLightColor,
+                                  fontFamily: "ProximaNovaBold",
+                                  fontWeight: FontWeight.bold)),
+                          const SizedBox(
+                            width: 3.0,
+                          ),
+                          Text(widget.rating.toString(),
+                              style: const TextStyle(
+                                  fontSize: 17.0,
+                                  color: kLightColor,
+                                  fontFamily: "ProximaNovaBold",
+                                  fontWeight: FontWeight.normal)),
+                          const SizedBox(
+                            width: 3.0,
+                          ),
+                          const Icon(Icons.star, color: kRatingColor, size: 17),
+                        ]),
                     const SizedBox(
                       height: 12.0,
                     ),

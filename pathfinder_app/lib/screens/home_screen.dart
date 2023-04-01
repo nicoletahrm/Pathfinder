@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/reusable_widgets/reusable_widget.dart';
@@ -46,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
         time: const Duration(hours: 6),
         routeLength: 12,
         difficulty: Difficulty.easy,
-        altitude: 1720),
+        altitude: 1720,
+        rating: 4.9),
     Trail(
         id: 1,
         title: "Vf. Omu",
@@ -55,7 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
         time: const Duration(hours: 9),
         routeLength: 20,
         difficulty: Difficulty.hard,
-        altitude: 1820),
+        altitude: 1820,
+        rating: 4.0),
     Trail(
         id: 2,
         title: "Vf. Piatra Mica",
@@ -65,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
         time: const Duration(hours: 9),
         routeLength: 20,
         difficulty: Difficulty.easy,
-        altitude: 1720),
+        altitude: 1720,
+        rating: 4.0),
     Trail(
         id: 3,
         title: "Vf. Ascutit",
@@ -75,7 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
         time: const Duration(hours: 9),
         routeLength: 20,
         difficulty: Difficulty.easy,
-        altitude: 1720),
+        altitude: 1720,
+        rating: 4.0),
     Trail(
         id: 4,
         title: "Vf. Piatra Mare",
@@ -84,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
         time: const Duration(hours: 9),
         routeLength: 20,
         difficulty: Difficulty.easy,
-        altitude: 1720)
+        altitude: 1720,
+        rating: 4.0)
   ];
 
   @override
@@ -92,8 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size = MediaQuery.of(context).size;
 
     //addUserDetails();
-
-    print(user?.email.toString());
 
     return Scaffold(
         backgroundColor: kDefaultIconLightColor,
@@ -121,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           SharedPreferences pref =
                               await SharedPreferences.getInstance();
                           pref.remove("email");
-                          print(user?.email.toString());
                           // ignore: use_build_context_synchronously
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (_) {
@@ -148,15 +149,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         return GestureDetector(
                             onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
-                                      builder: (context) => TrailDetailsScreen(
-                                          index: index,
-                                          title: demoRoutes[index].title,
-                                          description:
-                                              demoRoutes[index].description,
-                                          coverImage:
-                                              demoRoutes[index].coverImage,
-                                          difficulty:
-                                              demoRoutes[index].difficulty)),
+                                    builder: (context) => TrailDetailsScreen(
+                                        index: index,
+                                        title: demoRoutes[index].title,
+                                        description:
+                                            demoRoutes[index].description,
+                                        coverImage:
+                                            demoRoutes[index].coverImage,
+                                        difficulty:
+                                            demoRoutes[index].difficulty,
+                                        rating: demoRoutes[index].rating),
+                                  ),
                                 ),
                             child: (Stack(children: <Widget>[
                               Hero(

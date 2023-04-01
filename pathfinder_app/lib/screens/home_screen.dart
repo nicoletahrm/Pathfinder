@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/reusable_widgets/reusable_widget.dart';
 import 'package:pathfinder_app/screens/trail_details_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/difficulty.dart';
 import '../models/trail.dart';
 import '../reusable_widgets/custom_nav_bar.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import '../utils/constant_colors.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,6 +22,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   final TextEditingController _homeTextController = TextEditingController();
+
+  // Trail t = Trail(
+  //     id: 0,
+  //     title: "Cabana Malaiesti",
+  //     description: "Valea Glăjăriei - Cabana Malaiesti",
+  //     coverImage: "assets/images/image2.jpg",
+  //     time: const Duration(hours: 6),
+  //     routeLength: 12,
+  //     difficulty: Difficulty.easy,
+  //     altitude: 1720);
+
+  // Future addUserDetails() async {
+  //   await FirebaseFirestore.instance.collection("trail").add(t.toMap());
+  // }
 
   List<Trail> demoRoutes = [
     Trail(
@@ -74,6 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    //addUserDetails();
+
+    print(user?.email.toString());
+
     return Scaffold(
         backgroundColor: kDefaultIconLightColor,
         body: SingleChildScrollView(
@@ -83,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "It's time for another hike!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -93,6 +114,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                           fontFamily: "ProximaNovaBold",
                         ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.logout_outlined),
+                        onPressed: () async {
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+                          pref.remove("email");
+                          print(user?.email.toString());
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (_) {
+                            return const LoginScreen();
+                          }));
+                        },
                       ),
                     ]),
                 const SizedBox(

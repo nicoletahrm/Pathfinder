@@ -9,6 +9,7 @@ import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../reusable_widgets/reusable_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -51,8 +52,21 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString("email");
+    print(email);
+    runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: email == null ? const LoginScreen() : const HomeScreen(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    main();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: hexStringToColor("#44564a"),
@@ -159,7 +173,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ))
                                       ]),
                                 ),
-                                loginButton(context, true, () {
+                                loginButton(context, true, () async {
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.setString(
+                                      "email", _emailTextController.text);
+                                      
+                                  print(_emailTextController.text);
                                   try {
                                     FirebaseAuth.instance
                                         .signInWithEmailAndPassword(
@@ -167,7 +187,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       password: _passwordTextController.text,
                                     )
                                         .then((value) {
-                                      //print("Sign in.");
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(

@@ -26,6 +26,21 @@ class Trail {
     required this.routeLength,
     required this.difficulty,
     required this.altitude,
-    this.reviews,
+    this.reviews, required,
   });
+
+  Map<String,dynamic> toMap(){
+  return {
+    "title": title,
+    "description": description,
+    "coverImage": coverImage,
+    "time": time,
+    "routeLength": routeLength,
+    "difficulty": difficulty,
+    "altitude": altitude,
+    "reviews": reviews,
+    "rating": rating,
+    "images": images,
+  };
+}
 }

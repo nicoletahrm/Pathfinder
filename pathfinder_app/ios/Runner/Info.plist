@@ -6,7 +6,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need to get your lcoation!</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Need to get your lcoation!</string>
+	<string>Need to get your location!</string>
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

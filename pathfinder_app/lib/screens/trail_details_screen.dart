@@ -53,17 +53,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                     ],
                   ),
                 )),
-            GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: const Padding(
-                  padding: EdgeInsets.only(
-                    top: 64.0,
-                    bottom: 0.0,
-                    left: 28.0,
-                    right: 28.0,
-                  ),
-                  child: Icon(Icons.arrow_back),
-                )),
             Positioned(
               bottom: 0.0,
               child: Padding(

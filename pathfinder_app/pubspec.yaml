@@ -37,6 +37,7 @@ dependencies:
   google_fonts: ^4.0.1
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.5
+  firebase_database: ^10.1.0
   email_validator: "^2.1.16"
   fluttericon: ^2.0.0
   google_maps_flutter: ^2.2.4
@@ -48,6 +49,7 @@ dependencies:
   flutter_map: any
   flutter_map_marker_cluster: any
   shared_preferences: ^2.1.0
+  logger: ^1.3.0
 
 dev_dependencies:
   flutter_test:

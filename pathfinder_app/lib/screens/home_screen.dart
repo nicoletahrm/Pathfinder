@@ -1,5 +1,10 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/reusable_widgets/reusable_widget.dart';
 import 'package:pathfinder_app/screens/trail_details_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,87 +27,82 @@ class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   final TextEditingController _homeTextController = TextEditingController();
 
-  // Trail t = Trail(
-  //     id: 0,
-  //     title: "Cabana Malaiesti",
-  //     description: "Valea Glăjăriei - Cabana Malaiesti",
-  //     coverImage: "assets/images/image2.jpg",
-  //     time: const Duration(hours: 6),
-  //     routeLength: 12,
-  //     difficulty: Difficulty.easy,
-  //     altitude: 1720);
-
-  // Future addUserDetails() async {
-  //   await FirebaseFirestore.instance.collection("trail").add(t.toMap());
-  // }
+  TrailRepository trailRepository = TrailRepository();
+  late Future<List<Trail?>> trailsList;
+  late List<Trail?> trails;
 
   List<Trail> demoRoutes = [
     Trail(
-        id: 0,
-        title: "Cabana Malaiesti",
-        description: "Valea Glăjăriei - Cabana Malaiesti",
-        coverImage: "assets/images/image2.jpg",
-        time: const Duration(hours: 6),
-        routeLength: 12,
-        difficulty: Difficulty.easy,
-        altitude: 1720,
-        rating: 4.9),
+      title: "Cabana Malaiesti",
+      description: "Valea Glăjăriei - Cabana Malaiesti",
+      coverImage: "assets/images/image2.jpg",
+      //time: const Duration(hours: 6),
+      //routeLength: 12,
+      difficulty: Difficulty.easy,
+      //altitude: 1720,
+      // rating: 4.9
+    ),
     Trail(
-        id: 1,
-        title: "Vf. Omu",
-        description: "Padina - Vf. Omu",
-        coverImage: "assets/images/image2.jpg",
-        time: const Duration(hours: 9),
-        routeLength: 20,
-        difficulty: Difficulty.hard,
-        altitude: 1820,
-        rating: 4.0),
+      title: "Vf. Omu",
+      description: "Padina - Vf. Omu",
+      coverImage: "assets/images/image2.jpg",
+      //time: const Duration(hours: 9),
+      //routeLength: 20,
+      difficulty: Difficulty.hard,
+      // altitude: 1820,
+      // rating: 4.0
+    ),
     Trail(
-        id: 2,
-        title: "Vf. Piatra Mica",
-        description:
-            "Fantana lui Botorog - Poiana Zanoaga - Cabana Curmatura - Vf. Piara Mica",
-        coverImage: "assets/images/image3.jpg",
-        time: const Duration(hours: 9),
-        routeLength: 20,
-        difficulty: Difficulty.easy,
-        altitude: 1720,
-        rating: 4.0),
+      title: "Vf. Piatra Mica",
+      description:
+          "Fantana lui Botorog - Poiana Zanoaga - Cabana Curmatura - Vf. Piara Mica",
+      coverImage: "assets/images/image3.jpg",
+      //time: const Duration(hours: 9),
+      //routeLength: 20,
+      difficulty: Difficulty.easy,
+      //altitude: 1720,
+      //rating: 4.0
+    ),
     Trail(
-        id: 3,
-        title: "Vf. Ascutit",
-        description:
-            "Fantana lui Botorog - Poiana Zanoaga - Cabana Curmatura - Vf. Ascultit",
-        coverImage: "assets/images/image2.jpg",
-        time: const Duration(hours: 9),
-        routeLength: 20,
-        difficulty: Difficulty.easy,
-        altitude: 1720,
-        rating: 4.0),
+      title: "Vf. Ascutit",
+      description:
+          "Fantana lui Botorog - Poiana Zanoaga - Cabana Curmatura - Vf. Ascultit",
+      coverImage: "assets/images/image2.jpg",
+      //time: const Duration(hours: 9),
+      //routeLength: 20,
+      difficulty: Difficulty.easy,
+      //altitude: 1720,
+      // rating: 4.0
+    ),
     Trail(
-        id: 4,
-        title: "Vf. Piatra Mare",
-        description: "7 scari - Vf. Piara Mare",
-        coverImage: "assets/images/image3.jpg",
-        time: const Duration(hours: 9),
-        routeLength: 20,
-        difficulty: Difficulty.easy,
-        altitude: 1720,
-        rating: 4.0)
+      title: "Vf. Piatra Mare",
+      description: "7 scari - Vf. Piara Mare",
+      coverImage: "assets/images/image3.jpg",
+      //time: const Duration(hours: 9),
+      //routeLength: 20,
+      difficulty: Difficulty.easy,
+      //altitude: 1720,
+      //rating: 4.0
+    )
   ];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    //addUserDetails();
+    Future<void> init() async {
+      trailsList = trailRepository.getAllTrails();
+      trails = await trailRepository.getAllTrails();
+    }
+
+    init();
 
     return Scaffold(
         backgroundColor: kDefaultIconLightColor,
         body: SingleChildScrollView(
           child: Container(
               padding: const EdgeInsets.only(
-                  top: 64.0, bottom: 0.0, left: 32.0, right: 32.0),
+                  top: 80.0, bottom: 0.0, left: 20.0, right: 20.0),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,28 +137,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 reusableTextField("Search a place...", Icons.search_outlined,
                     false, _homeTextController, (() {})),
                 const SizedBox(
-                  height: 10.0,
+                  height: 30.0,
                 ),
                 SizedBox(
                   height: 590.0,
-                  //width: 900.0,
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
-                      itemCount: demoRoutes.length,
+                      itemCount: trails.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                             onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => TrailDetailsScreen(
                                         index: index,
-                                        title: demoRoutes[index].title,
-                                        description:
-                                            demoRoutes[index].description,
-                                        coverImage:
-                                            demoRoutes[index].coverImage,
-                                        difficulty:
-                                            demoRoutes[index].difficulty,
-                                        rating: demoRoutes[index].rating),
+                                        title: trails[index]!.title,
+                                        description: trails[index]!.description,
+                                        coverImage: trails[index]!.coverImage,
+                                        difficulty: trails[index]!.difficulty,
+                                        rating: trails[index]!.rating),
                                   ),
                                 ),
                             child: (Stack(children: <Widget>[
@@ -172,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(14.0),
                                       image: DecorationImage(
                                           image: AssetImage(
-                                              demoRoutes[index].coverImage),
+                                              trails[index]!.coverImage),
                                           fit: BoxFit.cover),
                                     )),
                               ),
@@ -224,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                          demoRoutes[index].difficulty.name,
+                                          trails[index]!.difficulty.name,
                                           style: const TextStyle(
                                               fontSize: 18.0,
                                               color: kLightColor,
@@ -235,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bottom: 25.0,
                                 left: 24.0,
                                 width: size.width / 2.6,
-                                child: Text(demoRoutes[index].title,
+                                child: Text(trails[index]!.title,
                                     style: const TextStyle(
                                         fontSize: 24.0,
                                         color: kLightColor,

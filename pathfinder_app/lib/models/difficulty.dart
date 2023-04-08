@@ -1,6 +1,6 @@
 enum Difficulty { easy, mediu, hard }
 
-Difficulty difficultyFromString(String value) {
+Difficulty stringToDifficulty(String value) {
   switch (value) {
     case 'easy':
       return Difficulty.easy;

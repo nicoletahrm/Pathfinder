@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       await SharedPreferences.getInstance();
                                   prefs.setString(
                                       "email", _emailTextController.text);
-                                      
+
                                   print(_emailTextController.text);
                                   try {
                                     FirebaseAuth.instance

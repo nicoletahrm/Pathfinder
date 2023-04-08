@@ -4,7 +4,7 @@ import 'package:pathfinder_app/utils/constant_colors.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
-  final String title, description, coverImage;
+  final String title, description, coverImage, distance;
   final double rating;
   final Difficulty difficulty;
 
@@ -14,6 +14,8 @@ class TrailDetailsScreen extends StatefulWidget {
       required this.title,
       required this.description,
       required this.coverImage,
+      required this.distance,
+      //required this.altitude,
       required this.difficulty,
       required this.rating});
 
@@ -107,6 +109,110 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             fontSize: 20.0,
                             color: kLightColor,
                           )),
+                    ),
+                    const SizedBox(
+                      height: 28.0,
+                    ),
+                    SizedBox(
+                      width: size.width / 1.2,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                const Text(
+                                  "Distance",
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: kLightColor,
+                                      fontFamily: "ProximaNovaBold",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  widget.distance.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20.0,
+                                      color: kLightColor,
+                                      fontFamily: "ProximaNovaBold",
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: const [
+                                Text(
+                                  "Altitude",
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: kLightColor,
+                                      fontFamily: "ProximaNovaBold",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  //widget.altitude.toString(),
+                                  "1200m",
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: kLightColor,
+                                      fontFamily: "ProximaNovaBold",
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Text(
+                                  "Difficulty",
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: kLightColor,
+                                      fontFamily: "ProximaNovaBold",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  widget.difficulty.name,
+                                  style: const TextStyle(
+                                      fontSize: 20.0,
+                                      color: kLightColor,
+                                      fontFamily: "ProximaNovaBold",
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ],
+                            ),
+                          ]),
+                    ),
+                    const SizedBox(
+                      height: 28.0,
+                    ),
+                    GestureDetector(
+                      onVerticalDragUpdate: (details) {
+                        int sensitivity = 8;
+                        if (details.delta.dy > sensitivity) {
+                          // Down Swipe
+                        } else if (details.delta.dy < -sensitivity) {
+                          // Up Swipe
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: size.width / 1.2,
+                            child: const Icon(Icons.arrow_upward,
+                                color: Colors.white),
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
                     ),
                   ],
                 ),

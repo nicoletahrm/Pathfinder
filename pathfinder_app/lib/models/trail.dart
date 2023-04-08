@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
-import 'package:pathfinder_app/models/review_model.dart';
 
 class Trail {
   final String title;
@@ -9,7 +8,7 @@ class Trail {
   //final List<String>? images;
   final double rating;
   //final Duration time;
-  //final double routeLength;
+  final String distance;
   final Difficulty difficulty;
   //final List<Review>? reviews;
   //final int altitude;
@@ -22,7 +21,7 @@ class Trail {
     required this.description,
     required this.coverImage,
     // required this.time,
-    //required this.routeLength,
+    required this.distance,
     required this.difficulty,
     //required this.altitude,
     //this.reviews,
@@ -35,7 +34,7 @@ class Trail {
       "description": description,
       "coverImage": coverImage,
       //"time": time,
-      //"routeLength": routeLength,
+      "distance": distance,
       "difficulty": difficulty,
       //"altitude": altitude,
       //"reviews": reviews,
@@ -51,16 +50,20 @@ class Trail {
       description: json["description"],
       coverImage: json["coverImage"],
       //time: json["time"],
-      //routeLength: json["routeLength"],
-      difficulty: difficultyFromString(json["difficulty"]),
+      distance: json["distance"],
+      difficulty: stringToDifficulty(json["difficulty"]),
       //altitude: json["altitude"],
       //reviews: json["reviews"],
-      rating: ratingFromString(json["rating"]),
+      rating: stringToDouble(json["rating"]),
       //images: json["images"],
     );
   }
 }
 
-double ratingFromString(String value) {
+double stringToDouble(String value) {
   return double.parse(value);
+}
+
+int stringToInt(String value) {
+  return int.parse(value);
 }

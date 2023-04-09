@@ -13,7 +13,7 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
+      height: 70.0,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -23,10 +23,10 @@ class CustomBottomNavBar extends StatelessWidget {
             color: const Color(0xFFDADADA).withOpacity(0.15),
           ),
         ],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        ),
+        // borderRadius: const BorderRadius.only(
+        //   topLeft: Radius.circular(40),
+        //   topRight: Radius.circular(40),
+        // ),
       ),
       child: SafeArea(
           top: true,

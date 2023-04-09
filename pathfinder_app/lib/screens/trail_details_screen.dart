@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
 
+import '../utils/colors_utils.dart';
+
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
-  final String title, description, coverImage, distance;
+  final String title, description, coverImage, distance, altitude;
   final double rating;
   final Difficulty difficulty;
 
@@ -15,7 +18,7 @@ class TrailDetailsScreen extends StatefulWidget {
       required this.description,
       required this.coverImage,
       required this.distance,
-      //required this.altitude,
+      required this.altitude,
       required this.difficulty,
       required this.rating});
 
@@ -142,8 +145,8 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                               ],
                             ),
                             Column(
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   "Altitude",
                                   style: TextStyle(
                                       fontSize: 20.0,
@@ -151,13 +154,12 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                       fontFamily: "ProximaNovaBold",
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10.0,
                                 ),
                                 Text(
-                                  //widget.altitude.toString(),
-                                  "1200m",
-                                  style: TextStyle(
+                                  widget.altitude,
+                                  style: const TextStyle(
                                       fontSize: 20.0,
                                       color: kLightColor,
                                       fontFamily: "ProximaNovaBold",
@@ -205,11 +207,39 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                       },
                       child: Align(
                           alignment: Alignment.center,
-                          child: SizedBox(
-                            width: size.width / 1.2,
-                            child: const Icon(Icons.arrow_upward,
-                                color: Colors.white),
-                          )),
+                          child: Container(
+                              width: MediaQuery.of(context).size.width / 1.5,
+                              margin: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.resolveWith(
+                                            (states) {
+                                      if (states
+                                          .contains(MaterialState.pressed)) {
+                                        return Colors.transparent;
+                                      }
+                                      return Colors.transparent;
+                                    }),
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0)))),
+                                child: Text('Details',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ))
+                          //SizedBox(
+                          //   width: size.width / 1.2,
+                          //   child: const Icon(Icons.arrow_upward,
+                          //       color: Colors.white),
+                          // )
+                          ),
                     ),
                     const SizedBox(
                       height: 20.0,

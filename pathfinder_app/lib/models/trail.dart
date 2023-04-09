@@ -11,7 +11,7 @@ class Trail {
   final String distance;
   final Difficulty difficulty;
   //final List<Review>? reviews;
-  //final int altitude;
+  final String altitude;
   //marcaj traseu
 
   Trail({
@@ -23,7 +23,7 @@ class Trail {
     // required this.time,
     required this.distance,
     required this.difficulty,
-    //required this.altitude,
+    required this.altitude,
     //this.reviews,
   });
 
@@ -36,7 +36,7 @@ class Trail {
       //"time": time,
       "distance": distance,
       "difficulty": difficulty,
-      //"altitude": altitude,
+      "altitude": altitude,
       //"reviews": reviews,
       "rating": rating,
       //"images": images,
@@ -52,7 +52,7 @@ class Trail {
       //time: json["time"],
       distance: json["distance"],
       difficulty: stringToDifficulty(json["difficulty"]),
-      //altitude: json["altitude"],
+      altitude: json["altitude"],
       //reviews: json["reviews"],
       rating: stringToDouble(json["rating"]),
       //images: json["images"],

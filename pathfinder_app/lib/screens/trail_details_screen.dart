@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
-
-import '../utils/colors_utils.dart';
+//import 'package:weather/weather.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
@@ -26,6 +25,8 @@ class TrailDetailsScreen extends StatefulWidget {
   // ignore: library_private_types_in_public_api
   _TrailDetailsScreenState createState() => _TrailDetailsScreenState();
 }
+
+//WeatherFactory wf = WeatherFactory("c749e6a3c73722d2e098f4f69bf3756e");
 
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   @override

@@ -49,7 +49,9 @@ dependencies:
   flutter_map: any
   flutter_map_marker_cluster: any
   shared_preferences: ^2.1.0
-  logger: ^1.3.0
+  flutter_screenutil:
+  weather:
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:

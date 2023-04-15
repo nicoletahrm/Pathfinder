@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TrailRepository trailRepository = TrailRepository();
   late Future<List<Trail>> trailsList;
-  late List<Trail> trails;
+  late List<Trail> trails = [];
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 reusableTextField("Search a place...", Icons.search_outlined,
                     false, _homeTextController, (() {})),
                 SizedBox(
-                  height: 590.0,
+                  height: 590,
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: trails.length,

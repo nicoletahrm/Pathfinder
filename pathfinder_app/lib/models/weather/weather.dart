@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'current.dart';
 import 'daily.dart';
-import 'minutely.dart';
 
 class Weather {
   double? lat;
@@ -10,7 +8,6 @@ class Weather {
   String? timezone;
   int? timezoneOffset;
   Current? current;
-  List<Minutely>? minutely;
   List<Daily>? daily;
 
   Weather({
@@ -24,7 +21,7 @@ class Weather {
 
   @override
   String toString() {
-    return 'Weather(lat: $lat, lon: $lon, timezone: $timezone, timezoneOffset: $timezoneOffset, current: $current, minutely: $minutely, daily: $daily)';
+    return 'Weather(lat: $lat, lon: $lon, timezone: $timezone, timezoneOffset: $timezoneOffset, current: $current, daily: $daily)';
   }
 
   factory Weather.fromFrom(Map<String, dynamic> data) => Weather(
@@ -46,19 +43,14 @@ class Weather {
         'timezone': timezone,
         'timezone_offset': timezoneOffset,
         'current': current?.toFrom(),
-        'minutely': minutely?.map((e) => e.toFrom()).toList(),
         'daily': daily?.map((e) => e.toFrom()).toList(),
       };
 
-  /// `dart:convert`
-  ///
   /// Parses the string and returns the resulting Json object as [Weather].
   factory Weather.fromJson(String data) {
     return Weather.fromFrom(json.decode(data) as Map<String, dynamic>);
   }
 
-  /// `dart:convert`
-  ///
   /// Converts [Weather] to a JSON string.
   String toJson() => json.encode(toFrom());
 }

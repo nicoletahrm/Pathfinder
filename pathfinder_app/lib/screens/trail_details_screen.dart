@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pathfinder_app/controllers/location_controller.dart';
+import 'package:pathfinder_app/controllers/global_controller.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
@@ -28,7 +28,7 @@ class TrailDetailsScreen extends StatefulWidget {
 }
 
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
-  final LocationController locationController = LocationController();
+  final GlobalController locationController = GlobalController();
   late List<Daily> weatherDataDaily = [];
 
   @override
@@ -245,12 +245,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
-
-                                  // dynamic weather = locationController
-                                  //     .getWeatherByLatAndLon(45.9432, 24.9668);
-                                  // double temp = weather['main']['temp'];
-                                  // print(temp);
-                                  //someFunction();
                                 },
                                 style: ButtonStyle(
                                     backgroundColor:
@@ -288,11 +282,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
     List<Daily> weather =
         await locationController.getWeatherByLatAndLon(45.9432, 24.9668);
 
-    print(weather);
+    //print(weather);
     return weather;
-  }
-
-  f(double temp) {
-    return temp.toInt();
   }
 }

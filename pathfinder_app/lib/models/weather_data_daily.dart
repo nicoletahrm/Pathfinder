@@ -12,67 +12,46 @@ class WeatherDataDaily {
 }
 
 class Daily {
-  int? dt;
   int? sunset;
   Temp? temp;
-  int? pressure;
-  int? humidity;
-  double? dewPoint;
   double? windSpeed;
-  int? windDeg;
-  double? windGust;
   List<Weather>? weather;
   int? clouds;
-  double? pop;
-  double? uvi;
   double? rain;
 
   Daily({
-    this.dt,
     this.sunset,
     this.temp,
-    this.humidity,
     this.windSpeed,
     this.weather,
     this.clouds,
-    this.pop,
-    this.uvi,
     this.rain,
   });
 
   @override
   String toString() {
-    return 'Daily(dt: $dt, sunset: $sunset, temp: $temp, pressure: $pressure, humidity: $humidity, dewPoint: $dewPoint, windSpeed: $windSpeed, windDeg: $windDeg, windGust: $windGust, weather: $weather, clouds: $clouds, pop: $pop, uvi: $uvi, rain: $rain)';
+    return 'Daily(sunset: $sunset, temp: $temp, windSpeed: $windSpeed, weather: $weather, clouds: $clouds, rain: $rain)';
   }
 
   factory Daily.fromJson(Map<String, dynamic> data) => Daily(
-        dt: data['dt'] as int?,
         sunset: data['sunset'] as int?,
         temp: data['temp'] == null
             ? null
-            : Temp.fromFrom(data['temp'] as Map<String, dynamic>),
-        humidity: data['humidity'] as int?,
+            : Temp.fromJson(data['temp'] as Map<String, dynamic>),
         windSpeed: (data['wind_speed'] as num?)?.toDouble(),
         weather: (data['weather'] as List<dynamic>?)
             ?.map((e) => Weather.fromFrom(e as Map<String, dynamic>))
             .toList(),
         clouds: data['clouds'] as int?,
-        pop: (data['pop'] as num?)?.toDouble(),
-        uvi: (data['uvi'] as num?)?.toDouble(),
         rain: (data['rain'] as num?)?.toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
-        'dt': dt,
         'sunset': sunset,
-        'temp': temp?.toFrom(),
-        'pressure': pressure,
-        'humidity': humidity,
+        'temp': temp?.toJson(),
         'wind_speed': windSpeed,
         'weather': weather?.map((e) => e.toFrom()).toList(),
         'clouds': clouds,
-        'pop': pop,
-        'uvi': uvi,
         'rain': rain,
       };
 }

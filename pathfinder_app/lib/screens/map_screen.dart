@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../reusable_widgets/custom_nav_bar.dart';
-import '../controllers/location_controller.dart';
+import '../controllers/global_controller.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -13,8 +13,8 @@ class MapScreen extends StatefulWidget {
 
 class MapScreenState extends State<MapScreen> {
   late GoogleMapController _mapController;
-  final LocationController _locationController =
-      Get.put(LocationController(), permanent: true);
+  final GlobalController _locationController =
+      Get.put(GlobalController(), permanent: true);
 
   static const CameraPosition initialCameraPosition = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),

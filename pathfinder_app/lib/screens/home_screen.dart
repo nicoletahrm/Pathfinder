@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
@@ -31,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size = MediaQuery.of(context).size;
 
     Future<void> init() async {
-      //trailsList = trailRepository.getAllTrails();
       trails = await trailRepository.getAllTrails();
     }
 
@@ -63,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           SharedPreferences pref =
                               await SharedPreferences.getInstance();
                           pref.remove("email");
-                          // ignore: use_build_context_synchronously
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (_) {
                             return const LoginScreen();

@@ -1,16 +1,11 @@
 import 'dart:convert';
-
 import 'package:geolocator/geolocator.dart';
-import 'package:pathfinder_app/api/fetch_weather.dart';
-
 import '../api/api_key.dart';
 import '../models/weather_data.dart';
 import '../models/weather_data_daily.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/weather_model.dart';
-
-class LocationController {
+class GlobalController {
   // bool _isLoading = true;
   late double _latitude = 0.0;
   late double _longitude = 0.0;
@@ -66,26 +61,11 @@ class LocationController {
   }
 
   Future<List<Daily>> getWeatherByLatAndLon(double lat, double lon) async {
-    print("hehe");
-    //var weatherDataDaily;
-    List<Daily> data = [];
-    //FetchWeatherAPI().getWeartherDataFromUrl(lat, lon).then((value) async {
-    //print(value?.getWeatherDataDaily()?.daily);
-
-    //weatherDataDaily = value?.getWeatherDataDaily()?.daily;
-
-    var weatherData = await getWeathherData(lat, lon);
-
-    data = weatherData.daily;
-
-    //print(data[0].temp);
-    //});
-
-    return data;
-    //return weatherDataDaily;
+    var weatherData = await getWeatherData(lat, lon);
+    return weatherData.daily;
   }
 
-  Future<WeatherDataDaily> getWeathherData(double lat, double lon) async {
+  Future<WeatherDataDaily> getWeatherData(double lat, double lon) async {
     WeatherDataDaily? weatherData;
 
     var response = await http.get(Uri.parse(apiURL(lat, lon)));

@@ -1,7 +1,9 @@
-import 'package:pathfinder_app/models/weather_model.dart';
+import 'package:pathfinder_app/models/weather_data_daily.dart';
 
 class WeatherData {
-  final WeatherDataCurrent current;
+  final WeatherDataDaily? daily;
 
-  WeatherData(this.current);
+  WeatherData(this.daily);
+
+  WeatherDataDaily? getWeatherDataDaily() => daily;
 }

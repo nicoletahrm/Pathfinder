@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TrailRepository trailRepository = TrailRepository();
   late Future<List<Trail>> trailsList;
-  late List<Trail> trails = [];
+  late List<Trail> trails;
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +86,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => TrailDetailsScreen(
-                                        index: index,
-                                        title: trails[index].title,
-                                        description: trails[index].description,
-                                        coverImage: trails[index].coverImage,
-                                        distance: trails[index].distance,
-                                        altitude: trails[index].altitude,
-                                        difficulty: trails[index].difficulty,
-                                        rating: trails[index].rating),
+                                      index: index,
+                                      title: trails[index].title,
+                                      description: trails[index].description,
+                                      coverImage: trails[index].coverImage,
+                                      distance: trails[index].distance,
+                                      altitude: trails[index].altitude,
+                                      difficulty: trails[index].difficulty,
+                                      rating: trails[index].rating,
+                                    ),
                                   ),
                                 ),
                             child: (Stack(children: <Widget>[

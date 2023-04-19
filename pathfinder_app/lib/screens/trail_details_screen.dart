@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pathfinder_app/controllers/location_controller.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
+import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
-//import 'package:weather/weather.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
@@ -26,12 +27,19 @@ class TrailDetailsScreen extends StatefulWidget {
   _TrailDetailsScreenState createState() => _TrailDetailsScreenState();
 }
 
-//WeatherFactory wf = WeatherFactory("c749e6a3c73722d2e098f4f69bf3756e");
-
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
+  final LocationController locationController = LocationController();
+  late List<Daily> weatherDataDaily = [];
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    Future<void> init() async {
+      weatherDataDaily = (await someFunction())!;
+    }
+
+    init();
 
     return Scaffold(
         backgroundColor: kLightColor,
@@ -193,6 +201,29 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             ),
                           ]),
                     ),
+                    Column(
+                      children: [
+                        const Text(
+                          "vremea",
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              color: kLightColor,
+                              fontFamily: "ProximaNovaBold",
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          '${weatherDataDaily[0].temp!.day!.round()}º',
+                          style: const TextStyle(
+                              fontSize: 20.0,
+                              color: kLightColor,
+                              fontFamily: "ProximaNovaBold",
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       height: 28.0,
                     ),
@@ -214,6 +245,12 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
+
+                                  // dynamic weather = locationController
+                                  //     .getWeatherByLatAndLon(45.9432, 24.9668);
+                                  // double temp = weather['main']['temp'];
+                                  // print(temp);
+                                  //someFunction();
                                 },
                                 style: ButtonStyle(
                                     backgroundColor:
@@ -234,13 +271,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                         fontSize: 18,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold)),
-                              ))
-                          //SizedBox(
-                          //   width: size.width / 1.2,
-                          //   child: const Icon(Icons.arrow_upward,
-                          //       color: Colors.white),
-                          // )
-                          ),
+                              ))),
                     ),
                     const SizedBox(
                       height: 20.0,
@@ -251,5 +282,17 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
             )
           ],
         ))));
+  }
+
+  Future<List<Daily>?> someFunction() async {
+    List<Daily> weather =
+        await locationController.getWeatherByLatAndLon(45.9432, 24.9668);
+
+    print(weather);
+    return weather;
+  }
+
+  f(double temp) {
+    return temp.toInt();
   }
 }

@@ -1,19 +1,24 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:pathfinder_app/api/api_key.dart';
 import 'package:pathfinder_app/models/weather_model.dart';
 
 import '../models/weather_data.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+
+import '../models/weather_data_daily.dart';
 
 class FetchWeatherAPI {
   WeatherData? weatherData;
 
-  Future<WeatherData?> processData(lat, lon) async {
+  Future<WeatherData?> getWeartherDataFromUrl(lat, lon) async {
     var response = await http.get(Uri.parse(apiURL(lat, lon)));
     var jsonString = jsonDecode(response.body);
-    weatherData = WeatherData(WeatherDataCurrent.fromJson(jsonString));
+
+    // weatherData = WeatherData(WeatherDataCurrent.fromJson(jsonString),
+    //     WeatherDataDaily.fromJson(jsonString));
+
     return weatherData;
   }
 }

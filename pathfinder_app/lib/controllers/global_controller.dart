@@ -15,7 +15,7 @@ class GlobalController {
 
   onInit() {
     //if (_isLoading == true) {
-    //getLocation();
+    getLocation();
     //}
   }
 

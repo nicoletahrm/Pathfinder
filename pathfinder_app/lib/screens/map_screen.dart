@@ -16,10 +16,29 @@ class MapScreenState extends State<MapScreen> {
   final GlobalController _locationController =
       Get.put(GlobalController(), permanent: true);
 
-  static const CameraPosition initialCameraPosition = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14,
-  );
+  late double lat, lon;
+
+  init() {
+    _locationController.onInit();
+
+    markers.clear();
+
+    markers.add(Marker(
+        markerId: const MarkerId('currentLocation'),
+        position: LatLng(_locationController.getLatitude(),
+            _locationController.getLongitude())));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  late CameraPosition initialCameraPosition = CameraPosition(
+      target: LatLng(_locationController.getLatitude(),
+          _locationController.getLongitude()),
+      zoom: 15);
 
   Set<Marker> markers = {};
 
@@ -33,23 +52,8 @@ class MapScreenState extends State<MapScreen> {
           zoomControlsEnabled: true,
           onMapCreated: (GoogleMapController mapController) {
             _mapController = mapController;
-            _locationController.onInit();
-            _mapController.animateCamera(CameraUpdate.newCameraPosition(
-                CameraPosition(
-                    target: LatLng(_locationController.getLatitude(),
-                        _locationController.getLongitude()),
-                    zoom: 15)));
-
-            markers.clear();
-
-            markers.add(Marker(
-                markerId: const MarkerId('currentLocation'),
-                position: LatLng(_locationController.getLatitude(),
-                    _locationController.getLongitude())));
           },
         ),
         bottomNavigationBar: const CustomBottomNavBar());
   }
-
-  getLocation() {}
 }

@@ -257,9 +257,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                       },
                       child: Align(
                           alignment: Alignment.center,
-                          child: Container(
+                          child: SizedBox(
                               width: MediaQuery.of(context).size.width / 1.5,
-                              margin: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                              //margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();

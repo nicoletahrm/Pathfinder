@@ -19,7 +19,7 @@ class DailyWeatherWidget extends StatelessWidget {
         padding:
             const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
         child: GlassmorphicContainer(
-            margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             height: 90.0,
             width: 90.0,
             blur: -1.0,

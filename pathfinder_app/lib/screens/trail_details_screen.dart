@@ -33,20 +33,33 @@ class TrailDetailsScreen extends StatefulWidget {
 
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final GlobalController locationController = GlobalController();
-  late List<Daily> weatherDataDaily = [];
+  late List<Daily> weatherDataDaily;
 
   Future<void> init() async {
-    weatherDataDaily = await getWeather();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    init();
+    weatherDataDaily = await getWeather(widget.latitude, widget.longitude);
+    //weatherDataDaily = await getWeather(45.5526, 25.4534);
   }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: init(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting for the initialization to complete.
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Show an error message if the initialization failed.
+          return Text('Failed to initialize trails: ${snapshot.error}');
+        } else {
+          // Build the UI with the initialized trails list.
+          return buildTrail(context);
+        }
+      },
+    );
+  }
+
+  Widget buildTrail(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -59,6 +72,21 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
               tag: "trail${widget.index}",
               child: Image.asset(widget.coverImage,
                   height: size.height, width: size.width, fit: BoxFit.cover),
+            ),
+            SizedBox(
+              height: 30.0,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: weatherDataDaily.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Stack(children: <Widget>[
+                      Hero(
+                          tag: "weatherDataDaily$index",
+                          child: Text(
+                            '${weatherDataDaily[index].temp!.day!.round()}º',
+                          )),
+                    ]);
+                  }),
             ),
             Container(
                 height: size.height,
@@ -232,29 +260,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        const Text(
-                          "latitude",
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              color: kLightColor,
-                              fontFamily: "ProximaNovaBold",
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          widget.latitude.toString(),
-                          style: const TextStyle(
-                              fontSize: 20.0,
-                              color: kLightColor,
-                              fontFamily: "ProximaNovaBold",
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    ),
                     const SizedBox(
                       height: 28.0,
                     ),
@@ -309,9 +314,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
         ))));
   }
 
-  Future<List<Daily>> getWeather() async {
+  Future<List<Daily>> getWeather(double lat, double lon) async {
     List<Daily> weather =
-        await locationController.getWeatherByLatAndLon(45.9432, 24.9668);
+        await locationController.getWeatherByLatAndLon(lat, lon);
 
     //print(weather);
     return weather;

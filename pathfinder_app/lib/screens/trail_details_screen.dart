@@ -7,10 +7,12 @@ import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
 
+import '../reusable_widgets/daily_weather_widget.dart';
+
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
-  final String title, description, coverImage, distance, altitude;
-  final double rating, latitude, longitude;
+  final String title, description, coverImage;
+  final double rating, distance, altitude, latitude, longitude;
   final Difficulty difficulty;
 
   const TrailDetailsScreen({
@@ -73,21 +75,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
               child: Image.asset(widget.coverImage,
                   height: size.height, width: size.width, fit: BoxFit.cover),
             ),
-            SizedBox(
-              height: 30.0,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: weatherDataDaily.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Stack(children: <Widget>[
-                      Hero(
-                          tag: "weatherDataDaily$index",
-                          child: Text(
-                            '${weatherDataDaily[index].temp!.day!.round()}º',
-                          )),
-                    ]);
-                  }),
-            ),
             Container(
                 height: size.height,
                 width: size.width,
@@ -118,6 +105,8 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                 )),
             Positioned(
               bottom: 0.0,
+              right: 10.0,
+              left: 10.0,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: 16.0, horizontal: 28.0),
@@ -125,7 +114,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(widget.title,
                               style: const TextStyle(
@@ -150,17 +139,17 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SizedBox(
-                      width: size.width / 1.1,
-                      child: Text(widget.description,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            color: kLightColor,
-                          )),
-                    ),
-                    const SizedBox(
-                      height: 28.0,
-                    ),
+                    // SizedBox(
+                    //   width: size.width / 1.1,
+                    //   child: Text(widget.description,
+                    //       style: const TextStyle(
+                    //         fontSize: 20.0,
+                    //         color: kLightColor,
+                    //       )),
+                    // ),
+                    // const SizedBox(
+                    //   height: 15.0,
+                    // ),
                     SizedBox(
                       width: size.width / 1.2,
                       child: Row(
@@ -180,7 +169,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                   height: 10.0,
                                 ),
                                 Text(
-                                  widget.distance.toString(),
+                                  '${widget.distance.round().toString()}km',
                                   style: const TextStyle(
                                       fontSize: 20.0,
                                       color: kLightColor,
@@ -203,7 +192,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                   height: 10.0,
                                 ),
                                 Text(
-                                  widget.altitude,
+                                  '${widget.altitude.round().toString()}m',
                                   style: const TextStyle(
                                       fontSize: 20.0,
                                       color: kLightColor,
@@ -237,28 +226,21 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             ),
                           ]),
                     ),
-                    Column(
-                      children: [
-                        const Text(
-                          "vremea",
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              color: kLightColor,
-                              fontFamily: "ProximaNovaBold",
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          '${weatherDataDaily[0].temp!.day!.round()}º',
-                          style: const TextStyle(
-                              fontSize: 20.0,
-                              color: kLightColor,
-                              fontFamily: "ProximaNovaBold",
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 28.0,
+                    ),
+                    SizedBox(
+                      height: 80.0,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: weatherDataDaily.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Stack(children: <Widget>[
+                              DailyWeatherWidget(
+                                  index: index, daily: weatherDataDaily[index]),
+                            ]);
+                          }),
                     ),
                     const SizedBox(
                       height: 28.0,

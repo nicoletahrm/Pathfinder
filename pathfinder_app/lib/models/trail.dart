@@ -6,9 +6,9 @@ class Trail {
   final String description;
   final String coverImage;
   final double rating;
-  final String distance;
+  final double distance;
   final Difficulty difficulty;
-  final String altitude;
+  final double altitude;
   final double latitude;
   final double longitude;
   //marcaj traseu
@@ -46,9 +46,9 @@ class Trail {
       title: json["title"],
       description: json["description"],
       coverImage: json["coverImage"],
-      distance: json["distance"],
+      distance: stringToDouble(json["distance"]),
       difficulty: stringToDifficulty(json["difficulty"]),
-      altitude: json["altitude"],
+      altitude: stringToDouble(json["altitude"]),
       rating: stringToDouble(json["rating"]),
       latitude: stringToDouble(json["latitude"]),
       longitude: stringToDouble(json["longitude"]),

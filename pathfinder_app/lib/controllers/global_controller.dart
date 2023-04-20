@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import '../api/api_key.dart';
-import '../models/weather_data.dart';
 import '../models/weather_data_daily.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,8 +8,6 @@ class GlobalController {
   // bool _isLoading = true;
   late double _latitude = 0.0;
   late double _longitude = 0.0;
-
-  late WeatherData weatherData;
 
   //bool checkLoading() => _isLoading;
   double getLatitude() => _latitude;
@@ -48,15 +45,6 @@ class GlobalController {
         .then((value) {
       _latitude = value.latitude;
       _longitude = value.longitude;
-      //print(_latitude);
-      //print(_longitude);
-
-      // return FetchWeatherAPI()
-      //     .getDataByLatAndLon(value.latitude, value.longitude)
-      //     .then((value) {
-      //   //weatherData.value = value;
-      //   _isLoading = false;
-      // });
     });
   }
 

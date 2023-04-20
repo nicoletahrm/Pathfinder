@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/controllers/global_controller.dart';
@@ -8,22 +10,24 @@ import 'package:pathfinder_app/utils/constant_colors.dart';
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
   final String title, description, coverImage, distance, altitude;
-  final double rating;
+  final double rating, latitude, longitude;
   final Difficulty difficulty;
 
-  const TrailDetailsScreen(
-      {super.key,
-      required this.index,
-      required this.title,
-      required this.description,
-      required this.coverImage,
-      required this.distance,
-      required this.altitude,
-      required this.difficulty,
-      required this.rating});
+  const TrailDetailsScreen({
+    super.key,
+    required this.index,
+    required this.title,
+    required this.description,
+    required this.coverImage,
+    required this.distance,
+    required this.altitude,
+    required this.difficulty,
+    required this.rating,
+    required this.latitude,
+    required this.longitude,
+  });
 
   @override
-  // ignore: library_private_types_in_public_api
   _TrailDetailsScreenState createState() => _TrailDetailsScreenState();
 }
 
@@ -31,15 +35,19 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final GlobalController locationController = GlobalController();
   late List<Daily> weatherDataDaily = [];
 
+  Future<void> init() async {
+    weatherDataDaily = await getWeather();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    Future<void> init() async {
-      weatherDataDaily = (await someFunction())!;
-    }
-
-    init();
 
     return Scaffold(
         backgroundColor: kLightColor,
@@ -224,6 +232,29 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         ),
                       ],
                     ),
+                    Column(
+                      children: [
+                        const Text(
+                          "latitude",
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              color: kLightColor,
+                              fontFamily: "ProximaNovaBold",
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          widget.latitude.toString(),
+                          style: const TextStyle(
+                              fontSize: 20.0,
+                              color: kLightColor,
+                              fontFamily: "ProximaNovaBold",
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       height: 28.0,
                     ),
@@ -278,7 +309,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
         ))));
   }
 
-  Future<List<Daily>?> someFunction() async {
+  Future<List<Daily>> getWeather() async {
     List<Daily> weather =
         await locationController.getWeatherByLatAndLon(45.9432, 24.9668);
 

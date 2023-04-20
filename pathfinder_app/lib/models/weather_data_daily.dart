@@ -6,6 +6,8 @@ class WeatherDataDaily {
 
   WeatherDataDaily({required this.daily});
 
+  List<Daily> getWeatherDataDaily() => daily;
+
   factory WeatherDataDaily.fromJson(Map<String, dynamic> json) =>
       WeatherDataDaily(
           daily: List<Daily>.from(json['daily'].map((e) => Daily.fromJson(e))));

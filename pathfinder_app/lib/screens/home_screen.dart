@@ -23,20 +23,41 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   final TextEditingController _homeTextController = TextEditingController();
+  final TrailRepository trailRepository = TrailRepository();
+  late List<Trail>? trails = [];
 
-  TrailRepository trailRepository = TrailRepository();
-  late Future<List<Trail>> trailsList;
-  late List<Trail> trails;
+  Future<void> init() async {
+    trails = await trailRepository.getAllTrails();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: init(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting for the initialization to complete.
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Show an error message if the initialization failed.
+          return Text('Failed to initialize trails: ${snapshot.error}');
+        } else {
+          // Build the UI with the initialized trails list.
+          return buildWithTrails(context);
+        }
+      },
+    );
+  }
+
+  //@override
+  Widget buildWithTrails(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    Future<void> init() async {
-      trails = await trailRepository.getAllTrails();
-    }
-
-    init();
 
     return Scaffold(
         backgroundColor: kDefaultIconLightColor,
@@ -80,20 +101,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 590,
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
-                      itemCount: trails.length,
+                      itemCount: trails!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                             onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => TrailDetailsScreen(
                                       index: index,
-                                      title: trails[index].title,
-                                      description: trails[index].description,
-                                      coverImage: trails[index].coverImage,
-                                      distance: trails[index].distance,
-                                      altitude: trails[index].altitude,
-                                      difficulty: trails[index].difficulty,
-                                      rating: trails[index].rating,
+                                      title: trails![index].title,
+                                      description: trails![index].description,
+                                      coverImage: trails![index].coverImage,
+                                      distance: trails![index].distance,
+                                      altitude: trails![index].altitude,
+                                      difficulty: trails![index].difficulty,
+                                      rating: trails![index].rating,
+                                      latitude: trails![index].latitude,
+                                      longitude: trails![index].longitude,
                                     ),
                                   ),
                                 ),
@@ -108,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(14.0),
                                       image: DecorationImage(
                                           image: AssetImage(
-                                              trails[index].coverImage),
+                                              trails![index].coverImage),
                                           fit: BoxFit.cover),
                                     )),
                               ),
@@ -159,7 +182,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     child: Align(
                                       alignment: Alignment.center,
-                                      child: Text(trails[index].difficulty.name,
+                                      child: Text(
+                                          trails![index].difficulty.name,
                                           style: const TextStyle(
                                               fontSize: 18.0,
                                               color: kLightColor,
@@ -170,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bottom: 25.0,
                                 left: 24.0,
                                 width: size.width / 2.6,
-                                child: Text(trails[index].title,
+                                child: Text(trails![index].title,
                                     style: const TextStyle(
                                         fontSize: 24.0,
                                         color: kLightColor,

@@ -22,12 +22,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  final TextEditingController _homeTextController = TextEditingController();
+  final TextEditingController _searchTextController = TextEditingController();
   final TrailRepository trailRepository = TrailRepository();
   late List<Trail> trails = [];
 
+  late List<Trail> filteredTrails = [];
+
+  late String query;
+
   Future<void> init() async {
-    trails = await trailRepository.getAllTrails();
+    filteredTrails = await trailRepository.getAllTrails();
+    trails = filteredTrails;
+    query = '';
   }
 
   @override
@@ -96,116 +102,132 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 30.0,
                 ),
                 reusableTextField("Search a place...", Icons.search_outlined,
-                    false, _homeTextController, (() {})),
+                    false, _searchTextController, () {
+                  searchTrailByTitle(_searchTextController.text);
+                }),
                 SizedBox(
                   height: 590,
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: trails.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => TrailDetailsScreen(
-                                      index: index,
-                                      title: trails[index].title,
-                                      description: trails[index].description,
-                                      coverImage: trails[index].coverImage,
-                                      distance: trails[index].distance,
-                                      altitude: trails[index].altitude,
-                                      difficulty: trails[index].difficulty,
-                                      rating: trails[index].rating,
-                                      latitude: trails[index].latitude,
-                                      longitude: trails[index].longitude,
+                  child: Expanded(
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: trails.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => TrailDetailsScreen(
+                                        index: index,
+                                        title: trails[index].title,
+                                        description: trails[index].description,
+                                        coverImage: trails[index].coverImage,
+                                        distance: trails[index].distance,
+                                        altitude: trails[index].altitude,
+                                        difficulty: trails[index].difficulty,
+                                        rating: trails[index].rating,
+                                        latitude: trails[index].latitude,
+                                        longitude: trails[index].longitude,
+                                      ),
                                     ),
                                   ),
+                              child: (Stack(children: <Widget>[
+                                Hero(
+                                  tag: "trail$index",
+                                  child: Container(
+                                      height: 160.0,
+                                      width: 700.0,
+                                      margin: const EdgeInsets.only(top: 20.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(14.0),
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                trails[index].coverImage),
+                                            fit: BoxFit.cover),
+                                      )),
                                 ),
-                            child: (Stack(children: <Widget>[
-                              Hero(
-                                tag: "trail$index",
-                                child: Container(
+                                Container(
                                     height: 160.0,
                                     width: 700.0,
-                                    margin: const EdgeInsets.only(top: 20.0),
+                                    margin: const EdgeInsets.only(top: 24.0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(14.0),
-                                      image: DecorationImage(
-                                          image: AssetImage(
-                                              trails[index].coverImage),
-                                          fit: BoxFit.cover),
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          Colors.black87,
+                                        ],
+                                        stops: [
+                                          0.6,
+                                          0.9,
+                                        ],
+                                      ),
                                     )),
-                              ),
-                              Container(
-                                  height: 160.0,
-                                  width: 700.0,
-                                  margin: const EdgeInsets.only(top: 24.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14.0),
-                                    gradient: const LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black87,
-                                      ],
-                                      stops: [
-                                        0.6,
-                                        0.9,
-                                      ],
-                                    ),
-                                  )),
-                              Positioned(
-                                bottom: 24.0,
-                                right: 24.0,
-                                child: GlassmorphicContainer(
-                                    height: 32.0,
-                                    width: 75.0,
-                                    blur: 2.0,
-                                    border: 0.0,
-                                    borderRadius: 8.0,
-                                    alignment: Alignment.center,
-                                    linearGradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        kLightColor.withOpacity(0.4),
-                                        kLightColor.withOpacity(0.4),
-                                      ],
-                                    ),
-                                    borderGradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        kLightColor.withOpacity(0.4),
-                                        kLightColor.withOpacity(0.4),
-                                      ],
-                                    ),
-                                    child: Align(
+                                Positioned(
+                                  bottom: 24.0,
+                                  right: 24.0,
+                                  child: GlassmorphicContainer(
+                                      height: 32.0,
+                                      width: 75.0,
+                                      blur: 2.0,
+                                      border: 0.0,
+                                      borderRadius: 8.0,
                                       alignment: Alignment.center,
-                                      child: Text(
-                                          trails[index].difficulty.name,
-                                          style: const TextStyle(
-                                              fontSize: 18.0,
-                                              color: kLightColor,
-                                              fontWeight: FontWeight.bold)),
-                                    )),
-                              ),
-                              Positioned(
-                                bottom: 25.0,
-                                left: 24.0,
-                                width: size.width / 2.6,
-                                child: Text(trails[index].title,
-                                    style: const TextStyle(
-                                        fontSize: 24.0,
-                                        color: kLightColor,
-                                        fontFamily: "ProximaNovaBold",
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ])));
-                      }),
+                                      linearGradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          kLightColor.withOpacity(0.4),
+                                          kLightColor.withOpacity(0.4),
+                                        ],
+                                      ),
+                                      borderGradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          kLightColor.withOpacity(0.4),
+                                          kLightColor.withOpacity(0.4),
+                                        ],
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                            trails[index].difficulty.name,
+                                            style: const TextStyle(
+                                                fontSize: 18.0,
+                                                color: kLightColor,
+                                                fontWeight: FontWeight.bold)),
+                                      )),
+                                ),
+                                Positioned(
+                                  bottom: 25.0,
+                                  left: 24.0,
+                                  width: size.width / 2.6,
+                                  child: Text(trails[index].title,
+                                      style: const TextStyle(
+                                          fontSize: 24.0,
+                                          color: kLightColor,
+                                          fontFamily: "ProximaNovaBold",
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ])));
+                        }),
+                  ),
                 )
               ])),
         ),
         bottomNavigationBar: const CustomBottomNavBar());
+  }
+
+  dynamic searchTrailByTitle(String query) async {
+    setState(() {
+      trails = filteredTrails.where((trail) {
+        final trailTitle = trail.title.toLowerCase();
+        final input = query.toLowerCase();
+
+        return trailTitle.contains(input);
+      }).toList();
+    });
   }
 }

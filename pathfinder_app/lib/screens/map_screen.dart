@@ -12,11 +12,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen> {
-  late GoogleMapController _mapController;
+  //late GoogleMapController _mapController;
   final GlobalController _locationController =
       Get.put(GlobalController(), permanent: true);
-
-  late double lat, lon;
 
   init() {
     _locationController.onInit();
@@ -48,11 +46,12 @@ class MapScreenState extends State<MapScreen> {
         body: GoogleMap(
           mapType: MapType.normal,
           initialCameraPosition: initialCameraPosition,
-          markers: markers,
+          // markers: markers,
           zoomControlsEnabled: true,
           onMapCreated: (GoogleMapController mapController) {
-            _mapController = mapController;
+            // _mapController = mapController;
           },
+          myLocationEnabled: true,
         ),
         bottomNavigationBar: const CustomBottomNavBar());
   }

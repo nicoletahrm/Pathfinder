@@ -39,7 +39,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
 
   Future<void> init() async {
     weatherDataDaily = await getWeather(widget.latitude, widget.longitude);
-    //weatherDataDaily = await getWeather(45.5526, 25.4534);
   }
 
   @override

@@ -13,7 +13,7 @@ Transform logo(String imageName) {
 }
 
 TextField reusableTextField(String text, IconData icon, bool isPasswordType,
-    TextEditingController controller, Function() onChanged) {
+    TextEditingController controller, onChanged) {
   return TextField(
     onChanged: onChanged(),
     controller: controller,

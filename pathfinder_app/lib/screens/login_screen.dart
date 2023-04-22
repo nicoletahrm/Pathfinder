@@ -33,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
+  // ignore: unused_field
   String _errorMessage = "";
 
   void validateField(String val, String field) {

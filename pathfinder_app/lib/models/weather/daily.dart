@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'temp.dart';
-import 'weather.dart';
 
 class Daily {
   int? sunset;

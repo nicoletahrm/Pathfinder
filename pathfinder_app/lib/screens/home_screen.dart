@@ -49,7 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the initialization to complete.
-          return const CircularProgressIndicator();
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: kButtonColor,
+                backgroundColor: Colors.black12.withOpacity(0.5),
+              ),
+            ],
+          ));
         } else if (snapshot.hasError) {
           // Show an error message if the initialization failed.
           return Text('Failed to initialize trails: ${snapshot.error}');

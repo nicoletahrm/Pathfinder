@@ -46,10 +46,10 @@ class MapScreenState extends State<MapScreen> {
         body: GoogleMap(
           mapType: MapType.normal,
           initialCameraPosition: initialCameraPosition,
-          // markers: markers,
+          //markers: markers,
           zoomControlsEnabled: true,
           onMapCreated: (GoogleMapController mapController) {
-            // _mapController = mapController;
+            //_mapController = mapController;
           },
           myLocationEnabled: true,
         ),

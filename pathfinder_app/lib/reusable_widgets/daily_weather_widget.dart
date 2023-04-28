@@ -45,17 +45,40 @@ class DailyWeatherWidget extends StatelessWidget {
               ],
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                date,
                 Align(
-                  alignment: Alignment.center,
-                  child: Text('${daily.temp!.max!.round()}º',
-                      style: const TextStyle(
-                          fontSize: 20.0,
-                          color: kLightColor,
-                          fontWeight: FontWeight.bold)),
+                  alignment: Alignment.bottomCenter,
+                  child: Image.asset(
+                    getWeatherIcon(daily.weather![0].icon!),
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${daily.temp!.min!.round() + 5}º',
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                            color: kLightColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ))),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25.0, bottom: 4.0),
+                    child: date,
+                  ),
                 ),
               ],
             )));
+  }
+
+  getWeatherIcon(String icon) {
+    return 'assets/icons/$icon.png';
   }
 }

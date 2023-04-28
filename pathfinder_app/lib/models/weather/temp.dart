@@ -3,9 +3,9 @@ import 'dart:convert';
 class Temp {
   double? day;
   double? max;
-  double? night;
+  double? min;
 
-  Temp({this.day, this.max, this.night});
+  Temp({this.day, this.max, this.min});
 
   @override
   String toString() {
@@ -15,7 +15,7 @@ class Temp {
   factory Temp.fromJson(Map<String, dynamic> data) => Temp(
         day: (data['day'] as num?)?.toDouble(),
         max: (data['max'] as num?)?.toDouble(),
-        night: (data['night'] as num?)?.toDouble(),
+        min: (data['min'] as num?)?.toDouble(),
       );
 
   Map<String, dynamic> toJson() => {'day': day};

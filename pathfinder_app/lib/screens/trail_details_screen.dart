@@ -8,6 +8,7 @@ import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
 
+import '../models/weather/weather.dart';
 import '../reusable_widgets/daily_weather_widget.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
@@ -141,43 +142,30 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(widget.title,
-                              style: const TextStyle(
-                                  fontSize: 24.0,
-                                  color: kLightColor,
-                                  fontFamily: "ProximaNovaBold",
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(
-                            width: 3.0,
-                          ),
-                          Text(widget.rating.toString(),
-                              style: const TextStyle(
-                                  fontSize: 17.0,
-                                  color: kLightColor,
-                                  fontFamily: "ProximaNovaBold",
-                                  fontWeight: FontWeight.normal)),
-                          const SizedBox(
-                            width: 3.0,
-                          ),
-                          const Icon(Icons.star, color: kRatingColor, size: 17),
-                        ]),
+                    Row(children: [
+                      Text(widget.title,
+                          style: const TextStyle(
+                              fontSize: 24.0,
+                              color: kLightColor,
+                              fontFamily: "ProximaNovaBold",
+                              fontWeight: FontWeight.bold)),
+                      const SizedBox(
+                        width: 3.0,
+                      ),
+                      Text(widget.rating.toString(),
+                          style: const TextStyle(
+                              fontSize: 17.0,
+                              color: kLightColor,
+                              fontFamily: "ProximaNovaBold",
+                              fontWeight: FontWeight.normal)),
+                      const SizedBox(
+                        width: 3.0,
+                      ),
+                      const Icon(Icons.star, color: kRatingColor, size: 17),
+                    ]),
                     const SizedBox(
                       height: 12.0,
                     ),
-                    // SizedBox(
-                    //   width: size.width / 1.1,
-                    //   child: Text(widget.description,
-                    //       style: const TextStyle(
-                    //         fontSize: 20.0,
-                    //         color: kLightColor,
-                    //       )),
-                    // ),
-                    // const SizedBox(
-                    //   height: 15.0,
-                    // ),
                     SizedBox(
                       width: size.width / 1.2,
                       child: Row(
@@ -327,10 +315,18 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   }
 
   Future<List<Daily>> getWeather(double lat, double lon) async {
-    List<Daily> weather =
+    List<Daily> dailyWeather =
         await locationController.getWeatherByLatAndLon(lat, lon);
 
-    //print(weather);
-    return weather;
+    //print(dailyWeather);
+    // for (Daily daily in dailyWeather) {
+    //   if (daily.weather != null && daily.weather!.isNotEmpty) {
+    //     for (Weather w in daily.weather!) {
+    //       print(w.icon);
+    //     }
+    //   }
+    // }
+
+    return dailyWeather;
   }
 }

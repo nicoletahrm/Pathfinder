@@ -31,7 +31,7 @@ class Current {
         clouds: data['clouds'] as int?,
         windSpeed: (data['wind_speed'] as num?)?.toDouble(),
         weather: (data['weather'] as List<dynamic>?)
-            ?.map((e) => Weather.fromFrom(e as Map<String, dynamic>))
+            ?.map((e) => Weather.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
 
@@ -41,7 +41,7 @@ class Current {
         'temp': temp,
         'clouds': clouds,
         'wind_speed': windSpeed,
-        'weather': weather?.map((e) => e.toFrom()).toList(),
+        'weather': weather?.map((e) => e.toJson()).toList(),
       };
 
   /// Parses the string and returns the resulting Json object as [Current].

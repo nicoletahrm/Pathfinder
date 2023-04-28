@@ -42,7 +42,7 @@ class Daily {
             : Temp.fromJson(data['temp'] as Map<String, dynamic>),
         windSpeed: (data['wind_speed'] as num?)?.toDouble(),
         weather: (data['weather'] as List<dynamic>?)
-            ?.map((e) => Weather.fromFrom(e as Map<String, dynamic>))
+            ?.map((e) => Weather.fromJson(e as Map<String, dynamic>))
             .toList(),
         clouds: data['clouds'] as int?,
         rain: (data['rain'] as num?)?.toDouble(),
@@ -52,7 +52,7 @@ class Daily {
         'sunset': sunset,
         'temp': temp?.toJson(),
         'wind_speed': windSpeed,
-        'weather': weather?.map((e) => e.toFrom()).toList(),
+        'weather': weather?.map((e) => e.toJson()).toList(),
         'clouds': clouds,
         'rain': rain,
       };

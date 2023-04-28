@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:pathfinder_app/controllers/global_controller.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
@@ -36,9 +37,28 @@ class TrailDetailsScreen extends StatefulWidget {
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final GlobalController locationController = GlobalController();
   late List<Daily> weatherDataDaily;
+  final dates = <Widget>[];
+  final currentDate = DateTime.now();
+  final _dayFormatter = DateFormat('d');
+  final _monthFormatter = DateFormat('MMM');
 
   Future<void> init() async {
     weatherDataDaily = await getWeather(widget.latitude, widget.longitude);
+
+    for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
+      final date = currentDate.add(Duration(days: i));
+
+      dates.add(Row(
+        children: [
+          Text(
+            _dayFormatter.format(date),
+          ),
+          Text(
+            _monthFormatter.format(date),
+          ),
+        ],
+      ));
+    }
   }
 
   @override
@@ -246,7 +266,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                           itemBuilder: (BuildContext context, int index) {
                             return Stack(children: <Widget>[
                               DailyWeatherWidget(
-                                  index: index, daily: weatherDataDaily[index]),
+                                  index: index,
+                                  daily: weatherDataDaily[index],
+                                  date: dates[index]),
                             ]);
                           }),
                     ),

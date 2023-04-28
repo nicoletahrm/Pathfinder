@@ -6,11 +6,13 @@ import '../utils/constant_colors.dart';
 class DailyWeatherWidget extends StatelessWidget {
   final Daily daily;
   final int index;
+  final Widget date;
 
   const DailyWeatherWidget({
     Key? key,
     required this.index,
     required this.daily,
+    required this.date,
   }) : super(key: key);
 
   @override
@@ -42,13 +44,18 @@ class DailyWeatherWidget extends StatelessWidget {
                 kLightColor.withOpacity(0.4),
               ],
             ),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text('${daily.temp!.max!.round()}º',
-                  style: const TextStyle(
-                      fontSize: 20.0,
-                      color: kLightColor,
-                      fontWeight: FontWeight.bold)),
+            child: Column(
+              children: [
+                date,
+                Align(
+                  alignment: Alignment.center,
+                  child: Text('${daily.temp!.max!.round()}º',
+                      style: const TextStyle(
+                          fontSize: 20.0,
+                          color: kLightColor,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ],
             )));
   }
 }

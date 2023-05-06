@@ -12,7 +12,6 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen> {
-  //late GoogleMapController _mapController;
   final GlobalController _locationController =
       Get.put(GlobalController(), permanent: true);
 
@@ -49,7 +48,7 @@ class MapScreenState extends State<MapScreen> {
           //markers: markers,
           zoomControlsEnabled: true,
           onMapCreated: (GoogleMapController mapController) {
-            //_mapController = mapController;
+            mapController = _locationController as GoogleMapController;
           },
           myLocationEnabled: true,
         ),

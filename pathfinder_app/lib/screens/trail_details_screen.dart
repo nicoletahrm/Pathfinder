@@ -7,8 +7,6 @@ import 'package:pathfinder_app/controllers/global_controller.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
-
-import '../models/weather/weather.dart';
 import '../reusable_widgets/daily_weather_widget.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
@@ -246,7 +244,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                       height: 28.0,
                     ),
                     SizedBox(
-                      height: 80.0,
+                      height: 100.0,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -277,7 +275,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                           alignment: Alignment.center,
                           child: SizedBox(
                               width: MediaQuery.of(context).size.width / 1.5,
-                              //margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();

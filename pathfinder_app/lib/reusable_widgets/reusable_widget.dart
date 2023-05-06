@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Transform logo(String imageName) {
+Widget logo(String imageName) {
   return Transform.translate(
       offset: const Offset(0, -400),
       child: Image.asset(

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../models/trail.dart';
 
 class TrailRepository {
@@ -11,7 +10,7 @@ class TrailRepository {
         await database.collection("trail").orderBy('title').get();
 
     return snapshot.docs
-        .map((docSnapshot) => Trail.fromMap(docSnapshot))
+        .map((docSnapshot) => Trail.fromJson(docSnapshot))
         .toList();
   }
 }

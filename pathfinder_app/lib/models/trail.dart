@@ -11,6 +11,7 @@ class Trail {
   final double altitude;
   final double latitude;
   final double longitude;
+  final List<dynamic> images;
   //marcaj traseu
 
   Trail({
@@ -23,10 +24,11 @@ class Trail {
     required this.altitude,
     required this.latitude,
     required this.longitude,
+    required this.images,
   });
 
   // for insert into database
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "title": title,
       "description": description,
@@ -37,22 +39,25 @@ class Trail {
       "rating": rating,
       "latitude": latitude,
       "longitude": longitude,
+      "images": images,
     };
   }
 
   // for read from database
-  factory Trail.fromMap(QueryDocumentSnapshot<Map<String, dynamic>> json) {
+  factory Trail.fromJson(QueryDocumentSnapshot<Map<String, dynamic>> json) {
+    final data = json.data();
+
     return Trail(
-      title: json["title"],
-      description: json["description"],
-      coverImage: json["coverImage"],
-      distance: stringToDouble(json["distance"]),
-      difficulty: stringToDifficulty(json["difficulty"]),
-      altitude: stringToDouble(json["altitude"]),
-      rating: stringToDouble(json["rating"]),
-      latitude: stringToDouble(json["latitude"]),
-      longitude: stringToDouble(json["longitude"]),
-    );
+        title: data["title"],
+        description: data["description"],
+        coverImage: data["coverImage"],
+        distance: stringToDouble(data["distance"]),
+        difficulty: stringToDifficulty(data["difficulty"]),
+        altitude: stringToDouble(data["altitude"]),
+        rating: stringToDouble(data["rating"]),
+        latitude: stringToDouble(data["latitude"]),
+        longitude: stringToDouble(data["longitude"]),
+        images: List<String>.from(data['images'] ?? []));
   }
 }
 

@@ -97,13 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    height = isKeyboardVisible
-        ? MediaQuery.of(context).size.height * 0.7
-        : MediaQuery.of(context).size.height * 0.7;
+    // bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    // height = isKeyboardVisible
+    //     ? MediaQuery.of(context).size.height * 0.5
+    //     : MediaQuery.of(context).size.height * 0.7;
 
     return Scaffold(
-      // resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: true,
       backgroundColor: hexStringToColor("#44564a"),
       body: ListView(
         physics: const BouncingScrollPhysics(),
@@ -280,7 +280,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   getHeight() {
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    if (isKeyboardVisible) return MediaQuery.of(context).size.height * 0.5;
+
+    if (isKeyboardVisible) return MediaQuery.of(context).size.height * 0.7;
     return MediaQuery.of(context).size.height * 0.7;
   }
 }

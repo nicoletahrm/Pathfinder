@@ -14,6 +14,7 @@ class TrailDetailsScreen extends StatefulWidget {
   final String title, description, coverImage;
   final double rating, distance, altitude, latitude, longitude;
   final Difficulty difficulty;
+  final List<dynamic> images;
 
   const TrailDetailsScreen({
     super.key,
@@ -27,6 +28,7 @@ class TrailDetailsScreen extends StatefulWidget {
     required this.rating,
     required this.latitude,
     required this.longitude,
+    required this.images,
   });
 
   @override
@@ -40,12 +42,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final currentDate = DateTime.now();
   final _dayFormatter = DateFormat('d');
   final _monthFormatter = DateFormat('MMM');
-  final List<String> _images = [
-    'assets/images/image1.jpg',
-    'assets/images/image2.jpg',
-    'assets/images/image3.jpg',
-    'assets/images/image4.jpg'
-  ];
 
   Future<void> init() async {
     weatherDataDaily = await getWeather(widget.latitude, widget.longitude);
@@ -58,6 +54,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
           Text(
             _dayFormatter.format(date),
           ),
+          const Text(" "),
           Text(
             _monthFormatter.format(date),
           ),
@@ -103,7 +100,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
           child: Stack(
             children: [
               PageView.builder(
-                  itemCount: _images.length,
+                  itemCount: widget.images.length,
                   itemBuilder: (BuildContext context, int index) {
                     return SingleChildScrollView(
                         child: Stack(
@@ -111,7 +108,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         Hero(
                           tag: "trail${widget.index}",
                           child: Image.asset(
-                            _images[index],
+                            widget.images[index].toString(),
                             height: size.height,
                             width: size.width,
                             fit: BoxFit.cover,

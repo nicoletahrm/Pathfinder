@@ -52,7 +52,7 @@ class DailyWeatherWidget extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 5.0, top: 7.0),
+                      padding: const EdgeInsets.only(top: 7.0),
                       child: Image.asset(
                         getWeatherIcon(daily.weather![0].icon!),
                         width: 40,
@@ -75,7 +75,8 @@ class DailyWeatherWidget extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 25.0, bottom: 4.0),
+                      padding: const EdgeInsets.only(left: 27.0, bottom: 4.0),
+                      
                       child: date,
                     ),
                   ),

@@ -26,14 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final TrailRepository trailRepository = TrailRepository();
   late List<Trail> trails = [];
 
-  late List<Trail>? filteredTrails = [];
+  late List<Trail> filteredTrails = [];
 
   late String query;
 
   Future<void> init() async {
     filteredTrails = await trailRepository.getAllTrails();
-    trails = filteredTrails!;
-    // print('heloooooo');
+    trails = filteredTrails;
     query = '';
   }
 
@@ -41,8 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     init();
-    print('heloooooo');
-    print(filteredTrails?[0].images);
   }
 
   @override
@@ -121,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: trails?.length,
+                        itemCount: trails.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                               onTap: () => Navigator.of(context).push(
@@ -234,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   dynamic searchTrailByTitle(String query) async {
     setState(() {
-      trails = filteredTrails!.where((trail) {
+      trails = filteredTrails.where((trail) {
         final trailTitle = trail.title.toLowerCase();
         final input = query.toLowerCase();
 

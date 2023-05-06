@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void main() async {
+  Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
@@ -97,10 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    // height = isKeyboardVisible
-    //     ? MediaQuery.of(context).size.height * 0.5
-    //     : MediaQuery.of(context).size.height * 0.7;
+    main();
 
     return Scaffold(
       resizeToAvoidBottomInset: true,

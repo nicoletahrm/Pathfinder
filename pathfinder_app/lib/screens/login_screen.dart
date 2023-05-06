@@ -36,24 +36,55 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _errorMessage = "";
 
+  // void validateField(String val, String field) {
+  //   if (val.isEmpty) {
+  //     setState(() {
+  //       _errorMessage = "$field can not be empty";
+  //     });
+  //   } else if (!EmailValidator.validate(val, true)) {
+  //     setState(() {
+  //       field = field.toLowerCase();
+  //       _errorMessage = "Invalid $field";
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _errorMessage = "";
+  //     });
+  //   }
+  // }
+
   void validateField(String val, String field) {
-    if (val.isEmpty) {
-      setState(() {
-        _errorMessage = "$field can not be empty";
-      });
-    } else if (!EmailValidator.validate(val, true)) {
-      setState(() {
-        field = field.toLowerCase();
-        _errorMessage = "Invalid $field";
-      });
-    } else {
-      setState(() {
-        _errorMessage = "";
-      });
+    switch (field) {
+      case 'Email':
+        if (val.isEmpty) {
+          setState(() {
+            _errorMessage = '$field can not be empty';
+          });
+        } else if (!EmailValidator.validate(val, true)) {
+          setState(() {
+            _errorMessage = 'Invalid $field';
+          });
+        } else {
+          setState(() {
+            _errorMessage = '';
+          });
+        }
+        break;
+      case 'Password':
+        if (val.isEmpty) {
+          setState(() {
+            _errorMessage = '$field can not be empty';
+          });
+        } else {
+          setState(() {
+            _errorMessage = '';
+          });
+        }
+        break;
     }
   }
 
-  Future<void> main() async {
+  void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
@@ -66,16 +97,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    main();
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     height = isKeyboardVisible
-        ? MediaQuery.of(context).size.height * 0.6
+        ? MediaQuery.of(context).size.height * 0.7
         : MediaQuery.of(context).size.height * 0.7;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      // resizeToAvoidBottomInset: true,
       backgroundColor: hexStringToColor("#44564a"),
       body: ListView(
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: false,
         reverse: true,
         children: [
@@ -84,13 +115,14 @@ class _LoginScreenState extends State<LoginScreen> {
             //   padding: EdgeInsets.only(
             //       bottom: (MediaQuery.of(context).viewInsets.bottom)),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
+              children: <Widget>[
                 Stack(
                   children: [
                     logo("assets/images/image4.jpg"),
                     Container(
-                      height: height,
+                      height: getHeight(),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: hexStringToColor("#ffffff"),
@@ -244,5 +276,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ))
     ]);
+  }
+
+  getHeight() {
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    if (isKeyboardVisible) return MediaQuery.of(context).size.height * 0.5;
+    return MediaQuery.of(context).size.height * 0.7;
   }
 }

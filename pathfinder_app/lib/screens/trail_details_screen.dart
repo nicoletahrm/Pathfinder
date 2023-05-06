@@ -265,6 +265,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         height: 100.0,
                         width: MediaQuery.of(context).size.width,
                         child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: weatherDataDaily.length,
                             itemBuilder: (BuildContext context, int index) {

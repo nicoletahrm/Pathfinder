@@ -34,7 +34,7 @@ class TrailDetailsScreen extends StatefulWidget {
 }
 
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
-  final GlobalController locationController = GlobalController();
+  final GlobalController _globalController = GlobalController();
   late List<Daily> weatherDataDaily;
   final dates = <Widget>[];
   final currentDate = DateTime.now();
@@ -333,16 +333,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
 
   Future<List<Daily>> getWeather(double lat, double lon) async {
     List<Daily> dailyWeather =
-        await locationController.getWeatherByLatAndLon(lat, lon);
-
-    //print(dailyWeather);
-    // for (Daily daily in dailyWeather) {
-    //   if (daily.weather != null && daily.weather!.isNotEmpty) {
-    //     for (Weather w in daily.weather!) {
-    //       print(w.icon);
-    //     }
-    //   }
-    // }
+        await _globalController.getWeatherByLatAndLon(lat, lon);
 
     return dailyWeather;
   }

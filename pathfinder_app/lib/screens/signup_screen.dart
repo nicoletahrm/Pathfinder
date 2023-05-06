@@ -23,6 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _confirmPasswordTextController =
       TextEditingController();
+  late double height;
 
   @override
   void dispose() {
@@ -62,100 +63,109 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    height = isKeyboardVisible
+        ? MediaQuery.of(context).size.height * 0.8
+        : MediaQuery.of(context).size.height * 0.7;
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: hexStringToColor("#44564a"),
       body: ListView(
         shrinkWrap: false,
         reverse: true,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Stack(
-                children: [
-                  logo("assets/images/image4.jpg"),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: hexStringToColor("#ffffff"),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
+          Padding(
+            padding: EdgeInsets.only(
+                bottom: (MediaQuery.of(context).viewInsets.bottom)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Stack(
+                  children: [
+                    logo("assets/images/image4.jpg"),
+                    Container(
+                      height: height,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: hexStringToColor("#ffffff"),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Sign Up",
+                              style: GoogleFonts.poppins(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: hexStringToColor("#44564a"),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 0, 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  reusableTextField(
+                                      "Username",
+                                      Icons.person_outline,
+                                      false,
+                                      _usernameTextController,
+                                      (() {})),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  reusableTextField("E-mail", Icons.mail, false,
+                                      _emailTextController, (() {})),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  reusableTextField(
+                                      "Password",
+                                      Icons.lock_outline,
+                                      true,
+                                      _passwordTextController,
+                                      (() {})),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  reusableTextField(
+                                      "Confirm password",
+                                      Icons.lock_outline,
+                                      true,
+                                      _confirmPasswordTextController,
+                                      (() {})),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  loginButton(context, false, () {
+                                    signUp().then((value) => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomeScreen())));
+                                  }),
+                                  signUpOption(false),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Sign Up",
-                            style: GoogleFonts.poppins(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: hexStringToColor("#44564a"),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                reusableTextField(
-                                    "Username",
-                                    Icons.person_outline,
-                                    false,
-                                    _usernameTextController,
-                                    (() {})),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                reusableTextField("E-mail", Icons.mail, false,
-                                    _emailTextController, (() {})),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                reusableTextField(
-                                    "Password",
-                                    Icons.lock_outline,
-                                    true,
-                                    _passwordTextController,
-                                    (() {})),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                reusableTextField(
-                                    "Confirm password",
-                                    Icons.lock_outline,
-                                    true,
-                                    _confirmPasswordTextController,
-                                    (() {})),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                loginButton(context, false, () {
-                                  signUp().then((value) => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomeScreen())));
-                                }),
-                                signUpOption(false),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ],
       ),

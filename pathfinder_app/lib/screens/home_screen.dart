@@ -130,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               trails[index].description,
                                           coverImage: trails[index].coverImage,
                                           distance: trails[index].distance,
+                                          content: trails[index].content,
                                           altitude: trails[index].altitude,
                                           difficulty: trails[index].difficulty,
                                           rating: trails[index].rating,

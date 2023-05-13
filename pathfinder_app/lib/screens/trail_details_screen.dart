@@ -12,7 +12,7 @@ import '../reusable_widgets/daily_weather_widget.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
-  final String title, description, coverImage;
+  final String title, description, coverImage, content;
   final double rating, distance, altitude, latitude, longitude;
   final Difficulty difficulty;
   final List<dynamic> images;
@@ -22,6 +22,7 @@ class TrailDetailsScreen extends StatefulWidget {
     required this.index,
     required this.title,
     required this.description,
+    required this.content,
     required this.coverImage,
     required this.distance,
     required this.altitude,
@@ -104,11 +105,13 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
               // Down Swipe
             } else if (details.delta.dy < -sensitivity) {
               // Up Swipe
-              //Navigator.of(context).pop();
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TrailContentScreen()));
+                      builder: (context) => TrailContentScreen(
+                          index: widget.index,
+                          title: widget.title,
+                          content: widget.content)));
             }
           },
           child: SingleChildScrollView(
@@ -296,21 +299,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                           const SizedBox(
                             height: 28.0,
                           ),
-                          // GestureDetector(
-                          //   onVerticalDragUpdate: (details) {
-                          //     int sensitivity = 8;
-                          //     if (details.delta.dy > sensitivity) {
-                          //       // Down Swipe
-                          //     } else if (details.delta.dy < -sensitivity) {
-                          //       // Up Swipe
-                          //       //Navigator.of(context).pop();
-                          //       Navigator.push(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //               builder: (context) =>
-                          //                   TrailContentScreen()));
-                          //     }
-                          //   },
                           Align(
                               alignment: Alignment.center,
                               child: SizedBox(
@@ -322,7 +310,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  TrailContentScreen()));
+                                                  TrailContentScreen(
+                                                      index: widget.index,
+                                                      title: widget.title,
+                                                      content:
+                                                          widget.content)));
                                     },
                                     style: ButtonStyle(
                                         backgroundColor:
@@ -345,7 +337,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold)),
                                   ))),
-
                           const SizedBox(
                             height: 20.0,
                           ),

@@ -4,6 +4,7 @@ import 'package:pathfinder_app/models/difficulty.dart';
 class Trail {
   final String title;
   final String description;
+  final String content;
   final String coverImage;
   final double rating;
   final double distance;
@@ -18,6 +19,7 @@ class Trail {
     required this.rating,
     required this.title,
     required this.description,
+    required this.content,
     required this.coverImage,
     required this.distance,
     required this.difficulty,
@@ -32,6 +34,7 @@ class Trail {
     return {
       "title": title,
       "description": description,
+      "content": content,
       "coverImage": coverImage,
       "distance": distance,
       "difficulty": difficulty,
@@ -50,6 +53,7 @@ class Trail {
     return Trail(
         title: data["title"],
         description: data["description"],
+        content: data["content"],
         coverImage: data["coverImage"],
         distance: stringToDouble(data["distance"]),
         difficulty: stringToDifficulty(data["difficulty"]),

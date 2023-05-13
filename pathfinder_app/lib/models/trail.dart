@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
+import '../utils/covert_to.dart';
 
 class Trail {
   final String title;
@@ -13,7 +14,7 @@ class Trail {
   final double latitude;
   final double longitude;
   final List<dynamic> images;
-  //marcaj traseu
+  final List<dynamic> reviews;
 
   Trail({
     required this.rating,
@@ -27,9 +28,9 @@ class Trail {
     required this.latitude,
     required this.longitude,
     required this.images,
+    required this.reviews,
   });
 
-  // for insert into database
   Map<String, dynamic> toJson() {
     return {
       "title": title,
@@ -43,32 +44,26 @@ class Trail {
       "latitude": latitude,
       "longitude": longitude,
       "images": images,
+      "reviews": reviews,
     };
   }
 
-  // for read from database
   factory Trail.fromJson(QueryDocumentSnapshot<Map<String, dynamic>> json) {
     final data = json.data();
 
     return Trail(
-        title: data["title"],
-        description: data["description"],
-        content: data["content"],
-        coverImage: data["coverImage"],
-        distance: stringToDouble(data["distance"]),
-        difficulty: stringToDifficulty(data["difficulty"]),
-        altitude: stringToDouble(data["altitude"]),
-        rating: stringToDouble(data["rating"]),
-        latitude: stringToDouble(data["latitude"]),
-        longitude: stringToDouble(data["longitude"]),
-        images: List<String>.from(data['images'] ?? []));
+      title: data["title"],
+      description: data["description"],
+      content: data["content"],
+      coverImage: data["coverImage"],
+      distance: stringToDouble(data["distance"]),
+      difficulty: stringToDifficulty(data["difficulty"]),
+      altitude: stringToDouble(data["altitude"]),
+      rating: stringToDouble(data["rating"]),
+      latitude: stringToDouble(data["latitude"]),
+      longitude: stringToDouble(data["longitude"]),
+      images: List<String>.from(data['images'] ?? []),
+      reviews: List<DocumentReference>.from(data['reviews'] ?? []),
+    );
   }
-}
-
-double stringToDouble(String value) {
-  return double.parse(value);
-}
-
-int stringToInt(String value) {
-  return int.parse(value);
 }

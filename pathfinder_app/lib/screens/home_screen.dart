@@ -25,9 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final TrailRepository trailRepository = TrailRepository();
   late List<Trail> trails = [];
-
   late List<Trail> filteredTrails = [];
-
   late String query;
 
   Future<void> init() async {

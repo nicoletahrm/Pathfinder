@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -13,11 +14,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return ScreenUtilInit(
-    //     designSize: const Size(360, 690),
-    //     minTextAdapt: true,
-    //     splitScreenMode: true,
-    //     builder: (context, child) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark, // or light
+    );
+
     return MaterialApp(
       title: 'Pathfinder',
       theme: ThemeData(

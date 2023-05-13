@@ -80,7 +80,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
     _scrollController.addListener(() {
       if (_scrollController.offset <=
           _scrollController.position.minScrollExtent) {
-        // Scroll to top
         _scrollController.animateTo(
           0,
           duration: const Duration(milliseconds: 300),
@@ -96,7 +95,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
       future: init(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while waiting for the initialization to complete.
           return Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -108,10 +106,8 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
             ],
           ));
         } else if (snapshot.hasError) {
-          // Show an error message if the initialization failed.
           return Text('Failed to initialize trails: ${snapshot.error}');
         } else {
-          // Build the UI with the initialized trails list.
           return buildTrail(context);
         }
       },
@@ -120,14 +116,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
 
   Widget buildTrail(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _scrollController.animateTo(
-    //     0,
-    //     duration: const Duration(milliseconds: 300),
-    //     curve: Curves.easeOut,
-    //   );
-    // });
 
     return GestureDetector(
       onTap: () {
@@ -139,7 +127,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
           body: SafeArea(
               child: ListView(
                   controller: _scrollController,
-                  physics: const BouncingScrollPhysics(),
                   shrinkWrap: false,
                   children: [
                 SingleChildScrollView(
@@ -148,14 +135,13 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                       SizedBox(
-                        height: size.height * 0.7,
+                        height: size.height * 0.9,
                         child: Stack(children: [
                           PageView.builder(
                               itemCount: widget.images.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Stack(
                                   children: [
-                                    //logo(widget.images[index].toString()),
                                     Hero(
                                       tag: "trail${widget.index}",
                                       child: Image.asset(
@@ -322,6 +308,12 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                           ),
                         ]),
                       ),
+
+                      const Align(
+                        alignment: Alignment.center,
+                        child: Icon(Icons.arrow_upward, size: 35.0),
+                      ),
+
                       // a doua parte
                       Stack(children: [
                         SizedBox(

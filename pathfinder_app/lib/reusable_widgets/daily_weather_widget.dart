@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/weather_data_daily.dart';
 import '../utils/constant_colors.dart';
 
@@ -63,20 +64,17 @@ class DailyWeatherWidget extends StatelessWidget {
                   ),
                   Expanded(
                       child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${daily.temp!.min!.round() + 5}º',
-                            style: const TextStyle(
-                              fontSize: 17.0,
-                              color: kLightColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ))),
+                    alignment: Alignment.center,
+                    child: Text('${daily.temp!.min!.round() + 5}º',
+                        style: GoogleFonts.poppins(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: kLightColor)),
+                  )),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 27.0, bottom: 4.0),
-                      
                       child: date,
                     ),
                   ),

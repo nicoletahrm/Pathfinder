@@ -23,10 +23,10 @@ class CustomBottomNavBar extends StatelessWidget {
             color: const Color(0xFFDADADA).withOpacity(0.15),
           ),
         ],
-        // borderRadius: const BorderRadius.only(
-        //   topLeft: Radius.circular(40),
-        //   topRight: Radius.circular(40),
-        // ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(40),
+          topRight: Radius.circular(40),
+        ),
       ),
       child: SafeArea(
           top: true,

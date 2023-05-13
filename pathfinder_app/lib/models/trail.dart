@@ -3,6 +3,7 @@ import 'package:pathfinder_app/models/difficulty.dart';
 import '../utils/covert_to.dart';
 
 class Trail {
+  //final String id;
   final String title;
   final String description;
   final String content;
@@ -14,9 +15,10 @@ class Trail {
   final double latitude;
   final double longitude;
   final List<dynamic> images;
-  final List<dynamic> reviews;
+  List<dynamic> reviews;
 
   Trail({
+    //required this.id,
     required this.rating,
     required this.title,
     required this.description,
@@ -33,6 +35,7 @@ class Trail {
 
   Map<String, dynamic> toJson() {
     return {
+      //"id": id,
       "title": title,
       "description": description,
       "content": content,
@@ -52,6 +55,7 @@ class Trail {
     final data = json.data();
 
     return Trail(
+      //id: data["id"],
       title: data["title"],
       description: data["description"],
       content: data["content"],

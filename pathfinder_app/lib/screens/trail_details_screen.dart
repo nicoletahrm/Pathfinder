@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:pathfinder_app/controllers/global_controller.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
-import 'package:pathfinder_app/screens/trail_content_screen.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
 import '../reusable_widgets/daily_weather_widget.dart';
+import '../utils/colors_utils.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
@@ -39,6 +39,7 @@ class TrailDetailsScreen extends StatefulWidget {
 
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final GlobalController _globalController = GlobalController();
+  late ScrollController _scrollController;
   late List<Daily> weatherDataDaily;
   final dates = <Widget>[];
   final currentDate = DateTime.now();
@@ -63,6 +64,20 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
         ],
       ));
     }
+
+    _scrollController = ScrollController();
+
+    _scrollController.addListener(() {
+      if (_scrollController.offset <=
+          _scrollController.position.minScrollExtent) {
+        // Scroll to top
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   @override
@@ -96,259 +111,249 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   Widget buildTrail(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: kLightColor,
-        body: GestureDetector(
-          onVerticalDragUpdate: (details) {
-            int sensitivity = 8;
-            if (details.delta.dy > sensitivity) {
-              // Down Swipe
-            } else if (details.delta.dy < -sensitivity) {
-              // Up Swipe
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TrailContentScreen(
-                          index: widget.index,
-                          title: widget.title,
-                          content: widget.content)));
-            }
-          },
-          child: SingleChildScrollView(
-            child: SizedBox(
-              height: size.height,
-              child: Stack(
-                children: [
-                  PageView.builder(
-                      itemCount: widget.images.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return SingleChildScrollView(
-                            child: Stack(
+        body: ListView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(),
+            shrinkWrap: false,
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      SizedBox(
+                        height: size.height,
+                        child: Stack(
                           children: [
-                            Hero(
-                              tag: "trail${widget.index}",
-                              child: Image.asset(
-                                widget.images[index].toString(),
-                                height: size.height,
-                                width: size.width,
-                                fit: BoxFit.cover,
+                            PageView.builder(
+                                itemCount: widget.images.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return SingleChildScrollView(
+                                      child: Stack(
+                                    children: [
+                                      Hero(
+                                        tag: "trail${widget.index}",
+                                        child: Image.asset(
+                                          widget.images[index].toString(),
+                                          height: size.height,
+                                          width: size.width,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Container(
+                                          height: size.height,
+                                          width: size.width,
+                                          decoration: const BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Colors.transparent,
+                                                Colors.black,
+                                              ],
+                                              stops: [
+                                                0.6,
+                                                0.9,
+                                              ],
+                                            ),
+                                          )),
+                                    ],
+                                  ));
+                                }),
+                            GestureDetector(
+                                onTap: () => Navigator.of(context).pop(),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 64.0,
+                                    bottom: 0.0,
+                                    left: 28.0,
+                                    right: 28.0,
+                                  ),
+                                  child: Icon(Icons.arrow_back),
+                                )),
+                            Positioned(
+                              bottom: 0.0,
+                              right: 10.0,
+                              left: 10.0,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16.0, horizontal: 28.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(children: [
+                                      Text(widget.title,
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 28.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: kLightColor)),
+                                      const SizedBox(
+                                        width: 3.0,
+                                      ),
+                                      Text(widget.rating.toString(),
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.normal,
+                                              color: kLightColor)),
+                                      const SizedBox(
+                                        width: 3.0,
+                                      ),
+                                      const Icon(Icons.star,
+                                          color: kRatingColor, size: 17),
+                                    ]),
+                                    const SizedBox(
+                                      height: 12.0,
+                                    ),
+                                    SizedBox(
+                                      width: size.width / 1.2,
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Text("Distance",
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: kLightColor)),
+                                                const SizedBox(
+                                                  height: 10.0,
+                                                ),
+                                                Text(
+                                                    '${widget.distance.round().toString()}km',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        color: kLightColor)),
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                Text("Altitude",
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: kLightColor)),
+                                                const SizedBox(
+                                                  height: 10.0,
+                                                ),
+                                                Text(
+                                                    '${widget.altitude.round().toString()}m',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        color: kLightColor)),
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                Text("Difficulty",
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: kLightColor)),
+                                                const SizedBox(
+                                                  height: 10.0,
+                                                ),
+                                                Text(widget.difficulty.name,
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        color: kLightColor)),
+                                              ],
+                                            ),
+                                          ]),
+                                    ),
+                                    const SizedBox(
+                                      height: 28.0,
+                                    ),
+                                    SizedBox(
+                                      height: 100.0,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.builder(
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: weatherDataDaily.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Stack(children: <Widget>[
+                                              DailyWeatherWidget(
+                                                  index: index,
+                                                  daily:
+                                                      weatherDataDaily[index],
+                                                  date: dates[index]),
+                                            ]);
+                                          }),
+                                    ),
+                                    const SizedBox(
+                                      height: 28.0,
+                                    ),
+                                    const Align(
+                                        alignment: Alignment.center,
+                                        child: Icon(
+                                          Icons.arrow_upward,
+                                          color: Colors.white,
+                                          weight: 10.0,
+                                        )),
+                                  ],
+                                ),
                               ),
                             ),
-                            Container(
-                                height: size.height,
-                                width: size.width,
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black,
-                                    ],
-                                    stops: [
-                                      0.6,
-                                      0.9,
-                                    ],
-                                  ),
-                                )),
                           ],
-                        ));
-                      }),
-                  GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: const Padding(
-                        padding: EdgeInsets.only(
-                          top: 64.0,
-                          bottom: 0.0,
-                          left: 28.0,
-                          right: 28.0,
                         ),
-                        child: Icon(Icons.arrow_back),
-                      )),
-                  Positioned(
-                    bottom: 0.0,
-                    right: 10.0,
-                    left: 10.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16.0, horizontal: 28.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(children: [
-                            Text(widget.title,
-                                style: const TextStyle(
-                                    fontSize: 24.0,
-                                    color: kLightColor,
-                                    fontFamily: "ProximaNovaBold",
-                                    fontWeight: FontWeight.bold)),
-                            const SizedBox(
-                              width: 3.0,
-                            ),
-                            Text(widget.rating.toString(),
-                                style: const TextStyle(
-                                    fontSize: 17.0,
-                                    color: kLightColor,
-                                    fontFamily: "ProximaNovaBold",
-                                    fontWeight: FontWeight.normal)),
-                            const SizedBox(
-                              width: 3.0,
-                            ),
-                            const Icon(Icons.star,
-                                color: kRatingColor, size: 17),
-                          ]),
-                          const SizedBox(
-                            height: 12.0,
-                          ),
-                          SizedBox(
-                            width: size.width / 1.2,
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    children: [
-                                      const Text(
-                                        "Distance",
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            color: kLightColor,
-                                            fontFamily: "ProximaNovaBold",
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Text(
-                                        '${widget.distance.round().toString()}km',
-                                        style: const TextStyle(
-                                            fontSize: 20.0,
-                                            color: kLightColor,
-                                            fontFamily: "ProximaNovaBold",
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      const Text(
-                                        "Altitude",
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            color: kLightColor,
-                                            fontFamily: "ProximaNovaBold",
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Text(
-                                        '${widget.altitude.round().toString()}m',
-                                        style: const TextStyle(
-                                            fontSize: 20.0,
-                                            color: kLightColor,
-                                            fontFamily: "ProximaNovaBold",
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      const Text(
-                                        "Difficulty",
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            color: kLightColor,
-                                            fontFamily: "ProximaNovaBold",
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Text(
-                                        widget.difficulty.name,
-                                        style: const TextStyle(
-                                            fontSize: 20.0,
-                                            color: kLightColor,
-                                            fontFamily: "ProximaNovaBold",
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    ],
-                                  ),
-                                ]),
-                          ),
-                          const SizedBox(
-                            height: 28.0,
-                          ),
-                          SizedBox(
-                            height: 100.0,
-                            width: MediaQuery.of(context).size.width,
-                            child: ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                itemCount: weatherDataDaily.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Stack(children: <Widget>[
-                                    DailyWeatherWidget(
-                                        index: index,
-                                        daily: weatherDataDaily[index],
-                                        date: dates[index]),
-                                  ]);
-                                }),
-                          ),
-                          const SizedBox(
-                            height: 28.0,
-                          ),
-                          Align(
-                              alignment: Alignment.center,
-                              child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.5,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TrailContentScreen(
-                                                      index: widget.index,
-                                                      title: widget.title,
-                                                      content:
-                                                          widget.content)));
-                                    },
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.resolveWith(
-                                                (states) {
-                                          if (states.contains(
-                                              MaterialState.pressed)) {
-                                            return Colors.transparent;
-                                          }
-                                          return Colors.transparent;
-                                        }),
-                                        shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        12.0)))),
-                                    child: Text('Details',
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
-                                  ))),
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                        ],
                       ),
-                    ),
-                  )
-                ],
+                      Stack(children: [
+                        Container(
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              color: hexStringToColor("#ffffff"),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                topRight: Radius.circular(40),
+                              ),
+                            ),
+                            child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.content,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.normal,
+                                          color: hexStringToColor("#44564a"),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                    ])))
+                      ]),
+                    ]),
               ),
-            ),
-          ),
-        ));
+            ]));
   }
 
   Future<List<Daily>> getWeather(double lat, double lon) async {

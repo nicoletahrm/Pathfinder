@@ -36,23 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _errorMessage = "";
 
-  // void validateField(String val, String field) {
-  //   if (val.isEmpty) {
-  //     setState(() {
-  //       _errorMessage = "$field can not be empty";
-  //     });
-  //   } else if (!EmailValidator.validate(val, true)) {
-  //     setState(() {
-  //       field = field.toLowerCase();
-  //       _errorMessage = "Invalid $field";
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _errorMessage = "";
-  //     });
-  //   }
-  // }
-
   void validateField(String val, String field) {
     switch (field) {
       case 'Email':
@@ -108,9 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
         reverse: true,
         children: [
           SingleChildScrollView(
-            // child: Padding(
-            //   padding: EdgeInsets.only(
-            //       bottom: (MediaQuery.of(context).viewInsets.bottom)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -154,17 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     validateField(
                                         _emailTextController.text, "Email");
                                   })),
-                                  //Padding(
-                                  // padding:
-                                  //  const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                  //child: Text(
-                                  //_errorMessage,
-                                  //style: GoogleFonts.poppins(
-                                  //  fontSize: 12,
-                                  //  color: Colors.red,
-                                  //),
-                                  //),
-                                  //),
                                   const SizedBox(
                                     height: 20,
                                   ),
@@ -176,17 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     validateField(_passwordTextController.text,
                                         "Password");
                                   })),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                  //   child: Text(
-                                  //     _errorMessage,
-                                  //     style: GoogleFonts.poppins(
-                                  //       fontSize: 12,
-                                  //       color: Colors.red,
-                                  //     ),
-                                  //   ),
-                                  //),
                                   Padding(
                                     padding: const EdgeInsets.all(0),
                                     child: Row(
@@ -217,8 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         await SharedPreferences.getInstance();
                                     prefs.setString(
                                         "email", _emailTextController.text);
-
-                                    //print(_emailTextController.text);
                                     try {
                                       FirebaseAuth.instance
                                           .signInWithEmailAndPassword(

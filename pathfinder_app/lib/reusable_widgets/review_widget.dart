@@ -54,7 +54,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
 
   Widget buildReview(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -62,7 +62,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
             radius: 16,
             backgroundImage: AssetImage(user.profilePhoto),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

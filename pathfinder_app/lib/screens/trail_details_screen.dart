@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -138,7 +137,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                       SizedBox(
-                        height: size.height * 0.9,
+                        height: size.height * 0.7,
                         child: Stack(children: [
                           PageView.builder(
                               itemCount: widget.images.length,
@@ -312,30 +311,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         ]),
                       ),
 
-                      const Align(
-                        alignment: Alignment.center,
-                        child: Icon(Icons.arrow_upward, size: 35.0),
-                      ),
-
                       // a doua parte
                       Stack(children: [
                         SizedBox(
-                          height: size.height,
+                          height: size.height * 1.4,
                           width: size.width,
-                          // decoration: const BoxDecoration(
-                          //   gradient: LinearGradient(
-                          //     begin: Alignment.topCenter,
-                          //     end: Alignment.bottomCenter,
-                          //     colors: [
-                          //       Colors.transparent,
-                          //       Colors.black,
-                          //     ],
-                          //     stops: [
-                          //       0.6,
-                          //       0.9,
-                          //     ],
-                          //   ),
-                          // ),
                         ),
                         Positioned(
                           top: size.height * 0.0,
@@ -373,19 +353,39 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                     ),
                                   ),
                                   const SizedBox(
+                                    height: 28,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Let's see some reviews",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 25.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: hexStringToColor("#44564a"),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
                                     height: 20,
                                   ),
-                                  Expanded(
+                                  SizedBox(
+                                    height: 350,
+                                    child: Expanded(
                                       child: ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          itemCount: trailReviews.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return ReviewWidget(
-                                                content:
-                                                    trailReviews[index].content,
-                                                ref: trailReviews[index].user);
-                                          })),
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: trailReviews.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return ReviewWidget(
+                                            content:
+                                                trailReviews[index].content,
+                                            ref: trailReviews[index].user,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

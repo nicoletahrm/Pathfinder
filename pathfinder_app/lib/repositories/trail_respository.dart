@@ -18,9 +18,9 @@ class TrailRepository {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await database.collection("review").get();
 
-    print(snapshot.docs
-        .map((docSnapshot) => Review.fromJson(docSnapshot))
-        .toList());
+    // print(snapshot.docs
+    //     .map((docSnapshot) => Review.fromJson(docSnapshot))
+    //     .toList());
 
     return snapshot.docs
         .map((docSnapshot) => Review.fromJson(docSnapshot))

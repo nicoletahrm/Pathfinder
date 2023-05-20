@@ -375,31 +375,16 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                   const SizedBox(
                                     height: 20,
                                   ),
-                                  reusableTextField(
-                                      "Write a review...",
-                                      Icons.wrong_location_sharp,
-                                      false,
-                                      _reviewTextController,
-                                      () {}),
-                                  SizedBox(
-                                    height: 100,
-                                    child: ReviewWidget(trailId: widget.id),
-                                    //Expanded(
-                                    //     child: ListView.builder(
-                                    //         scrollDirection: Axis.vertical,
-                                    //         itemCount: trailReviews.length,
-                                    //         itemBuilder:
-                                    //             (BuildContext context,
-                                    //                 int index) {
-                                    //           return Stack(children: <Widget>[
-                                    //             Hero(
-                                    //                 tag: "review$index",
-                                    //                 child: Text(
-                                    //                     trailReviews[index]
-                                    //                         .content)),
-                                    //           ]);
-                                    //         }))
-                                  )
+                                  Expanded(
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: trailReviews.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return ReviewWidget(
+                                                content: trailReviews[index]
+                                                    .content);
+                                          }))
                                 ],
                               ),
                             ),

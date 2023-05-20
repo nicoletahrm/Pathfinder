@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -8,9 +9,9 @@ import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
 import '../models/review.dart';
+import '../models/user.dart';
 import '../repositories/trail_respository.dart';
 import '../reusable_widgets/daily_weather_widget.dart';
-import '../reusable_widgets/reusable_widget.dart';
 import '../reusable_widgets/review_widget.dart';
 import '../utils/colors_utils.dart';
 
@@ -45,7 +46,6 @@ class TrailDetailsScreen extends StatefulWidget {
 
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final GlobalController _globalController = GlobalController();
-  final _reviewTextController = TextEditingController();
   late ScrollController _scrollController;
 
   final TrailRepository trailRepository = TrailRepository();
@@ -56,10 +56,10 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final _dayFormatter = DateFormat('d');
   final _monthFormatter = DateFormat('MMM');
   late List<Review> trailReviews = [];
+  late User user;
 
   Future<void> init() async {
     trailReviews = await trailRepository.getAllReviews();
-
     weatherDataDaily = await getWeather(widget.latitude, widget.longitude);
 
     for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
@@ -382,8 +382,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return ReviewWidget(
-                                                content: trailReviews[index]
-                                                    .content);
+                                                content:
+                                                    trailReviews[index].content,
+                                                ref:  trailReviews[index].user);
                                           }))
                                 ],
                               ),
@@ -401,5 +402,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
         await _globalController.getWeatherByLatAndLon(lat, lon);
 
     return dailyWeather;
+  }
+
+  Future<User?> getUser(DocumentReference<Object?>? d) {
+    return trailRepository.getUser(d);
   }
 }

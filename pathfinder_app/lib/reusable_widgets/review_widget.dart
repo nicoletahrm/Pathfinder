@@ -63,13 +63,28 @@ class _ReviewWidgetState extends State<ReviewWidget> {
             alignment: Alignment.center,
             child: Align(
               alignment: Alignment.center,
-              child: Text(
-                user.username,
-                style: GoogleFonts.poppins(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.normal,
-                  color: hexStringToColor("#44564a"),
-                ),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                      radius: 16,
+                      backgroundImage: AssetImage(user.profilePhoto)),
+                  Text(
+                    user.username,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                      color: hexStringToColor("#44564a"),
+                    ),
+                  ),
+                  Text(
+                    widget.content,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.normal,
+                      color: hexStringToColor("#44564a"),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -44,7 +44,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
             ],
           ));
         } else if (snapshot.hasError) {
-          return Text('Failed to initialize trails: ${snapshot.error}');
+          return Text('Failed to initialize review: ${snapshot.error}');
         } else {
           return buildReview(context);
         }
@@ -54,46 +54,40 @@ class _ReviewWidgetState extends State<ReviewWidget> {
 
   Widget buildReview(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: Column(
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 90.0,
-            width: double.infinity,
-            alignment: Alignment.center,
-            child: Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  CircleAvatar(
-                      radius: 16,
-                      backgroundImage: AssetImage(user.profilePhoto)),
-                  Text(
-                    user.username,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.normal,
-                      color: hexStringToColor("#44564a"),
-                    ),
+          CircleAvatar(
+            radius: 16,
+            backgroundImage: AssetImage(user.profilePhoto),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.username,
+                  style: GoogleFonts.poppins(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: hexStringToColor("#44564a"),
                   ),
-                  Text(
-                    widget.content,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.normal,
-                      color: hexStringToColor("#44564a"),
-                    ),
+                ),
+                Text(
+                  widget.content,
+                  style: GoogleFonts.poppins(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.normal,
+                    color: hexStringToColor("#44564a"),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
-  }
-
-  Future<User?> getUser(DocumentReference<Object?>? d) {
-    return trailRepository.getUser(d);
   }
 }

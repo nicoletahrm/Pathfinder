@@ -384,8 +384,8 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                             return ReviewWidget(
                                                 content:
                                                     trailReviews[index].content,
-                                                ref:  trailReviews[index].user);
-                                          }))
+                                                ref: trailReviews[index].user);
+                                          })),
                                 ],
                               ),
                             ),
@@ -402,9 +402,5 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
         await _globalController.getWeatherByLatAndLon(lat, lon);
 
     return dailyWeather;
-  }
-
-  Future<User?> getUser(DocumentReference<Object?>? d) {
-    return trailRepository.getUser(d);
   }
 }

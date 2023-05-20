@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
 import '../utils/colors_utils.dart';
@@ -11,12 +10,14 @@ import '../utils/constant_colors.dart';
 
 class ReviewWidget extends StatefulWidget {
   final String content;
+  final double rating;
   final DocumentReference<Object?>? ref;
   final DocumentReference<Object?>? trailRef;
 
   const ReviewWidget(
       {Key? key,
       required this.content,
+      required this.rating,
       required this.ref,
       required this.trailRef})
       : super(key: key);
@@ -67,7 +68,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            radius: 16,
+            radius: 25,
             backgroundImage: AssetImage(user.profilePhoto),
           ),
           const SizedBox(width: 20),
@@ -75,22 +76,33 @@ class _ReviewWidgetState extends State<ReviewWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  user.username,
-                  style: GoogleFonts.poppins(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: hexStringToColor("#44564a"),
+                Row(children: [
+                  Text(
+                    user.username,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: hexStringToColor("#44564a"),
+                    ),
                   ),
-                ),
-                Text(
-                  widget.content,
-                  style: GoogleFonts.poppins(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.normal,
-                    color: hexStringToColor("#44564a"),
+                  const SizedBox(
+                    width: 3.0,
                   ),
-                ),
+                  Text(widget.rating.toString(),
+                      style: GoogleFonts.poppins(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.normal,
+                          color: kDefaultIconDarkColor)),
+                  const SizedBox(
+                    width: 3.0,
+                  ),
+                  const Icon(Icons.star, color: kRatingColor, size: 17),
+                ]),
+                Text(widget.content,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                        color: kDefaultIconDarkColor)),
               ],
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart' as x;
 
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -27,8 +28,6 @@ class TrailRepository {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           snapshot.docs[0];
 
-      print(documentSnapshot.id);
-
       Map<String, dynamic>? data = documentSnapshot.data();
       return Trail.fromJson(data!);
     } else {
@@ -46,15 +45,6 @@ class TrailRepository {
 
     return documentSnapshot.reference;
   }
-
-  // Future<List<Review>> getAllReviews() async {
-  //   QuerySnapshot<Map<String, dynamic>> snapshot =
-  //       await database.collection("review").get();
-
-  //   return snapshot.docs
-  //       .map((docSnapshot) => Review.fromJson(docSnapshot))
-  //       .toList();
-  // }
 
   Future<List<Review>> getTrailReviewsByRef(DocumentReference ref) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
@@ -89,6 +79,17 @@ class TrailRepository {
     return null;
   }
 
+ Future<DocumentReference> getUserRefByEmail(String? email) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("user")
+        .where('email', isEqualTo: email)
+        .get();
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
+
+    return documentSnapshot.reference;
+  }
+
   Future<Trail?> getTrailByRef(DocumentReference<Object?>? ref) async {
     if (ref == null) {
       return null;
@@ -102,5 +103,28 @@ class TrailRepository {
     }
 
     return null;
+  }
+
+  void addReview(String content, String rating, DocumentReference<Object?>? ref,
+      DocumentReference<Object?>? user) async {
+    try {
+      // Access the Firestore collection where you want to add the data
+      CollectionReference collectionRef = database.collection('review');
+
+      // Create a new document with an auto-generated ID
+      DocumentReference documentRef = collectionRef.doc();
+
+      // Set the data with the provided parameters
+      await documentRef.set({
+        'content': content,
+        'rating': rating,
+        'trail': ref,
+        'user': user,
+      });
+
+      print('Data added to Firestore successfully!');
+    } catch (error) {
+      print('Error adding data to Firestore: $error');
+    }
   }
 }

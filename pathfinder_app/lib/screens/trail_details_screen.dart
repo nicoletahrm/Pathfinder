@@ -15,6 +15,7 @@ import '../repositories/trail_respository.dart';
 import '../reusable_widgets/daily_weather_widget.dart';
 import '../reusable_widgets/review_widget.dart';
 import '../utils/colors_utils.dart';
+import 'add_review_screen.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
@@ -317,85 +318,134 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
 
                       // a doua parte
                       Stack(children: [
-                        SizedBox(
-                          height: size.height * 1.4,
-                          width: size.width,
-                        ),
-                        Positioned(
-                          top: size.height * 0.0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: hexStringToColor("#ffffff"),
-                              borderRadius: const BorderRadius.only(
-                                  //topLeft: Radius.circular(40),
-                                  //topRight: Radius.circular(40),
-                                  ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 2,
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(30, 20, 30, 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.content,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: hexStringToColor("#44564a"),
+                        Container(
+                          padding: const EdgeInsets.all(0.0),
+                          constraints: BoxConstraints(
+                            minHeight: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).padding.top -
+                                MediaQuery.of(context).padding.bottom,
+                          ),
+                          child: Positioned(
+                            top: size.height * 0.0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: hexStringToColor("#ffffff"),
+                                borderRadius: const BorderRadius.only(
+                                    //topLeft: Radius.circular(40),
+                                    //topRight: Radius.circular(40),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 28,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Let's see some reviews",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 25.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: hexStringToColor("#44564a"),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  SizedBox(
-                                    height: 350,
-                                    child: Expanded(
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: trailReviews.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return ReviewWidget(
-                                              content:
-                                                  trailReviews[index].content,
-                                              ref: trailReviews[index].user,
-                                              trailRef:
-                                                  trailReviews[index].trail);
-                                        },
-                                      ),
-                                    ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 2,
+                                    blurRadius: 15,
+                                    offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.content,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal,
+                                        color: hexStringToColor("#44564a"),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 28,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Let's see some reviews",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: hexStringToColor("#44564a"),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 60,
+                                        margin: const EdgeInsets.fromLTRB(
+                                            0, 10, 0, 20),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddReviewScreen(
+                                                            ref: ref)));
+                                          },
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith((states) {
+                                                if (states.contains(
+                                                    MaterialState.pressed)) {
+                                                  return Colors.black26;
+                                                }
+                                                return hexStringToColor(
+                                                    "#44564a");
+                                              }),
+                                              shape: MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0)))),
+                                          child: Text('Add review',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold)),
+                                        )),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    SizedBox(
+                                      height: 330,
+                                      child: Expanded(
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: trailReviews.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return ReviewWidget(
+                                                content:
+                                                    trailReviews[index].content,
+                                                ref: trailReviews[index].user,
+                                                trailRef:
+                                                    trailReviews[index].trail,
+                                                rating:
+                                                    trailReviews[index].rating);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        )
                       ])
                     ]))
               ]))),

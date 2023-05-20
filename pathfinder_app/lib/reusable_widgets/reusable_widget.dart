@@ -119,3 +119,23 @@ Widget profileMenu(BuildContext context, String text, Function onTop) {
     ),
   );
 }
+
+TextField textField(String text, TextEditingController controller, onChanged) {
+  return TextField(
+    onChanged: onChanged(),
+    controller: controller,
+    cursorColor: Colors.black,
+    cursorHeight: 25,
+    style: GoogleFonts.poppins(fontSize: 18),
+    decoration: InputDecoration(
+      labelText: text,
+      labelStyle: const TextStyle(color: Colors.black45, fontSize: 18),
+      filled: true,
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      fillColor: hexStringToColor("#f0f3f1"),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
+    ),
+  );
+}

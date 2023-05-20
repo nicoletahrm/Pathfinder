@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
 import '../models/review.dart';
+import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
 import '../reusable_widgets/daily_weather_widget.dart';
@@ -16,7 +18,6 @@ import '../utils/colors_utils.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
-  final String? id;
   final String title, description, coverImage, content;
   final double rating, distance, altitude, latitude, longitude;
   final Difficulty difficulty;
@@ -25,7 +26,6 @@ class TrailDetailsScreen extends StatefulWidget {
   const TrailDetailsScreen({
     super.key,
     required this.index,
-    required this.id,
     required this.title,
     required this.description,
     required this.content,
@@ -56,10 +56,14 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final _monthFormatter = DateFormat('MMM');
   late List<Review> trailReviews = [];
   late User user;
+  late Trail? trail;
+  late DocumentReference ref;
 
   Future<void> init() async {
-    trailReviews = await trailRepository.getAllReviews();
     weatherDataDaily = await getWeather(widget.latitude, widget.longitude);
+    trail = await trailRepository.getTrailByTitle(widget.title);
+    ref = await trailRepository.getRefTrailByTitle(widget.title);
+    trailReviews = await trailRepository.getTrailReviewsByRef(ref);
 
     for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
       final date = currentDate.add(Duration(days: i));
@@ -378,10 +382,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                         itemBuilder:
                                             (BuildContext context, int index) {
                                           return ReviewWidget(
-                                            content:
-                                                trailReviews[index].content,
-                                            ref: trailReviews[index].user,
-                                          );
+                                              content:
+                                                  trailReviews[index].content,
+                                              ref: trailReviews[index].user,
+                                              trailRef:
+                                                  trailReviews[index].trail);
                                         },
                                       ),
                                     ),

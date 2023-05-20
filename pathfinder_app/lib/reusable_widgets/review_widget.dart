@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
 import '../utils/colors_utils.dart';
@@ -11,8 +12,13 @@ import '../utils/constant_colors.dart';
 class ReviewWidget extends StatefulWidget {
   final String content;
   final DocumentReference<Object?>? ref;
+  final DocumentReference<Object?>? trailRef;
 
-  const ReviewWidget({Key? key, required this.content, required this.ref})
+  const ReviewWidget(
+      {Key? key,
+      required this.content,
+      required this.ref,
+      required this.trailRef})
       : super(key: key);
 
   @override
@@ -22,9 +28,11 @@ class ReviewWidget extends StatefulWidget {
 class _ReviewWidgetState extends State<ReviewWidget> {
   final TrailRepository trailRepository = TrailRepository();
   late User user;
+  //late Trail trail;
 
   Future<void> init() async {
-    user = (await trailRepository.getUser(widget.ref))!;
+    user = (await trailRepository.getUserByRef(widget.ref))!;
+    //trail = (await trailRepository.getTrailByRef(widget.trailRef))!;
   }
 
   @override

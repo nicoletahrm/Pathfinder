@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import '../utils/covert.dart';
 
@@ -33,7 +32,6 @@ class Trail {
 
   Map<String, dynamic> toJson() {
     return {
-      //"id": id,
       "title": title,
       "description": description,
       "content": content,
@@ -48,8 +46,8 @@ class Trail {
     };
   }
 
-  factory Trail.fromJson(QueryDocumentSnapshot<Map<String, dynamic>> json) {
-    final data = json.data();
+  factory Trail.fromJson(Map<String, dynamic> json) {
+    final data = json;
 
     return Trail(
       id: data["id"],

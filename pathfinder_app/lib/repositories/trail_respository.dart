@@ -13,33 +13,92 @@ class TrailRepository {
         await database.collection("trail").orderBy('title').get();
 
     return snapshot.docs
-        .map((docSnapshot) => Trail.fromJson(docSnapshot))
+        .map((docSnapshot) => Trail.fromJson(docSnapshot.data()))
         .toList();
   }
 
-  Future<List<Review>> getAllReviews() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await database.collection("review").get();
+  Future<Trail?> getTrailByTitle(String trailTitle) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("trail")
+        .where('title', isEqualTo: trailTitle)
+        .get();
 
-    // print(snapshot.docs
-    //     .map((docSnapshot) => Review.fromJson(docSnapshot))
-    //     .toList());
+    if (snapshot.docs.isNotEmpty) {
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          snapshot.docs[0];
 
-    return snapshot.docs
-        .map((docSnapshot) => Review.fromJson(docSnapshot))
-        .toList();
+      print(documentSnapshot.id);
+
+      Map<String, dynamic>? data = documentSnapshot.data();
+      return Trail.fromJson(data!);
+    } else {
+      return null;
+    }
   }
 
-  Future<User?> getUser(DocumentReference<Object?>? userRef) async {
-    if (userRef == null) {
+  Future<DocumentReference> getRefTrailByTitle(String trailTitle) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("trail")
+        .where('title', isEqualTo: trailTitle)
+        .get();
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
+
+    return documentSnapshot.reference;
+  }
+
+  // Future<List<Review>> getAllReviews() async {
+  //   QuerySnapshot<Map<String, dynamic>> snapshot =
+  //       await database.collection("review").get();
+
+  //   return snapshot.docs
+  //       .map((docSnapshot) => Review.fromJson(docSnapshot))
+  //       .toList();
+  // }
+
+  Future<List<Review>> getTrailReviewsByRef(DocumentReference ref) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('review')
+        .where('trail', isEqualTo: ref)
+        .get();
+
+    List<Review> reviews = [];
+    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+        in snapshot.docs) {
+      Map<String, dynamic> data = documentSnapshot.data();
+      Review review = Review.fromJson(data);
+      reviews.add(review);
+    }
+
+    return reviews;
+  }
+
+  Future<User?> getUserByRef(DocumentReference<Object?>? ref) async {
+    if (ref == null) {
       return null;
     }
 
-    final userSnapshot = await userRef.get();
+    final userSnapshot = await ref.get();
 
     if (userSnapshot.exists) {
       final userData = userSnapshot.data() as Map<String, dynamic>;
       return User.fromJson(userData);
+    }
+
+    return null;
+  }
+
+  Future<Trail?> getTrailByRef(DocumentReference<Object?>? ref) async {
+    if (ref == null) {
+      return null;
+    }
+
+    final trailSnapshot = await ref.get();
+
+    if (trailSnapshot.exists) {
+      final trailData = trailSnapshot.data() as Map<String, dynamic>;
+      return Trail.fromJson(trailData);
     }
 
     return null;

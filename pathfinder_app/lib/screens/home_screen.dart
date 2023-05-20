@@ -128,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         builder: (context) =>
                                             TrailDetailsScreen(
                                                 index: index,
-                                                id: trails[index].id,
                                                 title: trails[index].title,
                                                 description:
                                                     trails[index].description,

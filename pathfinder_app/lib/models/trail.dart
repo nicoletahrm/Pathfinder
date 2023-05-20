@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
-import '../utils/covert_to.dart';
+import '../utils/covert.dart';
 
 class Trail {
-  //final String id;
+  final String? id;
   final String title;
   final String description;
   final String content;
@@ -15,10 +15,9 @@ class Trail {
   final double latitude;
   final double longitude;
   final List<dynamic> images;
-  List<dynamic> reviews;
 
   Trail({
-    //required this.id,
+    required this.id,
     required this.rating,
     required this.title,
     required this.description,
@@ -30,7 +29,6 @@ class Trail {
     required this.latitude,
     required this.longitude,
     required this.images,
-    required this.reviews,
   });
 
   Map<String, dynamic> toJson() {
@@ -47,7 +45,6 @@ class Trail {
       "latitude": latitude,
       "longitude": longitude,
       "images": images,
-      "reviews": reviews,
     };
   }
 
@@ -55,7 +52,7 @@ class Trail {
     final data = json.data();
 
     return Trail(
-      //id: data["id"],
+      id: data["id"],
       title: data["title"],
       description: data["description"],
       content: data["content"],
@@ -67,7 +64,6 @@ class Trail {
       latitude: stringToDouble(data["latitude"]),
       longitude: stringToDouble(data["longitude"]),
       images: List<String>.from(data['images'] ?? []),
-      reviews: List<DocumentReference>.from(data['reviews'] ?? []),
     );
   }
 }

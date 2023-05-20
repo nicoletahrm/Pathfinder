@@ -11,10 +11,12 @@ import '../models/review.dart';
 import '../repositories/trail_respository.dart';
 import '../reusable_widgets/daily_weather_widget.dart';
 import '../reusable_widgets/reusable_widget.dart';
+import '../reusable_widgets/review_widget.dart';
 import '../utils/colors_utils.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
+  final String? id;
   final String title, description, coverImage, content;
   final double rating, distance, altitude, latitude, longitude;
   final Difficulty difficulty;
@@ -23,6 +25,7 @@ class TrailDetailsScreen extends StatefulWidget {
   const TrailDetailsScreen({
     super.key,
     required this.index,
+    required this.id,
     required this.title,
     required this.description,
     required this.content,
@@ -379,22 +382,24 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                       _reviewTextController,
                                       () {}),
                                   SizedBox(
-                                      height: 100,
-                                      child: Expanded(
-                                          child: ListView.builder(
-                                              scrollDirection: Axis.vertical,
-                                              itemCount: trailReviews.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return Stack(children: <Widget>[
-                                                  Hero(
-                                                      tag: "review$index",
-                                                      child: Text(
-                                                          trailReviews[index]
-                                                              .title)),
-                                                ]);
-                                              })))
+                                    height: 100,
+                                    child: ReviewWidget(trailId: widget.id),
+                                    //Expanded(
+                                    //     child: ListView.builder(
+                                    //         scrollDirection: Axis.vertical,
+                                    //         itemCount: trailReviews.length,
+                                    //         itemBuilder:
+                                    //             (BuildContext context,
+                                    //                 int index) {
+                                    //           return Stack(children: <Widget>[
+                                    //             Hero(
+                                    //                 tag: "review$index",
+                                    //                 child: Text(
+                                    //                     trailReviews[index]
+                                    //                         .content)),
+                                    //           ]);
+                                    //         }))
+                                  )
                                 ],
                               ),
                             ),

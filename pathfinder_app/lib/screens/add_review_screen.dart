@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../reusable_widgets/reusable_widget.dart';
+import '../reusable_widgets/star_review_widget.dart';
 import '../utils/colors_utils.dart';
 import '../utils/constant_colors.dart';
 
@@ -38,42 +39,17 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: init(),
-      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: kButtonColor,
-                backgroundColor: Colors.black12.withOpacity(0.5),
-              ),
-            ],
-          ));
-        } else if (snapshot.hasError) {
-          return Text('Failed to initialize trails: ${snapshot.error}');
-        } else {
-          return buildTrailsList(context);
-        }
-      },
-    );
-  }
-
-  Widget buildTrailsList(BuildContext context) {
-    //Size size = MediaQuery.of(context).size;
-
+    init();
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.fromLTRB(30, 70, 30, 0),
       child: Column(
         children: [
-          textField("What you want to write?", _reviewController, (() {})),
+          StarReviewWidget(),
           const SizedBox(
-            height: 18,
+            height: 20,
           ),
-          textField("Rating", _ratingController, (() {})),
+          textField("What you want to write?", _reviewController, (() {})),
           const SizedBox(
             height: 18,
           ),

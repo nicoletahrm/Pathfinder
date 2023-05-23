@@ -65,7 +65,7 @@ class DailyWeatherWidget extends StatelessWidget {
                   Expanded(
                       child: Align(
                     alignment: Alignment.center,
-                    child: Text('${daily.temp!.min!.round() + 5}º',
+                    child: Text('${daily.temp!.max!.round()}º',
                         style: GoogleFonts.poppins(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,

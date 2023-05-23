@@ -29,11 +29,9 @@ class ReviewWidget extends StatefulWidget {
 class _ReviewWidgetState extends State<ReviewWidget> {
   final TrailRepository trailRepository = TrailRepository();
   late User user;
-  //late Trail trail;
 
   Future<void> init() async {
     user = (await trailRepository.getUserByRef(widget.ref))!;
-    //trail = (await trailRepository.getTrailByRef(widget.trailRef))!;
   }
 
   @override
@@ -41,18 +39,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
     return FutureBuilder(
       future: init(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: kButtonColor,
-                backgroundColor: Colors.black12.withOpacity(0.5),
-              ),
-            ],
-          ));
-        } else if (snapshot.hasError) {
+        if (snapshot.hasError) {
           return Text('Failed to initialize review: ${snapshot.error}');
         } else {
           return buildReview(context);

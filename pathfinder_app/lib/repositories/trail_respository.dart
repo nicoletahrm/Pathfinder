@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
-import 'package:firebase_auth/firebase_auth.dart' as x;
+import 'dart:io';
 
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -64,22 +65,19 @@ class TrailRepository {
     return reviews;
   }
 
-  Future<User?> getUserByRef(DocumentReference<Object?>? ref) async {
-    if (ref == null) {
-      return null;
-    }
-
-    final userSnapshot = await ref.get();
+  Future<User> getUserByRef(DocumentReference<Object?>? ref) async {
+    final userSnapshot = await ref!.get();
 
     if (userSnapshot.exists) {
       final userData = userSnapshot.data() as Map<String, dynamic>;
       return User.fromJson(userData);
     }
 
-    return null;
+    throw Exception(
+        'User not found.'); // Throw an exception if the user does not exist
   }
 
- Future<DocumentReference> getUserRefByEmail(String? email) async {
+  Future<DocumentReference> getUserRefByEmail(String? email) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await database
         .collection("user")
         .where('email', isEqualTo: email)
@@ -105,26 +103,41 @@ class TrailRepository {
     return null;
   }
 
-  void addReview(String content, String rating, DocumentReference<Object?>? ref,
-      DocumentReference<Object?>? user) async {
+  void addReview(String content, List<String> images, String rating,
+      DocumentReference<Object?>? ref, DocumentReference<Object?>? user) async {
     try {
-      // Access the Firestore collection where you want to add the data
       CollectionReference collectionRef = database.collection('review');
 
-      // Create a new document with an auto-generated ID
       DocumentReference documentRef = collectionRef.doc();
 
-      // Set the data with the provided parameters
+      print(images);
       await documentRef.set({
         'content': content,
         'rating': rating,
         'trail': ref,
         'user': user,
+        'images': images,
       });
 
       print('Data added to Firestore successfully!');
     } catch (error) {
       print('Error adding data to Firestore: $error');
     }
+  }
+
+  Future<String> upload(File file) async {
+    final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final Reference storageRef =
+        FirebaseStorage.instance.ref().child('images_folder/$fileName');
+
+    final TaskSnapshot snapshot = await storageRef.putFile(file);
+
+    if (snapshot.state == TaskState.success) {
+      final String downloadUrl = await storageRef.getDownloadURL();
+      return downloadUrl;
+    }
+
+    throw Exception('Image upload failed.');
   }
 }

@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
+import '../screens/home_screen.dart';
 import '../utils/colors_utils.dart';
 import '../utils/constant_colors.dart';
+import 'images_widget.dart';
 
 class ReviewWidget extends StatefulWidget {
   final String content;
   final double rating;
+  final List<String> images;
   final DocumentReference<Object?>? ref;
   final DocumentReference<Object?>? trailRef;
 
@@ -18,6 +21,7 @@ class ReviewWidget extends StatefulWidget {
       {Key? key,
       required this.content,
       required this.rating,
+      required this.images,
       required this.ref,
       required this.trailRef})
       : super(key: key);
@@ -31,7 +35,13 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   late User user;
 
   Future<void> init() async {
-    user = (await trailRepository.getUserByRef(widget.ref))!;
+    user = await trailRepository.getUserByRef(widget.ref);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
   }
 
   @override
@@ -39,7 +49,9 @@ class _ReviewWidgetState extends State<ReviewWidget> {
     return FutureBuilder(
       future: init(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        if (snapshot.hasError) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
           return Text('Failed to initialize review: ${snapshot.error}');
         } else {
           return buildReview(context);
@@ -90,6 +102,20 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                         fontSize: 16.0,
                         fontWeight: FontWeight.normal,
                         color: kDefaultIconDarkColor)),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ImageSliderScreen(images: widget.images)));
+                  },
+                  child: Text("See photos",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.normal,
+                          color: kDefaultIconDarkColor)),
+                )
               ],
             ),
           ),

@@ -6,7 +6,7 @@ class Review {
   final double rating;
   final DocumentReference<Object?>? user;
   final DocumentReference<Object?>? trail;
-  final List<dynamic> images;
+  final List<String> images;
 
   Review({
     required this.content,

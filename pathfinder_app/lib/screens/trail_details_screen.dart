@@ -428,6 +428,8 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                             return ReviewWidget(
                                                 content:
                                                     trailReviews[index].content,
+                                                images:
+                                                    trailReviews[index].images,
                                                 ref: trailReviews[index].user,
                                                 trailRef:
                                                     trailReviews[index].trail,

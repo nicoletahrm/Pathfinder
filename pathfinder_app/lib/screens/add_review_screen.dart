@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,7 @@ import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../reusable_widgets/reusable_widget.dart';
 import '../reusable_widgets/star_review_widget.dart';
 import '../utils/colors_utils.dart';
-import '../utils/constant_colors.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddReviewScreen extends StatefulWidget {
   final DocumentReference<Object?>? ref;
@@ -25,6 +27,37 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   final user = FirebaseAuth.instance.currentUser;
   final TrailRepository trailRepository = TrailRepository();
   late DocumentReference userRef;
+  late List<String> images = [];
+  late File _selectedImage;
+  late double rating;
+
+  void _uploadPhoto() async {
+    try {
+      final String downloadUrl = await trailRepository.upload(_selectedImage);
+      images.add(downloadUrl);
+      print('Image uploaded: $downloadUrl');
+    } catch (e) {
+      print('Image upload failed: $e');
+    }
+  }
+
+  _getFromGallery() async {
+    final PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+        print('Image selected: ${_selectedImage.path}');
+      });
+    }
+  }
+
+  void handleRating(double value) {
+    rating = value;
+  }
 
   Future<void> init() async {
     userRef = await trailRepository.getUserRefByEmail(user?.email);
@@ -45,7 +78,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
       padding: const EdgeInsets.fromLTRB(30, 70, 30, 0),
       child: Column(
         children: [
-          StarReviewWidget(),
+          StarReviewWidget(onRatingNeeded: handleRating),
           const SizedBox(
             height: 20,
           ),
@@ -53,14 +86,37 @@ class _AddReviewScreen extends State<AddReviewScreen> {
           const SizedBox(
             height: 18,
           ),
+          ElevatedButton(
+            onPressed: () {
+              _getFromGallery();
+            },
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return Colors.black26;
+                  }
+                  return hexStringToColor("#44564a");
+                }),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0)))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.photo_library),
+                SizedBox(width: 8),
+                Text('Add Photo'),
+              ],
+            ),
+          ),
           Container(
             width: MediaQuery.of(context).size.width,
             height: 60,
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
             child: ElevatedButton(
               onPressed: () {
-                trailRepository.addReview(_reviewController.text,
-                    _ratingController.text, widget.ref, userRef);
+                _uploadPhoto();
+                trailRepository.addReview(_reviewController.text, images,
+                    rating.toString(), widget.ref, userRef);
                 Navigator.of(context).pop();
               },
               style: ButtonStyle(

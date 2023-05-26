@@ -42,15 +42,17 @@ class MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: initialCameraPosition,
-          //markers: markers,
-          zoomControlsEnabled: true,
-          onMapCreated: (GoogleMapController mapController) {
-            mapController = _locationController as GoogleMapController;
-          },
-          myLocationEnabled: true,
+        body: SafeArea(
+          child: GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: initialCameraPosition,
+            //markers: markers,
+            zoomControlsEnabled: true,
+            onMapCreated: (GoogleMapController mapController) {
+              mapController = _locationController as GoogleMapController;
+            },
+            myLocationEnabled: true,
+          ),
         ),
         bottomNavigationBar: const CustomBottomNavBar());
   }

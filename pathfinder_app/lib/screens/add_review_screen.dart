@@ -99,68 +99,87 @@ class _AddReviewScreen extends State<AddReviewScreen> {
     //init();
     return Scaffold(
         body: Padding(
-      padding: const EdgeInsets.fromLTRB(30, 70, 30, 0),
-      child: Column(
-        children: [
-          StarReviewWidget(onRatingNeeded: handleRating),
-          const SizedBox(
-            height: 20,
+      padding: const EdgeInsets.fromLTRB(30, 60, 30, 0),
+      child: Stack(children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: const Icon(Icons.arrow_back),
           ),
-          textField("What you want to write?", _reviewController, (() {})),
-          const SizedBox(
-            height: 18,
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              StarReviewWidget(onRatingNeeded: handleRating),
+              const SizedBox(
+                height: 20,
+              ),
+              textField("What you want to write?", _reviewController, (() {})),
+              const SizedBox(
+                height: 18,
+              ),
+              Container(
+                  width: MediaQuery.of(context).size.width / 3.0,
+                  height: 60,
+                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _getFromGallery();
+                    },
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.black26;
+                          }
+                          return hexStringToColor("#44564a");
+                        }),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0)))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.photo_library),
+                        SizedBox(width: 8),
+                        Text('Add Photo'),
+                      ],
+                    ),
+                  )),
+              //grid cu pozele adaugate (maxim 4 poze)
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 60,
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _uploadPhoto();
+                    trailRepository.addReview(_reviewController.text, images,
+                        rating.toString(), widget.ref, userRef);
+                    Navigator.of(context).pop();
+                  },
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return Colors.black26;
+                        }
+                        return hexStringToColor("#44564a");
+                      }),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0)))),
+                  child: Text('Add review',
+                      style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)),
+                ),
+              )
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              _getFromGallery();
-            },
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.black26;
-                  }
-                  return hexStringToColor("#44564a");
-                }),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0)))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.photo_library),
-                SizedBox(width: 8),
-                Text('Add Photo'),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 60,
-            margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-            child: ElevatedButton(
-              onPressed: () {
-                _uploadPhoto();
-                trailRepository.addReview(_reviewController.text, images,
-                    rating.toString(), widget.ref, userRef);
-                Navigator.of(context).pop();
-              },
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.black26;
-                    }
-                    return hexStringToColor("#44564a");
-                  }),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0)))),
-              child: Text('Add review',
-                  style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
-            ),
-          )
-        ],
-      ),
+        )
+      ]),
     ));
   }
 }

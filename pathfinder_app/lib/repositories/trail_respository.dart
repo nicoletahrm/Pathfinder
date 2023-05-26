@@ -119,6 +119,8 @@ class TrailRepository {
         'images': images,
       });
 
+      print(images);
+
       print('Data added to Firestore successfully!');
     } catch (error) {
       print('Error adding data to Firestore: $error');

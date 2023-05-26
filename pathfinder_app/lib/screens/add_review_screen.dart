@@ -11,6 +11,7 @@ import '../reusable_widgets/reusable_widget.dart';
 import '../reusable_widgets/star_review_widget.dart';
 import '../utils/colors_utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AddReviewScreen extends StatefulWidget {
   final DocumentReference<Object?>? ref;
@@ -50,9 +51,22 @@ class _AddReviewScreen extends State<AddReviewScreen> {
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
+        images.add(_selectedImage.path);
+        print(images);
         print('Image selected: ${_selectedImage.path}');
       });
     }
+  }
+
+  Future<void> saveImageToStorage(File imageFile) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = '${directory.path}/$images/$imageFile';
+
+    // Create the directory if it doesn't exist
+    await Directory('${directory.path}/$images').create(recursive: true);
+
+    // Copy the image file to the desired location
+    await imageFile.copy(imagePath);
   }
 
   void handleRating(double value) {

@@ -131,7 +131,7 @@ class TrailRepository {
     final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
 
     final Reference storageRef =
-        FirebaseStorage.instance.ref().child('images_folder/$fileName');
+        FirebaseStorage.instance.ref().child(fileName);
 
     final TaskSnapshot snapshot = await storageRef.putFile(file);
 

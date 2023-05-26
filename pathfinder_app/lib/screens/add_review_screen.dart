@@ -35,7 +35,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   void _uploadPhoto() async {
     try {
       final String downloadUrl = await trailRepository.upload(_selectedImage);
-      images.add(downloadUrl);
+      //images.add(downloadUrl);
       print('Image uploaded: $downloadUrl');
     } catch (e) {
       print('Image upload failed: $e');
@@ -44,16 +44,16 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
   _getFromGallery() async {
     final PickedFile? pickedFile = await ImagePicker().getImage(
-      source: ImageSource.gallery,
-      maxWidth: 1800,
-      maxHeight: 1800,
+      source: ImageSource.camera,
+      // maxWidth: 1800,
+      // maxHeight: 1800,
     );
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
         images.add(_selectedImage.path);
-        print(images);
-        print('Image selected: ${_selectedImage.path}');
+        // print(images);
+        // print('Image selected: ${_selectedImage.path}');
       });
     }
   }

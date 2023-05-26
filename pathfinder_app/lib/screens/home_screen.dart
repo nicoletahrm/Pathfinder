@@ -3,11 +3,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
-import 'package:pathfinder_app/reusable_widgets/reusable_widget.dart';
+import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:pathfinder_app/screens/trail_details_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/trail.dart';
-import '../reusable_widgets/custom_nav_bar.dart';
+import '../widgets/custom_nav_bar.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import '../utils/constant_colors.dart';
 import 'login_screen.dart';

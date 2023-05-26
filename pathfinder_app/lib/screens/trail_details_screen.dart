@@ -12,8 +12,8 @@ import '../models/review.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
-import '../reusable_widgets/daily_weather_widget.dart';
-import '../reusable_widgets/review_widget.dart';
+import '../widgets/daily_weather_widget.dart';
+import '../widgets/review_widget.dart';
 import '../utils/colors_utils.dart';
 import 'add_review_screen.dart';
 

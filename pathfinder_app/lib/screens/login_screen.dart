@@ -8,7 +8,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../reusable_widgets/reusable_widget.dart';
+import '../widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
 import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../reusable_widgets/reusable_widget.dart';
+import '../widgets/reusable_widget.dart';
 import 'package:pathfinder_app/screens/home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {

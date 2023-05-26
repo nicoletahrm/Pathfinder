@@ -17,7 +17,8 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+        body: SafeArea(
+      child: Stack(
         children: [
           PageView.builder(
             itemCount: widget.images.length,
@@ -38,6 +39,6 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

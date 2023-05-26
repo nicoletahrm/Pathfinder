@@ -1,17 +1,15 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, deprecated_member_use
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
+import '../utils/constant_colors.dart';
 import '../widgets/reusable_widget.dart';
 import '../widgets/star_review_widget.dart';
 import '../utils/colors_utils.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 class AddReviewScreen extends StatefulWidget {
   final DocumentReference<Object?>? ref;
@@ -24,49 +22,37 @@ class AddReviewScreen extends StatefulWidget {
 
 class _AddReviewScreen extends State<AddReviewScreen> {
   final TextEditingController _reviewController = TextEditingController();
-  final TextEditingController _ratingController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
   final TrailRepository trailRepository = TrailRepository();
   late DocumentReference userRef;
   late List<String> images = [];
-  late File _selectedImage;
+  late List<File> _selectedImages;
   late double rating;
 
   void _uploadPhoto() async {
-    try {
-      final String downloadUrl = await trailRepository.upload(_selectedImage);
-      //images.add(downloadUrl);
-      print('Image uploaded: $downloadUrl');
-    } catch (e) {
-      print('Image upload failed: $e');
+    for (var i = 0; i < _selectedImages.length; i++) {
+      try {
+        final String downloadUrl =
+            await trailRepository.upload(_selectedImages[i]);
+
+        print('Image uploaded: $downloadUrl');
+      } catch (e) {
+        print('Image upload failed: $e');
+      }
     }
   }
 
-  _getFromGallery() async {
-    final PickedFile? pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
-      // maxWidth: 1800,
-      // maxHeight: 1800,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-        images.add(_selectedImage.path);
-        // print(images);
-        // print('Image selected: ${_selectedImage.path}');
-      });
+  Future<void> _getFromGallery() async {
+    List<XFile> pickedFiles = await ImagePicker().pickMultiImage();
+    List<File> selectedImages = [];
+    for (var i = 0; i < pickedFiles.length; i++) {
+      selectedImages.add(File(pickedFiles[i].path));
     }
-  }
-
-  Future<void> saveImageToStorage(File imageFile) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final imagePath = '${directory.path}/$images/$imageFile';
-
-    // Create the directory if it doesn't exist
-    await Directory('${directory.path}/$images').create(recursive: true);
-
-    // Copy the image file to the desired location
-    await imageFile.copy(imagePath);
+    setState(() {
+      for (var i = 0; i < selectedImages.length; i++) {
+        images.add(selectedImages[i].path);
+      }
+    });
   }
 
   void handleRating(double value) {
@@ -86,7 +72,31 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    init();
+    return FutureBuilder(
+      future: init(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: kButtonColor,
+                backgroundColor: Colors.black12.withOpacity(0.5),
+              ),
+            ],
+          ));
+        } else if (snapshot.hasError) {
+          return Text('Failed to initialize trails: ${snapshot.error}');
+        } else {
+          return buildTrail(context);
+        }
+      },
+    );
+  }
+
+  Widget buildTrail(BuildContext context) {
+    //init();
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.fromLTRB(30, 70, 30, 0),

@@ -72,9 +72,9 @@ class _ReviewWidgetState extends State<ReviewWidget> {
           ),
           const SizedBox(width: 20),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 Row(children: [
                   Text(
                     user.username,
@@ -97,28 +97,47 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                   ),
                   const Icon(Icons.star, color: kRatingColor, size: 17),
                 ]),
-                Text(widget.content,
-                    style: GoogleFonts.poppins(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        color: kDefaultIconDarkColor)),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ImageSliderScreen(images: widget.images)));
-                  },
-                  child: Text("See photos",
-                      style: GoogleFonts.poppins(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.normal,
-                          color: kDefaultIconDarkColor)),
-                )
-              ],
-            ),
-          ),
+                Row(
+                  children: [
+                    Text(widget.content,
+                        style: GoogleFonts.poppins(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal,
+                            color: kDefaultIconDarkColor)),
+                    SizedBox(
+                      width: 50.0,
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ImageSliderScreen(
+                                        images: widget.images)));
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.black26;
+                                }
+                                return hexStringToColor("#44564a");
+                              }),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)))),
+                          child: const Icon(
+                            Icons.photo_library,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ])),
         ],
       ),
     );

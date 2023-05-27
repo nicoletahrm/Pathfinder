@@ -61,84 +61,68 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   }
 
   Widget buildReview(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 25,
-            backgroundImage: AssetImage(user.profilePhoto),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageSliderScreen(images: widget.images),
+        ),
+      ),
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+        width: 500,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 25,
+              backgroundImage: AssetImage(user.profilePhoto),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                Row(children: [
-                  Text(
-                    user.username,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: hexStringToColor("#44564a"),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 3.0,
-                  ),
-                  Text(widget.rating.toString(),
-                      style: GoogleFonts.poppins(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.normal,
-                          color: kDefaultIconDarkColor)),
-                  const SizedBox(
-                    width: 3.0,
-                  ),
-                  const Icon(Icons.star, color: kRatingColor, size: 17),
-                ]),
-                Row(
-                  children: [
-                    Text(widget.content,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        user.username,
                         style: GoogleFonts.poppins(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.normal,
-                            color: kDefaultIconDarkColor)),
-                    SizedBox(
-                      width: 50.0,
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ImageSliderScreen(
-                                        images: widget.images)));
-                          },
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.black26;
-                                }
-                                return hexStringToColor("#44564a");
-                              }),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)))),
-                          child: const Icon(
-                            Icons.photo_library,
-                            size: 20,
-                          ),
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: hexStringToColor("#44564a"),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ])),
-        ],
+                      const SizedBox(width: 3.0),
+                      Text(
+                        widget.rating.toString(),
+                        style: GoogleFonts.poppins(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.normal,
+                          color: kDefaultIconDarkColor,
+                        ),
+                      ),
+                      const SizedBox(width: 3.0),
+                      const Icon(Icons.star, color: kRatingColor, size: 17),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        widget.content,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                          color: kDefaultIconDarkColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -195,7 +195,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
                   // Grid of added photos
                   SingleChildScrollView(
-                    child: Container(
+                    child: SizedBox(
                       height: size.height / 1.6,
                       child: GridView.count(
                         shrinkWrap: true,

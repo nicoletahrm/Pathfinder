@@ -22,6 +22,7 @@ class AddReviewScreen extends StatefulWidget {
 
 class _AddReviewScreen extends State<AddReviewScreen> {
   final TextEditingController _reviewController = TextEditingController();
+  late ScrollController _scrollController;
   final user = FirebaseAuth.instance.currentUser;
   final TrailRepository trailRepository = TrailRepository();
   late DocumentReference userRef;
@@ -61,6 +62,19 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
   Future<void> init() async {
     userRef = await trailRepository.getUserRefByEmail(user?.email);
+
+    _scrollController = ScrollController();
+
+    _scrollController.addListener(() {
+      if (_scrollController.offset <=
+          _scrollController.position.minScrollExtent) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   @override
@@ -96,90 +110,150 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   }
 
   Widget buildTrail(BuildContext context) {
-    //init();
-    return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.fromLTRB(30, 60, 30, 0),
-      child: Stack(children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: const Icon(Icons.arrow_back),
+    Size size = MediaQuery.of(context).size;
+    // Initialize grid items
+    List<Widget> gridItems = [];
+
+    // Add existing images to grid items
+    for (String imagePath in images) {
+      gridItems.add(
+        GestureDetector(
+          onTap: () {
+            // Implement logic to view the image entirely
+            // For example, you can show the image in a dialog or fullscreen view
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  child: Image.file(File(imagePath)),
+                );
+              },
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              image: DecorationImage(
+                image: FileImage(File(imagePath)),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
-        Align(
-          alignment: Alignment.center,
-          child: Column(
-            children: [
-              StarReviewWidget(onRatingNeeded: handleRating),
-              const SizedBox(
-                height: 20,
+      );
+    }
+
+    // Add a placeholder for adding more photos
+    gridItems.add(
+      GestureDetector(
+        onTap: () {
+          _getFromGallery();
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.grey.withOpacity(0.5),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.photo_library),
+                SizedBox(height: 8),
+                Text('Add Photo'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(30, 60, 30, 0),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: const Icon(Icons.arrow_back),
               ),
-              textField("What you want to write?", _reviewController, (() {})),
-              const SizedBox(
-                height: 18,
-              ),
-              Container(
-                  width: MediaQuery.of(context).size.width / 3.0,
-                  height: 60,
-                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _getFromGallery();
-                    },
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return Colors.black26;
-                          }
-                          return hexStringToColor("#44564a");
-                        }),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0)))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.photo_library),
-                        SizedBox(width: 8),
-                        Text('Add Photo'),
-                      ],
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                children: [
+                  StarReviewWidget(onRatingNeeded: handleRating),
+                  const SizedBox(height: 20),
+                  textField(
+                    "What you want to write?",
+                    _reviewController,
+                    (() {}),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // Grid of added photos
+                  SingleChildScrollView(
+                    child: Container(
+                      height: size.height / 1.6,
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        children: gridItems,
+                      ),
                     ),
-                  )),
-              //grid cu pozele adaugate (maxim 4 poze)
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 60,
-                margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-                child: ElevatedButton(
-                  onPressed: () {
-                    _uploadPhoto();
-                    trailRepository.addReview(_reviewController.text, images,
-                        rating.toString(), widget.ref, userRef);
-                    Navigator.of(context).pop();
-                  },
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.black26;
-                        }
-                        return hexStringToColor("#44564a");
-                      }),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0)))),
-                  child: Text('Add review',
-                      style: GoogleFonts.poppins(
+                  ),
+                  const SizedBox(height: 18),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 60,
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _uploadPhoto();
+                        trailRepository.addReview(
+                          _reviewController.text,
+                          images,
+                          rating.toString(),
+                          widget.ref,
+                          userRef,
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) {
+                            if (states.contains(MaterialState.pressed)) {
+                              return Colors.black26;
+                            }
+                            return hexStringToColor("#44564a");
+                          },
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Add review',
+                        style: GoogleFonts.poppins(
                           fontSize: 18,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold)),
-                ),
-              )
-            ],
-          ),
-        )
-      ]),
-    ));
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -47,9 +47,7 @@ class TrailDetailsScreen extends StatefulWidget {
 class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final GlobalController _globalController = GlobalController();
   late ScrollController _scrollController;
-
   final TrailRepository trailRepository = TrailRepository();
-
   late List<Daily> weatherDataDaily;
   final dates = <Widget>[];
   final currentDate = DateTime.now();

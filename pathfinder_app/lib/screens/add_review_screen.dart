@@ -30,7 +30,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   late List<File> _selectedImages;
   late double rating;
 
-  void _uploadPhoto() async {
+  void _uploadPhotos() async {
     for (var i = 0; i < _selectedImages.length; i++) {
       try {
         final String downloadUrl =
@@ -119,8 +119,6 @@ class _AddReviewScreen extends State<AddReviewScreen> {
       gridItems.add(
         GestureDetector(
           onTap: () {
-            // Implement logic to view the image entirely
-            // For example, you can show the image in a dialog or fullscreen view
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -169,91 +167,86 @@ class _AddReviewScreen extends State<AddReviewScreen> {
     );
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(30, 60, 30, 0),
-        child: Stack(
+        body: Padding(
+      padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+      child:
+          ListView(controller: _scrollController, shrinkWrap: false, children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: const Icon(Icons.arrow_back),
+          ),
+        ),
+        Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: const Icon(Icons.arrow_back),
+            StarReviewWidget(onRatingNeeded: handleRating),
+            const SizedBox(height: 20),
+            textField(
+              "What you want to write?",
+              _reviewController,
+              (() {}),
+            ),
+            const SizedBox(height: 18),
+
+            // Grid of added photos
+            SingleChildScrollView(
+              child: SizedBox(
+                height: size.height / 1.6,
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: gridItems,
+                ),
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  StarReviewWidget(onRatingNeeded: handleRating),
-                  const SizedBox(height: 20),
-                  textField(
-                    "What you want to write?",
-                    _reviewController,
-                    (() {}),
+            const SizedBox(height: 18),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  _uploadPhotos();
+                  trailRepository.addReview(
+                    _reviewController.text,
+                    images,
+                    rating.toString(),
+                    widget.ref,
+                    userRef,
+                  );
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                    (states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.black26;
+                      }
+                      return hexStringToColor("#44564a");
+                    },
                   ),
-                  const SizedBox(height: 18),
-
-                  // Grid of added photos
-                  SingleChildScrollView(
-                    child: SizedBox(
-                      height: size.height / 1.6,
-                      child: GridView.count(
-                        shrinkWrap: true,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        children: gridItems,
-                      ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
-                  const SizedBox(height: 18),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 60,
-                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _uploadPhoto();
-                        trailRepository.addReview(
-                          _reviewController.text,
-                          images,
-                          rating.toString(),
-                          widget.ref,
-                          userRef,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.black26;
-                            }
-                            return hexStringToColor("#44564a");
-                          },
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        'Add review',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                ),
+                child: Text(
+                  'Add review',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
               ),
             ),
           ],
         ),
-      ),
-    );
+      ]),
+    ));
   }
 }

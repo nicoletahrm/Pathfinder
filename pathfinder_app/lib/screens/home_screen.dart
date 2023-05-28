@@ -1,5 +1,5 @@
-// ignore_for_file: use_build_context_synchronously
-
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomeScreenState createState() => _HomeScreenState();
 }
 
@@ -128,24 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         builder: (context) =>
                                             TrailDetailsScreen(
                                                 index: index,
-                                                title: trails[index].title,
-                                                description:
-                                                    trails[index].description,
-                                                coverImage:
-                                                    trails[index].coverImage,
-                                                distance:
-                                                    trails[index].distance,
-                                                content: trails[index].content,
-                                                altitude:
-                                                    trails[index].altitude,
-                                                difficulty:
-                                                    trails[index].difficulty,
-                                                rating: trails[index].rating,
-                                                latitude:
-                                                    trails[index].latitude,
-                                                longitude:
-                                                    trails[index].longitude,
-                                                images: trails[index].images),
+                                                title: trails[index].title),
                                       ),
                                     ),
                                 child: (Stack(children: <Widget>[

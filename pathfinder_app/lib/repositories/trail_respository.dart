@@ -7,6 +7,8 @@ import '../models/trail.dart';
 import '../models/user.dart';
 import 'dart:io';
 
+import '../utils/covert.dart';
+
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
 
@@ -119,6 +121,19 @@ class TrailRepository {
         'images': images,
       });
 
+      final trailSnapshot = await ref?.get();
+
+      Map<String, dynamic>? trailData =
+          trailSnapshot?.data() as Map<String, dynamic>?;
+      double currentRating = stringToDouble(trailData?['rating'] ?? 0);
+
+      print(currentRating);
+
+      double averageRating = (stringToDouble(rating) + currentRating) / 2;
+      String averageRatingString = averageRating.toString();
+
+      await ref?.update({'rating': averageRatingString});
+
       print(images);
 
       print('Data added to Firestore successfully!');
@@ -130,8 +145,7 @@ class TrailRepository {
   Future<String> upload(File file) async {
     final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
 
-    final Reference storageRef =
-        FirebaseStorage.instance.ref().child(fileName);
+    final Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
 
     final TaskSnapshot snapshot = await storageRef.putFile(file);
 

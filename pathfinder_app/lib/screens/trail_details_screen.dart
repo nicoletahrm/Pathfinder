@@ -1,5 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,26 +21,10 @@ import 'add_review_screen.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
-  final String title, description, coverImage, content;
-  final double rating, distance, altitude, latitude, longitude;
-  final Difficulty difficulty;
-  final List<dynamic> images;
+  final String title;
 
-  const TrailDetailsScreen({
-    super.key,
-    required this.index,
-    required this.title,
-    required this.description,
-    required this.content,
-    required this.coverImage,
-    required this.distance,
-    required this.altitude,
-    required this.difficulty,
-    required this.rating,
-    required this.latitude,
-    required this.longitude,
-    required this.images,
-  });
+  const TrailDetailsScreen(
+      {super.key, required this.index, required this.title});
 
   @override
   _TrailDetailsScreenState createState() => _TrailDetailsScreenState();
@@ -59,9 +45,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   late DocumentReference ref;
 
   Future<void> init() async {
-    weatherDataDaily = await getWeather(widget.latitude, widget.longitude);
     trail = await trailRepository.getTrailByTitle(widget.title);
     ref = await trailRepository.getRefTrailByTitle(widget.title);
+    weatherDataDaily = await getWeather(trail!.latitude, trail!.longitude);
     trailReviews = await trailRepository.getTrailReviewsByRef(ref);
 
     for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
@@ -143,14 +129,14 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                         height: size.height * 0.7,
                         child: Stack(children: [
                           PageView.builder(
-                              itemCount: widget.images.length,
+                              itemCount: trail!.images.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Stack(
                                   children: [
                                     Hero(
                                       tag: "trail${widget.index}",
                                       child: Image.asset(
-                                        widget.images[index].toString(),
+                                        trail!.images[index].toString(),
                                         height: size.height,
                                         width: size.width,
                                         fit: BoxFit.cover,
@@ -206,7 +192,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                     const SizedBox(
                                       width: 3.0,
                                     ),
-                                    Text(widget.rating.toString(),
+                                    Text(trail!.rating.toStringAsPrecision(2),
                                         style: GoogleFonts.poppins(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.normal,
@@ -238,7 +224,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                 height: 10.0,
                                               ),
                                               Text(
-                                                  '${widget.distance.round().toString()}km',
+                                                  '${trail!.distance.round().toString()}km',
                                                   style: GoogleFonts.poppins(
                                                       fontSize: 18.0,
                                                       fontWeight:
@@ -258,7 +244,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                 height: 10.0,
                                               ),
                                               Text(
-                                                  '${widget.altitude.round().toString()}m',
+                                                  '${trail!.altitude.round().toString()}m',
                                                   style: GoogleFonts.poppins(
                                                       fontSize: 18.0,
                                                       fontWeight:
@@ -277,7 +263,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                               const SizedBox(
                                                 height: 10.0,
                                               ),
-                                              Text(widget.difficulty.name,
+                                              Text(trail!.difficulty.name,
                                                   style: GoogleFonts.poppins(
                                                       fontSize: 18.0,
                                                       fontWeight:
@@ -351,7 +337,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      widget.content,
+                                      trail!.content,
                                       style: GoogleFonts.poppins(
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.normal,
@@ -383,12 +369,20 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                             0, 10, 0, 20),
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddReviewScreen(
-                                                            ref: ref)));
+                                            Navigator.push<bool>(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddReviewScreen(ref: ref),
+                                              ),
+                                            ).then((result) {
+                                              // Trigger a rebuild or update necessary data in the previous page
+                                              setState(() async {
+                                                trail = await trailRepository
+                                                    .getTrailByTitle(
+                                                        widget.title);
+                                              });
+                                            });
                                           },
                                           style: ButtonStyle(
                                               backgroundColor:

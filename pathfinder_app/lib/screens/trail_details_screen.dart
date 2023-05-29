@@ -15,6 +15,7 @@ import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
 import '../widgets/daily_weather_widget.dart';
+import '../widgets/favorite_widget.dart';
 import '../widgets/review_widget.dart';
 import '../utils/colors_utils.dart';
 import 'add_review_screen.dart';
@@ -77,6 +78,14 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
           curve: Curves.easeInOut,
         );
       }
+    });
+  }
+
+  bool isTrailAdded = false;
+
+  void toggleTrailAdded() {
+    setState(() {
+      isTrailAdded = !isTrailAdded;
     });
   }
 
@@ -167,12 +176,22 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                               child: const Padding(
                                 padding: EdgeInsets.only(
                                   top: 30.0,
-                                  bottom: 0.0,
                                   left: 28.0,
                                   right: 28.0,
                                 ),
                                 child: Icon(Icons.arrow_back),
                               )),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 30.0,
+                              left: size.width - 70,
+                            ),
+                            child: FavoriteButton(
+                                isFavorite: isTrailAdded,
+                                onPressed: () {
+                                  toggleTrailAdded();
+                                }),
+                          ),
                           Positioned(
                             bottom: 0.0,
                             right: 10.0,

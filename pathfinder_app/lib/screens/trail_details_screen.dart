@@ -81,14 +81,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
     });
   }
 
-  bool isTrailAdded = false;
-
-  void toggleTrailAdded() {
-    setState(() {
-      isTrailAdded = !isTrailAdded;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -182,16 +174,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                 child: Icon(Icons.arrow_back),
                               )),
                           Padding(
-                            padding: EdgeInsets.only(
-                              top: 30.0,
-                              left: size.width - 70,
-                            ),
-                            child: FavoriteButton(
-                                isFavorite: isTrailAdded,
-                                onPressed: () {
-                                  toggleTrailAdded();
-                                }),
-                          ),
+                              padding: EdgeInsets.only(
+                                top: 30.0,
+                                left: size.width - 70,
+                              ),
+                              child: FavoriteButton(title: widget.title)),
                           Positioned(
                             bottom: 0.0,
                             right: 10.0,

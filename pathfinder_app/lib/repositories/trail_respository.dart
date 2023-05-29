@@ -1,12 +1,12 @@
-import 'dart:async';
+// ignore_for_file: unused_element
 
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
-import '../models/user.dart';
 import 'dart:io';
-
+import '../models/user.dart';
 import '../utils/covert.dart';
 
 class TrailRepository {
@@ -57,6 +57,7 @@ class TrailRepository {
         .get();
 
     List<Review> reviews = [];
+
     for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
         in snapshot.docs) {
       Map<String, dynamic> data = documentSnapshot.data();
@@ -90,6 +91,34 @@ class TrailRepository {
     return documentSnapshot.reference;
   }
 
+  Future<List<String>?> getFavoriteTrails(String? email) async {
+    final userDocRef = await getUserRefByEmail(email);
+    final userDocSnapshot = await userDocRef.get();
+
+    if (userDocSnapshot.exists) {
+      final userData = userDocSnapshot.data() as Map<String, dynamic>;
+      final user = User.fromJson(userData);
+
+      return user.trails;
+    }
+    return null;
+  }
+
+  Future<void> updateFavoriteTrails(
+      String? email, List<String> favoriteTrails) async {
+    try {
+      // Get the user's document reference
+      final userDocRef = await getUserRefByEmail(email);
+      final userDocSnapshot = await userDocRef.get();
+
+      // Update the favoriteTrails field in the user's document
+      await userDocRef.update({'trails': favoriteTrails});
+    } catch (e) {
+      // Handle any errors that occur during the update process
+      print('Error updating favorite trails: $e');
+    }
+  }
+
   Future<Trail?> getTrailByRef(DocumentReference<Object?>? ref) async {
     if (ref == null) {
       return null;
@@ -112,7 +141,7 @@ class TrailRepository {
 
       DocumentReference documentRef = collectionRef.doc();
 
-      print(images);
+      //print(images);
       await documentRef.set({
         'content': content,
         'rating': rating,
@@ -127,7 +156,7 @@ class TrailRepository {
           trailSnapshot?.data() as Map<String, dynamic>?;
       double currentRating = stringToDouble(trailData?['rating'] ?? 0);
 
-      print(currentRating);
+      //print(currentRating);
 
       double averageRating = (stringToDouble(rating) + currentRating) / 2;
       String averageRatingString = averageRating.toString();

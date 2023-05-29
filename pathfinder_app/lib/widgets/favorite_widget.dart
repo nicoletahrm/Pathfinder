@@ -1,15 +1,13 @@
 // ignore_for_file: library_private_types_in_public_api
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/models/user.dart';
+import 'package:pathfinder_app/repositories/trail_respository.dart';
 
 class FavoriteButton extends StatefulWidget {
-  final bool isFavorite;
-  final VoidCallback onPressed;
+  final String title;
 
-  const FavoriteButton({
-    Key? key,
-    required this.isFavorite,
-    required this.onPressed,
-  }) : super(key: key);
+  const FavoriteButton({super.key, required this.title});
 
   @override
   _FavoriteButtonState createState() => _FavoriteButtonState();
@@ -17,12 +15,52 @@ class FavoriteButton extends StatefulWidget {
 
 class _FavoriteButtonState extends State<FavoriteButton>
     with SingleTickerProviderStateMixin {
+  final user = FirebaseAuth.instance.currentUser;
+  final TrailRepository _trailRepository = TrailRepository();
   late AnimationController _animationController;
   late Animation<double> _animation;
+  late bool isTrailAdded;
+  late List<String>? favoriteTrails; // Add a list of strings
+
+  Future<void> toggleTrailAdded() async {
+    setState(() {
+      isTrailAdded = !isTrailAdded;
+    });
+
+    if (isTrailAdded) {
+      favoriteTrails!.add(widget.title);
+
+      // Update the trail repository with the new list of favorite trails
+      await _trailRepository.updateFavoriteTrails(user?.email, favoriteTrails!);
+    } else {
+      favoriteTrails!.remove(widget.title);
+
+      // Update the trail repository with the new list of favorite trails
+      await _trailRepository.updateFavoriteTrails(user?.email, favoriteTrails!);
+    }
+  }
+
+  void init() async {
+    favoriteTrails = await _trailRepository.getFavoriteTrails(user!.email);
+
+    setState(() {
+      if (favoriteTrails!.contains(widget.title)) {
+        isTrailAdded = true;
+      } else {
+        isTrailAdded = false;
+      }
+    });
+
+    print(user!.email);
+    print(favoriteTrails);
+  }
 
   @override
   void initState() {
     super.initState();
+
+    init();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -50,13 +88,13 @@ class _FavoriteButtonState extends State<FavoriteButton>
         } else {
           _animationController.forward();
         }
-        widget.onPressed();
+        toggleTrailAdded();
       },
       child: ScaleTransition(
         scale: _animation,
         child: Icon(
-          widget.isFavorite ? Icons.favorite : Icons.favorite_border,
-          color: widget.isFavorite ? Colors.red : Colors.grey,
+          isTrailAdded ? Icons.favorite : Icons.favorite_border,
+          color: isTrailAdded ? Colors.red : Colors.grey,
           size: 40.0,
         ),
       ),

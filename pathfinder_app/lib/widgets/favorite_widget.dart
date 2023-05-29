@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/models/user.dart';
@@ -19,7 +19,7 @@ class _FavoriteButtonState extends State<FavoriteButton>
   final TrailRepository _trailRepository = TrailRepository();
   late AnimationController _animationController;
   late Animation<double> _animation;
-  late bool isTrailAdded;
+  late bool isTrailAdded = false;
   late List<String>? favoriteTrails; // Add a list of strings
 
   Future<void> toggleTrailAdded() async {
@@ -32,11 +32,50 @@ class _FavoriteButtonState extends State<FavoriteButton>
 
       // Update the trail repository with the new list of favorite trails
       await _trailRepository.updateFavoriteTrails(user?.email, favoriteTrails!);
+
+      // Show "Trail Added" dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Trail Added'),
+            content: const Text('The trail has been added to your favorites.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } else {
       favoriteTrails!.remove(widget.title);
 
       // Update the trail repository with the new list of favorite trails
       await _trailRepository.updateFavoriteTrails(user?.email, favoriteTrails!);
+
+      // Show "Trail Removed" dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Trail Removed'),
+            content:
+                const Text('The trail has been removed from your favorites.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -58,7 +97,6 @@ class _FavoriteButtonState extends State<FavoriteButton>
   @override
   void initState() {
     super.initState();
-
     init();
 
     _animationController = AnimationController(

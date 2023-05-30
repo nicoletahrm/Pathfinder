@@ -1,5 +1,4 @@
 // ignore_for_file: unused_element
-
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -109,7 +108,6 @@ class TrailRepository {
     try {
       // Get the user's document reference
       final userDocRef = await getUserRefByEmail(email);
-      final userDocSnapshot = await userDocRef.get();
 
       // Update the favoriteTrails field in the user's document
       await userDocRef.update({'trails': favoriteTrails});

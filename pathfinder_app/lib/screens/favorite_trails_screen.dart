@@ -3,33 +3,35 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
-import 'package:pathfinder_app/widgets/reusable_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/trail.dart';
-import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
+import '../utils/constant_colors.dart';
 import '../widgets/trails_list_widget.dart';
-import 'login_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class FavoriteTrailsScreen extends StatefulWidget {
+  const FavoriteTrailsScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _FavoriteTrailsScreenState createState() => _FavoriteTrailsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  final TextEditingController _searchTextController = TextEditingController();
-  final TrailRepository trailRepository = TrailRepository();
+  final TrailRepository _trailRepository = TrailRepository();
+  late List<String>? favoriteTrails;
   late List<Trail> trails = [];
-  late List<Trail> filteredTrails = [];
-  late String query;
 
   Future<void> init() async {
-    filteredTrails = await trailRepository.getAllTrails();
-    trails = filteredTrails;
-    query = '';
+    favoriteTrails = await _trailRepository.getFavoriteTrails(user!.email);
+
+    for (int i = 0; i < favoriteTrails!.length; i++) {
+      Trail? trail = await _trailRepository.getTrailByTitle(favoriteTrails![i]);
+
+      print(trail!.title);
+      trails.add(trail);
+    }
+
+    print(trails);
   }
 
   @override
@@ -44,16 +46,22 @@ class _HomeScreenState extends State<HomeScreen> {
       future: init(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting for the initialization to complete.
           return Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              CustomCircularProgressIndicator(),
+            children: [
+              CircularProgressIndicator(
+                color: kButtonColor,
+                backgroundColor: Colors.black12.withOpacity(0.5),
+              ),
             ],
           ));
         } else if (snapshot.hasError) {
+          // Show an error message if the initialization failed.
           return Text('Failed to initialize trails: ${snapshot.error}');
         } else {
+          // Build the UI with the initialized trails list.
           return buildTrailsList(context);
         }
       },
@@ -74,9 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "It's time for another hike!",
+                      children: const [
+                        Text(
+                          "Your favorite trails",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 28.0,
@@ -85,44 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontFamily: "ProximaNovaBold",
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.logout_outlined),
-                          onPressed: () async {
-                            SharedPreferences pref =
-                                await SharedPreferences.getInstance();
-                            pref.remove("email");
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (_) {
-                              return const LoginScreen();
-                            }));
-                          },
-                        ),
                       ]),
                   const SizedBox(
                     height: 30.0,
-                  ),
-                  reusableTextField("Search a place...", Icons.search_outlined,
-                      false, _searchTextController, () {
-                    searchTrailByTitle(_searchTextController.text);
-                  }),
-                  const SizedBox(
-                    height: 25.0,
                   ),
                   TrailsList(trails: trails),
                 ])),
           ),
           bottomNavigationBar: const CustomBottomNavBar()),
     );
-  }
-
-  dynamic searchTrailByTitle(String query) async {
-    setState(() {
-      trails = filteredTrails.where((trail) {
-        final trailTitle = trail.title.toLowerCase();
-        final input = query.toLowerCase();
-
-        return trailTitle.contains(input);
-      }).toList();
-    });
   }
 }

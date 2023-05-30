@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/models/user.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 
 class FavoriteButton extends StatefulWidget {
@@ -20,7 +19,7 @@ class _FavoriteButtonState extends State<FavoriteButton>
   late AnimationController _animationController;
   late Animation<double> _animation;
   late bool isTrailAdded = false;
-  late List<String>? favoriteTrails; // Add a list of strings
+  late List<String>? favoriteTrails;
 
   Future<void> toggleTrailAdded() async {
     setState(() {

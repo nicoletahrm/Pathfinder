@@ -14,6 +14,7 @@ import '../models/review.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
+import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/daily_weather_widget.dart';
 import '../widgets/favorite_widget.dart';
 import '../widgets/review_widget.dart';
@@ -90,11 +91,8 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
           return Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: kButtonColor,
-                backgroundColor: Colors.black12.withOpacity(0.5),
-              ),
+            children: const [
+              CustomCircularProgressIndicator(),
             ],
           ));
         } else if (snapshot.hasError) {

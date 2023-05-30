@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../models/trail.dart';
+import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
 import '../utils/constant_colors.dart';
 import '../widgets/trails_list_widget.dart';
@@ -27,11 +28,11 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
     for (int i = 0; i < favoriteTrails!.length; i++) {
       Trail? trail = await _trailRepository.getTrailByTitle(favoriteTrails![i]);
 
-      print(trail!.title);
-      trails.add(trail);
+      //print(trail!.title);
+      trails.add(trail!);
     }
 
-    print(trails);
+    //print(trails);
   }
 
   @override
@@ -47,16 +48,7 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the initialization to complete.
-          return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: kButtonColor,
-                backgroundColor: Colors.black12.withOpacity(0.5),
-              ),
-            ],
-          ));
+          return const CustomCircularProgressIndicator();
         } else if (snapshot.hasError) {
           // Show an error message if the initialization failed.
           return Text('Failed to initialize trails: ${snapshot.error}');

@@ -1,15 +1,19 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
-import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/trail.dart';
+import '../utils/colors_utils.dart';
+import '../utils/constant_colors.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
-import '../widgets/custom_nav_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/trails_list_widget.dart';
+import '../widgets/custom_nav_bar.dart';
+import 'package:flutter/material.dart';
+import '../models/difficulty.dart';
+import '../models/trail.dart';
+import '../utils/covert.dart';
 import 'login_screen.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,11 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<Trail> trails = [];
   late List<Trail> filteredTrails = [];
   late String query;
+  late String selectedDifficulty;
+  static const IconData filter_list =
+      IconData(0xe280, fontFamily: 'MaterialIcons');
 
   Future<void> init() async {
     filteredTrails = await trailRepository.getAllTrails();
     trails = filteredTrails;
     query = '';
+    selectedDifficulty = 'easy';
   }
 
   @override
@@ -101,10 +109,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: 30.0,
                   ),
-                  reusableTextField("Search a place...", Icons.search_outlined,
-                      false, _searchTextController, () {
-                    searchTrailByTitle(_searchTextController.text);
-                  }),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: reusableTextField(
+                          "Search a place...",
+                          Icons.search_outlined,
+                          false,
+                          _searchTextController,
+                          () {
+                            searchTrailByTitle(_searchTextController.text);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10.0),
+                      GestureDetector(
+                        onTap: () => print('filter'),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14.0,
+                            horizontal: 16.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(14.0),
+                          ),
+                          child: Icon(
+                            filter_list,
+                            color: hexStringToColor("#f0f3f1"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 25.0,
                   ),
@@ -122,6 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
         final input = query.toLowerCase();
 
         return trailTitle.contains(input);
+      }).toList();
+    });
+  }
+
+  void filterTrailsByDifficulty(String difficultyFilter) {
+    setState(() {
+      trails = filteredTrails.where((trail) {
+        return trail.difficulty == stringToDifficulty(difficultyFilter);
       }).toList();
     });
   }

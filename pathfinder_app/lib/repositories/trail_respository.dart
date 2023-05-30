@@ -161,7 +161,7 @@ class TrailRepository {
 
       await ref?.update({'rating': averageRatingString});
 
-      print(images);
+      //print(images);
 
       print('Data added to Firestore successfully!');
     } catch (error) {

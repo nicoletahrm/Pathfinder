@@ -5,18 +5,14 @@ import '../models/weather_data_daily.dart';
 import 'package:http/http.dart' as http;
 
 class GlobalController {
-  // bool _isLoading = true;
   late double _latitude = 0.0;
   late double _longitude = 0.0;
 
-  //bool checkLoading() => _isLoading;
   double getLatitude() => _latitude;
   double getLongitude() => _longitude;
 
   onInit() {
-    //if (_isLoading == true) {
     getLocation();
-    //}
   }
 
   getLocation() async {

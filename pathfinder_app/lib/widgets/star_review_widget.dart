@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';

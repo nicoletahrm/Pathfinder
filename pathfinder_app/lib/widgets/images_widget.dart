@@ -1,7 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class ImageSliderScreen extends StatefulWidget {
@@ -17,7 +14,7 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Set the background color to black
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Stack(
           children: [
@@ -25,7 +22,7 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> {
               itemCount: widget.images.length,
               itemBuilder: (context, index) {
                 return Container(
-                  color: Colors.black, // Set the container color to black
+                  color: Colors.black,
                   child: Center(
                     child: Image.file(
                       File(widget.images[index]),
@@ -42,7 +39,7 @@ class _ImageSliderScreenState extends State<ImageSliderScreen> {
                 onTap: () => Navigator.of(context).pop(),
                 child: const Icon(
                   Icons.arrow_back,
-                  color: Colors.white, // Set the icon color to white
+                  color: Colors.white,
                 ),
               ),
             ),

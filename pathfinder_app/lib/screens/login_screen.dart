@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print, library_private_types_in_public_api, unused_field
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/forgot_password_screen.dart';
@@ -71,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
-    print(email);
+    //print(email);
     runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       home: email == null ? const LoginScreen() : const HomeScreen(),
@@ -88,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: hexStringToColor("#44564a"),
+        backgroundColor: hexStringToColor("#ffffff"),
         body: ListView(
           physics: const BouncingScrollPhysics(),
           shrinkWrap: false,

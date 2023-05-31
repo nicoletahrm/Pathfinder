@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/favorite_trails_screen.dart';
 import '../screens/home_screen.dart';

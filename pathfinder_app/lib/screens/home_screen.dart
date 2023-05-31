@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';

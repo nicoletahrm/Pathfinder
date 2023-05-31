@@ -1,4 +1,3 @@
-// ignore_for_file: unused_element
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';

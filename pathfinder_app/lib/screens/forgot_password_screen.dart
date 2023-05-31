@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
@@ -11,7 +9,6 @@ class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _ForgotPasswordScreen createState() => _ForgotPasswordScreen();
 }
 

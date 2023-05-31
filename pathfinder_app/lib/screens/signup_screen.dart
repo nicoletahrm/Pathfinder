@@ -66,7 +66,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ? MediaQuery.of(context).size.height * 0.7
         : MediaQuery.of(context).size.height * 0.7;
 
-    return Scaffold(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: hexStringToColor("#44564a"),
       body: ListView(
@@ -165,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ],
           ),
         ],
-      ),
+      ),)
     );
   }
 

@@ -240,7 +240,10 @@ class _LoginScreenState extends State<LoginScreen> {
   getHeight() {
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
-    if (isKeyboardVisible) return MediaQuery.of(context).size.height * 0.7;
+    if (isKeyboardVisible) {
+      return MediaQuery.of(context).size.height * 0.5;
+    }
+
     return MediaQuery.of(context).size.height * 0.7;
   }
 }

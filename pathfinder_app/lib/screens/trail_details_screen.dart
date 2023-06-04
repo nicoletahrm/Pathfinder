@@ -41,6 +41,13 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   late User user;
   late Trail? trail;
   late DocumentReference ref;
+  bool initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
 
   Future<void> init() async {
     trail = await trailRepository.getTrailByTitle(widget.title);
@@ -62,6 +69,10 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
           ),
         ],
       ));
+
+      setState(() {
+        initialized = true;
+      });
     }
 
     _scrollController = ScrollController();

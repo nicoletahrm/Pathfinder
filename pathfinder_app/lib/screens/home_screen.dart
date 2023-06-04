@@ -115,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 10.0),
                     GestureDetector(
                       onTap: () {
-                        print(selectedDifficulty);
                         showDifficultyFilterDialog();
                       },
                       child: Container(
@@ -159,9 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void filterTrailsByDifficulty(String difficultyFilter) async {
     setState(() {
       filteredTrails = trails.where((trail) {
-        print("difficulty filter: " +
-            stringToDifficulty(difficultyFilter).toString());
-        print("trail.difficulty:" + trail.difficulty.toString());
         return trail.difficulty == stringToDifficulty(difficultyFilter);
       }).toList();
     });

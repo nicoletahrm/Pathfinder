@@ -23,8 +23,6 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
   Future<void> init() async {
     favoriteTrails = await _trailRepository.getFavoriteTrails(user!.email);
 
-    print(favoriteTrails);
-
     for (int i = 0; i < favoriteTrails!.length; i++) {
       Trail? trail = await _trailRepository.getTrailByTitle(favoriteTrails![i]);
       trails.add(trail!);

@@ -316,7 +316,12 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             Navigator.push<bool>(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MapScreen()),
+                                  builder: (context) => MapScreen(
+                                        start: GeoPoint(trail!.start.latitude,
+                                            trail!.start.longitude),
+                                        end: GeoPoint(trail!.end.latitude,
+                                            trail!.end.longitude),
+                                      )),
                             );
                           },
                           style: ButtonStyle(

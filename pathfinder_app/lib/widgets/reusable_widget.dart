@@ -13,7 +13,7 @@ Widget logo(String imageName) {
 }
 
 TextField reusableTextField(String text, IconData icon, bool isPasswordType,
-    TextEditingController controller, onChanged) {
+    TextEditingController controller, onChanged()) {
   return TextField(
     onChanged: onChanged(),
     controller: controller,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pathfinder_app/controllers/global_controller.dart';
-import 'package:pathfinder_app/models/difficulty.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
 import '../models/review.dart';

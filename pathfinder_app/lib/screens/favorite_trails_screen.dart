@@ -5,7 +5,6 @@ import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../models/trail.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
-import '../utils/constant_colors.dart';
 import '../widgets/trails_list_widget.dart';
 
 class FavoriteTrailsScreen extends StatefulWidget {
@@ -24,6 +23,8 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
   Future<void> init() async {
     favoriteTrails = await _trailRepository.getFavoriteTrails(user!.email);
 
+    print(favoriteTrails);
+
     for (int i = 0; i < favoriteTrails!.length; i++) {
       Trail? trail = await _trailRepository.getTrailByTitle(favoriteTrails![i]);
 
@@ -37,7 +38,7 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
   @override
   void initState() {
     super.initState();
-    init();
+   // init();
   }
 
   @override

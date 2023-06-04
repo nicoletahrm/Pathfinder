@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
-import '../screens/home_screen.dart';
 import '../utils/colors_utils.dart';
 import '../utils/constant_colors.dart';
 import 'images_widget.dart';

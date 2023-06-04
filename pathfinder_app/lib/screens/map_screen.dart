@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:pathfinder_app/widgets/reusable_widget.dart';
+//import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import '../widgets/custom_nav_bar.dart';
 import '../controllers/global_controller.dart';
 
@@ -15,8 +15,8 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen> {
   final GlobalController _locationController =
       Get.put(GlobalController(), permanent: true);
-  final TextEditingController _searchTextFieldController =
-      TextEditingController();
+  // final TextEditingController _searchTextFieldController =
+  //     TextEditingController();
 
   init() {
     _locationController.onInit();
@@ -45,16 +45,17 @@ class MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Pathfinder')),
       body: SafeArea(
         child: Column(
           children: [
-            reusableTextField(
-              'Search...',
-              Icons.search,
-              false,
-              _searchTextFieldController,
-              (() {}),
-            ),
+            // reusableTextField(
+            //   'Search...',
+            //   Icons.search,
+            //   false,
+            //   _searchTextFieldController,
+            //   (() {}),
+            // ),
             Expanded(
               child: GoogleMap(
                 mapType: MapType.normal,

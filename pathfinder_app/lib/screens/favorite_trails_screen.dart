@@ -27,18 +27,13 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
 
     for (int i = 0; i < favoriteTrails!.length; i++) {
       Trail? trail = await _trailRepository.getTrailByTitle(favoriteTrails![i]);
-
-      //print(trail!.title);
       trails.add(trail!);
     }
-
-    //print(trails);
   }
 
   @override
   void initState() {
     super.initState();
-   // init();
   }
 
   @override

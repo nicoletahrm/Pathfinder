@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/models/difficulty.dart';
 import '../utils/covert.dart';
 
@@ -11,8 +12,8 @@ class Trail {
   final double distance;
   final Difficulty difficulty;
   final double altitude;
-  final double latitude;
-  final double longitude;
+  final GeoPoint start;
+  final GeoPoint end;
   final List<dynamic> images;
 
   Trail({
@@ -25,8 +26,8 @@ class Trail {
     required this.distance,
     required this.difficulty,
     required this.altitude,
-    required this.latitude,
-    required this.longitude,
+    required this.start,
+    required this.end,
     required this.images,
   });
 
@@ -40,8 +41,7 @@ class Trail {
       "difficulty": difficulty,
       "altitude": altitude,
       "rating": rating,
-      "latitude": latitude,
-      "longitude": longitude,
+      "start": start,
       "images": images,
     };
   }
@@ -59,8 +59,8 @@ class Trail {
       difficulty: stringToDifficulty(data["difficulty"]),
       altitude: stringToDouble(data["altitude"]),
       rating: stringToDouble(data["rating"]),
-      latitude: stringToDouble(data["latitude"]),
-      longitude: stringToDouble(data["longitude"]),
+      start: data["start"],
+      end: data["end"],
       images: List<String>.from(data['images'] ?? []),
     );
   }

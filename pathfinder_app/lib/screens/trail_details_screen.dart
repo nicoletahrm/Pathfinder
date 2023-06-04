@@ -16,6 +16,7 @@ import '../widgets/favorite_widget.dart';
 import '../widgets/review_widget.dart';
 import '../utils/colors_utils.dart';
 import 'add_review_screen.dart';
+import 'map_screen.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final int index;
@@ -51,7 +52,8 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   Future<void> init() async {
     trail = await trailRepository.getTrailByTitle(widget.title);
     ref = await trailRepository.getRefTrailByTitle(widget.title);
-    weatherDataDaily = await getWeather(trail!.latitude, trail!.longitude);
+    weatherDataDaily =
+        await getWeather(trail!.end.latitude, trail!.end.longitude);
     trailReviews = await trailRepository.getTrailReviewsByRef(ref);
 
     for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
@@ -308,7 +310,38 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             ),
                           ]),
                         ),
-
+                        ElevatedButton(
+                          onPressed: () {
+                            print(trail!.start.latitude);
+                            Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MapScreen()),
+                            );
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.black26;
+                              }
+                              return hexStringToColor("#44564a");
+                            }),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'See trail on map',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                         // a doua parte
                         Stack(children: [
                           Container(

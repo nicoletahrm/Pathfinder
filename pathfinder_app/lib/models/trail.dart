@@ -15,6 +15,7 @@ class Trail {
   final GeoPoint start;
   final GeoPoint end;
   final List<dynamic> images;
+  //final List<dynamic> path;
 
   Trail({
     required this.id,
@@ -29,6 +30,7 @@ class Trail {
     required this.start,
     required this.end,
     required this.images,
+    //required this.path,
   });
 
   Map<String, dynamic> toJson() {
@@ -42,7 +44,9 @@ class Trail {
       "altitude": altitude,
       "rating": rating,
       "start": start,
+      "end": end,
       "images": images,
+      //"path": path,
     };
   }
 
@@ -62,6 +66,7 @@ class Trail {
       start: data["start"],
       end: data["end"],
       images: List<String>.from(data['images'] ?? []),
+      //path: List<GeoPoint>.from(data['path'] ?? []),
     );
   }
 }

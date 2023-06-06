@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/favorite_trails_screen.dart';
+import '../screens/events_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile/profile_screen.dart';
 
@@ -49,10 +50,10 @@ class CustomBottomNavBar extends StatelessWidget {
                     color: Colors.black54,
                   ),
                   onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => const MapScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EventsScreen()));
                   }),
               IconButton(
                 icon: const Icon(

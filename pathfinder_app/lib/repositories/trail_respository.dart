@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../models/event.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
 import 'dart:io';
@@ -25,12 +26,10 @@ class TrailRepository {
         .where('title', isEqualTo: trailTitle)
         .get();
 
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-          snapshot.docs[0];
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
-      Map<String, dynamic>? data = documentSnapshot.data();
-      return Trail.fromJson(data!);
-    
+    Map<String, dynamic>? data = documentSnapshot.data();
+    return Trail.fromJson(data!);
   }
 
   Future<DocumentReference> getRefTrailByTitle(String trailTitle) async {
@@ -178,5 +177,14 @@ class TrailRepository {
     }
 
     throw Exception('Image upload failed.');
+  }
+
+  Future<List<Event>> getEvents() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await database.collection("event").get();
+
+    return snapshot.docs
+        .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
+        .toList();
   }
 }

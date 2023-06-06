@@ -1,14 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
-  final DocumentReference<Object?>? organzier;
-  final DocumentReference<Object?>? trail;
-  final List<DocumentReference<Object?>?> participants;
+  final DocumentReference<Object>? organzier;
+  final DocumentReference<Object>? trail;
+  final List<DocumentReference<Object>?> participants;
+  final Timestamp time;
+  final Timestamp timeAdded;
 
   Event({
     required this.organzier,
     required this.trail,
     required this.participants,
+    required this.time,
+    required this.timeAdded,
   });
 
   Map<String, dynamic> toJson() {
@@ -16,6 +20,8 @@ class Event {
       "organzier": organzier,
       "trail": trail,
       "participants": participants,
+      "time": time,
+      "timeAdded": timeAdded,
     };
   }
 
@@ -25,7 +31,9 @@ class Event {
     return Event(
       organzier: data["organzier"],
       trail: data["trail"],
-      participants: data["participants"],
+      participants: List<DocumentReference<Object>?>.from(data["participants"]),
+      time: data["time"] as Timestamp,
+      timeAdded: data["timeAdded"] as Timestamp,
     );
   }
 }

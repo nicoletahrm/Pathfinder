@@ -1,4 +1,4 @@
-// ignore_for_file: sdk_version_since
+// ignore_for_file: sdk_version_since, deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -78,8 +78,8 @@ class MapScreenState extends State<MapScreen> {
       Polyline(
           polylineId: polylineId,
           points: polylineCoordinates,
-          color: Colors.pink,
-          width: 4,
+          color: Colors.blue,
+          width: 3,
           startCap: Cap.roundCap,
           endCap: Cap.roundCap),
     };
@@ -110,15 +110,16 @@ class MapScreenState extends State<MapScreen> {
 
   void getPolyPoints() async {
     polylineCoordinates = await extractCoordinatesFromKmlFile(
-      'assets/files/cabana_malaiesti2.kml',
-    );
+        'assets/files/harta.kml', 'Valea Glăjărie - Cabana Malaiesti');
 
     setState(() {});
   }
 
   // Function to read the KML/KMZ file and extract coordinates
-  Future<List<LatLng>> extractCoordinatesFromKmlFile(String filePath) async {
+  Future<List<LatLng>> extractCoordinatesFromKmlFile(
+      String filePath, String trailName) async {
     List<LatLng> coordinates = [];
+    trailName = trailName.trim();
 
     try {
       final byteData = await rootBundle.load(filePath);
@@ -128,25 +129,36 @@ class MapScreenState extends State<MapScreen> {
       final placemarkElements = document.findAllElements('Placemark');
 
       for (final placemarkElement in placemarkElements) {
-        final lineStringElement =
-            placemarkElement.findElements('LineString').firstOrNull;
-        final coordinatesElement =
-            lineStringElement?.findElements('coordinates').firstOrNull;
+        final nameElement = placemarkElement.findElements('name').single;
+        final name = nameElement.text.trim();
 
-        if (coordinatesElement != null) {
-          final coordinatesText = coordinatesElement.text;
-          final coordinateValues = coordinatesText.trim().split('\n');
+        print("NAME: " + name);
+        print("TRIAL NAME: " + trailName);
+        print(name == trailName);
 
-          for (final coordinateValue in coordinateValues) {
-            final trimmedValue = coordinateValue.trim();
-            if (trimmedValue.isNotEmpty) {
-              final coordinateTokens = trimmedValue.split(',');
+        if (name == trailName) {
+          print('blablabla');
 
-              if (coordinateTokens.length == 3) {
-                final longitude = double.parse(coordinateTokens[0]);
-                final latitude = double.parse(coordinateTokens[1]);
+          final lineStringElement =
+              placemarkElement.findElements('LineString').firstOrNull;
+          final coordinatesElement =
+              lineStringElement?.findElements('coordinates').firstOrNull;
 
-                coordinates.add(LatLng(latitude, longitude));
+          if (coordinatesElement != null) {
+            final coordinatesText = coordinatesElement.text;
+            final coordinateValues = coordinatesText.trim().split('\n');
+
+            for (final coordinateValue in coordinateValues) {
+              final trimmedValue = coordinateValue.trim();
+              if (trimmedValue.isNotEmpty) {
+                final coordinateTokens = trimmedValue.split(',');
+
+                if (coordinateTokens.length == 3) {
+                  final longitude = double.parse(coordinateTokens[0]);
+                  final latitude = double.parse(coordinateTokens[1]);
+
+                  coordinates.add(LatLng(latitude, longitude));
+                }
               }
             }
           }
@@ -155,6 +167,8 @@ class MapScreenState extends State<MapScreen> {
     } catch (e) {
       print('Error extracting coordinates: $e');
     }
+
+    print(coordinates.toString());
 
     return coordinates;
   }

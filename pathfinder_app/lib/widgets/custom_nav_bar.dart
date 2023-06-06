@@ -44,7 +44,7 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
               IconButton(
                   icon: const Icon(
-                    Icons.place_outlined,
+                    Icons.people_alt,
                     size: 30,
                     color: Colors.black54,
                   ),

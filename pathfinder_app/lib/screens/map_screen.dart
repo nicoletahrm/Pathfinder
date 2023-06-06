@@ -108,7 +108,7 @@ class MapScreenState extends State<MapScreen> {
 
   void getPolyPoints() async {
     polylineCoordinates = await extractCoordinatesFromKmlFile(
-        'assets/files/harta.kml', widget.route);
+        'assets/files/trails_map.kml', widget.route);
 
     setState(() {});
   }

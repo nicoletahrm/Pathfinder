@@ -5,48 +5,42 @@ import '../utils/covert.dart';
 class Trail {
   final String? id;
   final String title;
-  final String description;
   final String content;
   final String coverImage;
   final double rating;
   final double distance;
   final Difficulty difficulty;
   final double altitude;
-  final GeoPoint start;
-  final GeoPoint end;
+  final GeoPoint destination;
   final List<dynamic> images;
-  //final List<dynamic> path;
+  final List<dynamic> routes;
 
   Trail({
     required this.id,
     required this.rating,
     required this.title,
-    required this.description,
     required this.content,
     required this.coverImage,
     required this.distance,
     required this.difficulty,
     required this.altitude,
-    required this.start,
-    required this.end,
+    required this.destination,
     required this.images,
-    //required this.path,
+    required this.routes,
   });
 
   Map<String, dynamic> toJson() {
     return {
       "title": title,
-      "description": description,
       "content": content,
       "coverImage": coverImage,
       "distance": distance,
       "difficulty": difficulty,
       "altitude": altitude,
       "rating": rating,
-      "start": start,
-      "end": end,
+      "destination": destination,
       "images": images,
-      //"path": path,
+      "routes": routes,
     };
   }
 
@@ -56,17 +50,15 @@ class Trail {
     return Trail(
       id: data["id"],
       title: data["title"],
-      description: data["description"],
       content: data["content"],
       coverImage: data["coverImage"],
       distance: stringToDouble(data["distance"]),
       difficulty: stringToDifficulty(data["difficulty"]),
       altitude: stringToDouble(data["altitude"]),
       rating: stringToDouble(data["rating"]),
-      start: data["start"],
-      end: data["end"],
+      destination: data["destination"],
       images: List<String>.from(data['images'] ?? []),
-      //path: List<GeoPoint>.from(data['path'] ?? []),
+      routes: List<String>.from(data['routes'] ?? []),
     );
   }
 }

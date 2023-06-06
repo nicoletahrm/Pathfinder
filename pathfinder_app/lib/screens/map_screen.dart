@@ -11,10 +11,10 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:xml/xml.dart' as xml;
 
 class MapScreen extends StatefulWidget {
-  final GeoPoint start;
-  final GeoPoint end;
+  final GeoPoint destination;
+  final String route;
 
-  MapScreen({Key? key, required this.start, required this.end})
+  MapScreen({Key? key, required this.destination, required this.route})
       : super(key: key);
 
   @override
@@ -33,26 +33,18 @@ class MapScreenState extends State<MapScreen> {
   void init() {
     _locationController.onInit();
 
-    sourceLocation = LatLng(
-      widget.start.latitude,
-      widget.start.longitude,
-    );
     destination = LatLng(
-      widget.end.latitude,
-      widget.end.longitude,
+      widget.destination.latitude,
+      widget.destination.longitude,
     );
 
-    markers.clear();
-    markers = {
-      Marker(
-        markerId: const MarkerId('start'),
-        position: LatLng(sourceLocation.latitude, sourceLocation.longitude),
-      ),
-      Marker(
-        markerId: const MarkerId('end'),
-        position: LatLng(destination.latitude, destination.longitude),
-      )
-    };
+    // markers.clear();
+    // markers = {
+    //   Marker(
+    //     markerId: const MarkerId('destination'),
+    //     position: LatLng(destination.latitude, destination.longitude),
+    //   )
+    // };
   }
 
   @override
@@ -64,10 +56,10 @@ class MapScreenState extends State<MapScreen> {
 
   late CameraPosition initialCameraPosition = CameraPosition(
     target: LatLng(
-      widget.start.latitude,
-      widget.start.longitude,
+      widget.destination.latitude,
+      widget.destination.longitude,
     ),
-    zoom: 15,
+    zoom: 13,
   );
 
   @override
@@ -78,7 +70,7 @@ class MapScreenState extends State<MapScreen> {
       Polyline(
           polylineId: polylineId,
           points: polylineCoordinates,
-          color: Colors.blue,
+          color: Colors.pink,
           width: 3,
           startCap: Cap.roundCap,
           endCap: Cap.roundCap),
@@ -86,19 +78,26 @@ class MapScreenState extends State<MapScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: initialCameraPosition,
-                markers: markers,
-                polylines: polylines,
-                zoomControlsEnabled: true,
-                onMapCreated: (GoogleMapController mapController) {
-                  mapController = mapController;
-                },
-                myLocationEnabled: true,
+            GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: initialCameraPosition,
+              //markers: markers,
+              polylines: polylines,
+              zoomControlsEnabled: true,
+              onMapCreated: (GoogleMapController mapController) {
+                mapController = mapController;
+              },
+              myLocationEnabled: true,
+            ),
+            Positioned(
+              top: 30.0,
+              left: 28.0,
+              //right: 28.0,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Icon(Icons.arrow_back),
               ),
             ),
           ],
@@ -110,7 +109,7 @@ class MapScreenState extends State<MapScreen> {
 
   void getPolyPoints() async {
     polylineCoordinates = await extractCoordinatesFromKmlFile(
-        'assets/files/harta.kml', 'Valea Glăjărie - Cabana Malaiesti');
+        'assets/files/harta.kml', widget.route);
 
     setState(() {});
   }
@@ -132,13 +131,7 @@ class MapScreenState extends State<MapScreen> {
         final nameElement = placemarkElement.findElements('name').single;
         final name = nameElement.text.trim();
 
-        print("NAME: " + name);
-        print("TRIAL NAME: " + trailName);
-        print(name == trailName);
-
         if (name == trailName) {
-          print('blablabla');
-
           final lineStringElement =
               placemarkElement.findElements('LineString').firstOrNull;
           final coordinatesElement =
@@ -167,8 +160,6 @@ class MapScreenState extends State<MapScreen> {
     } catch (e) {
       print('Error extracting coordinates: $e');
     }
-
-    print(coordinates.toString());
 
     return coordinates;
   }

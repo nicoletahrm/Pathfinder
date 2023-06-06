@@ -19,21 +19,18 @@ class TrailRepository {
         .toList();
   }
 
-  Future<Trail?> getTrailByTitle(String trailTitle) async {
+  Future<Trail> getTrailByTitle(String trailTitle) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await database
         .collection("trail")
         .where('title', isEqualTo: trailTitle)
         .get();
 
-    if (snapshot.docs.isNotEmpty) {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           snapshot.docs[0];
 
       Map<String, dynamic>? data = documentSnapshot.data();
       return Trail.fromJson(data!);
-    } else {
-      return null;
-    }
+    
   }
 
   Future<DocumentReference> getRefTrailByTitle(String trailTitle) async {

@@ -22,8 +22,8 @@ class TrailDetailsScreen extends StatefulWidget {
   final int index;
   final String title;
 
-  const TrailDetailsScreen(
-      {super.key, required this.index, required this.title});
+  TrailDetailsScreen({Key? key, required this.index, required this.title})
+      : super(key: key);
 
   @override
   _TrailDetailsScreenState createState() => _TrailDetailsScreenState();
@@ -40,7 +40,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final _monthFormatter = DateFormat('MMM');
   late List<Review> trailReviews = [];
   late User user;
-  late Trail? trail;
+  late Trail trail;
   late DocumentReference ref;
 
   @override
@@ -50,10 +50,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   }
 
   Future<void> init() async {
+    _scrollController = ScrollController();
     trail = await trailRepository.getTrailByTitle(widget.title);
     ref = await trailRepository.getRefTrailByTitle(widget.title);
-    weatherDataDaily =
-        await getWeather(trail!.end.latitude, trail!.end.longitude);
+    weatherDataDaily = await getWeather(
+        trail!.destination.latitude, trail!.destination.longitude);
     trailReviews = await trailRepository.getTrailReviewsByRef(ref);
 
     for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
@@ -71,8 +72,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
         ],
       ));
     }
-
-    _scrollController = ScrollController();
 
     _scrollController.addListener(() {
       if (_scrollController.offset <=
@@ -133,14 +132,14 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                           height: size.height * 0.7,
                           child: Stack(children: [
                             PageView.builder(
-                                itemCount: trail!.images.length,
+                                itemCount: trail.images.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Stack(
                                     children: [
                                       Hero(
                                         tag: "trail${widget.index}",
                                         child: Image.asset(
-                                          trail!.images[index].toString(),
+                                          trail.images[index].toString(),
                                           height: size.height,
                                           width: size.width,
                                           fit: BoxFit.cover,
@@ -201,7 +200,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                       const SizedBox(
                                         width: 3.0,
                                       ),
-                                      Text(trail!.rating.toStringAsPrecision(2),
+                                      Text(trail.rating.toStringAsPrecision(2),
                                           style: GoogleFonts.poppins(
                                               fontSize: 18.0,
                                               fontWeight: FontWeight.normal,
@@ -233,7 +232,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                   height: 10.0,
                                                 ),
                                                 Text(
-                                                    '${trail!.distance.round().toString()}km',
+                                                    '${trail.distance.round().toString()}km',
                                                     style: GoogleFonts.poppins(
                                                         fontSize: 18.0,
                                                         fontWeight:
@@ -253,7 +252,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                   height: 10.0,
                                                 ),
                                                 Text(
-                                                    '${trail!.altitude.round().toString()}m',
+                                                    '${trail.altitude.round().toString()}m',
                                                     style: GoogleFonts.poppins(
                                                         fontSize: 18.0,
                                                         fontWeight:
@@ -272,7 +271,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                 const SizedBox(
                                                   height: 10.0,
                                                 ),
-                                                Text(trail!.difficulty.name,
+                                                Text(trail.difficulty.name,
                                                     style: GoogleFonts.poppins(
                                                         fontSize: 18.0,
                                                         fontWeight:
@@ -310,47 +309,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             ),
                           ]),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            print(trail!.start.latitude);
-                            Navigator.push<bool>(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MapScreen(
-                                        start: GeoPoint(trail!.start.latitude,
-                                            trail!.start.longitude),
-                                        end: GeoPoint(trail!.end.latitude,
-                                            trail!.end.longitude),
-                                      )),
-                            );
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith((states) {
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.black26;
-                              }
-                              return hexStringToColor("#44564a");
-                            }),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            'See trail on map',
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+
                         // a doua parte
                         Stack(children: [
                           Container(
-                            padding: const EdgeInsets.all(0.0),
+                            padding: EdgeInsets.all(0.0),
                             constraints: BoxConstraints(
                               minHeight: MediaQuery.of(context).size.height -
                                   MediaQuery.of(context).padding.top -
@@ -359,7 +322,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: hexStringToColor("#ffffff"),
-                                borderRadius: const BorderRadius.only(),
+                                borderRadius: BorderRadius.only(),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.3),
@@ -370,20 +333,81 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                 ],
                               ),
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                                padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Container(
+                                      height:
+                                          trail.routes.length.toDouble() * 100,
+                                      child: Expanded(
+                                        child: ListView.builder(
+                                          itemCount: trail.routes.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 50,
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  0, 10, 0, 20),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.push<bool>(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MapScreen(
+                                                        destination: GeoPoint(
+                                                          trail.destination
+                                                              .latitude,
+                                                          trail.destination
+                                                              .longitude,
+                                                        ),
+                                                        route:
+                                                            trail.routes[index],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty
+                                                          .resolveWith(
+                                                              (states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .pressed)) {
+                                                      return Colors.black26;
+                                                    }
+                                                    return Colors.grey;
+                                                  }),
+                                                ),
+                                                child: Text(
+                                                  trail.routes[index],
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 15,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                     Text(
-                                      trail!.content,
+                                      trail.content,
                                       style: GoogleFonts.poppins(
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.normal,
                                         color: hexStringToColor("#44564a"),
                                       ),
                                     ),
-                                    const SizedBox(height: 28),
+                                    SizedBox(height: 28),
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
@@ -395,7 +419,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    SizedBox(height: 20),
                                     Container(
                                       width: MediaQuery.of(context).size.width,
                                       height: 60,

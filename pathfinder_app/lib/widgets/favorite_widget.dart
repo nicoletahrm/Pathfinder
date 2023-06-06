@@ -87,9 +87,6 @@ class _FavoriteButtonState extends State<FavoriteButton>
         isTrailAdded = false;
       }
     });
-
-    print(user!.email);
-    print(favoriteTrails);
   }
 
   @override

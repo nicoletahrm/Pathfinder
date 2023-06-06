@@ -94,7 +94,6 @@ class MapScreenState extends State<MapScreen> {
             Positioned(
               top: 30.0,
               left: 28.0,
-              //right: 28.0,
               child: GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
                 child: Icon(Icons.arrow_back),
@@ -103,7 +102,7 @@ class MapScreenState extends State<MapScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 

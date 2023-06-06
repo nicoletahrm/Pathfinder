@@ -337,20 +337,23 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      height:
-                                          trail.routes.length.toDouble() * 100,
-                                      child: Expanded(
+                                    if (trail.routes.isNotEmpty)
+                                      Container(
+                                        height:
+                                            trail.routes.length.toDouble() * 75,
                                         child: ListView.builder(
                                           itemCount: trail.routes.length,
                                           itemBuilder: (context, index) {
+                                            if (trail.routes[index] == null) {
+                                              return SizedBox();
+                                            }
                                             return Container(
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
-                                              height: 50,
-                                              margin: const EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 20),
+                                              height: 60,
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 10, 0, 0),
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.push<bool>(
@@ -398,7 +401,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                           },
                                         ),
                                       ),
-                                    ),
                                     Text(
                                       trail.content,
                                       style: GoogleFonts.poppins(

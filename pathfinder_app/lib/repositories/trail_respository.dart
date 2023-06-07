@@ -134,7 +134,6 @@ class TrailRepository {
 
       DocumentReference documentRef = collectionRef.doc();
 
-      //print(images);
       await documentRef.set({
         'content': content,
         'rating': rating,
@@ -149,14 +148,10 @@ class TrailRepository {
           trailSnapshot?.data() as Map<String, dynamic>?;
       double currentRating = stringToDouble(trailData?['rating'] ?? 0);
 
-      //print(currentRating);
-
       double averageRating = (stringToDouble(rating) + currentRating) / 2;
       String averageRatingString = averageRating.toString();
 
       await ref?.update({'rating': averageRatingString});
-
-      //print(images);
 
       print('Data added to Firestore successfully!');
     } catch (error) {
@@ -180,11 +175,25 @@ class TrailRepository {
   }
 
   Future<List<Event>> getEvents() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await database.collection("event").get();
+    // QuerySnapshot<Map<String, dynamic>> snapshot =
+    //     await database.collection("event").get();
 
-    return snapshot.docs
-        .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
-        .toList();
+    // return snapshot.docs
+    //     .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
+    //     .toList();
+
+QuerySnapshot<Map<String, dynamic>> snapshot =
+         await database.collection("event").get();
+
+     List<Event> events = [];
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+        in snapshot.docs) {
+      Map<String, dynamic> data = documentSnapshot.data();
+      Event event = Event.fromJson(data);
+      events.add(event);
+    }
+
+    return events;
   }
 }

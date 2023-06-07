@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../models/event.dart';
+import '../models/trail.dart';
 import '../models/user.dart';
 import 'custom_circular_progress_indicator.dart';
 
@@ -16,9 +19,11 @@ class EventWidget extends StatefulWidget {
 class _EventWidgetState extends State<EventWidget> {
   final TrailRepository trailRepository = TrailRepository();
   late User user;
+  late Trail? trail;
 
   Future<void> init() async {
-    user = await trailRepository.getUserByRef(widget.event.organzier);
+    user = await trailRepository.getUserByRef(widget.event.organizer);
+    trail = await trailRepository.getTrailByRef(widget.event.trail);
     print(user.username);
   }
 
@@ -34,7 +39,7 @@ class _EventWidgetState extends State<EventWidget> {
               child: CustomCircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Text('Failed to initialize trails: ${snapshot.error}');
+            return Text('Failed to initialize event: ${snapshot.error}');
           } else {
             return buildEvent(context);
           }
@@ -59,12 +64,12 @@ class _EventWidgetState extends State<EventWidget> {
             ),
             SizedBox(height: 8),
             Text(
-              'Trail: ${widget.event.trail}',
+              'Trail: ${trail!.title}',
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 8),
             Text(
-              'Time: ${widget.event.time}',
+              'Time: ${convertTime(widget.event.time)}',
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 8),
@@ -76,5 +81,16 @@ class _EventWidgetState extends State<EventWidget> {
         ),
       ),
     );
+  }
+
+  convertTime(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+
+    String formattedDateTime = DateFormat('dd-MM HH:mm').format(dateTime);
+
+    String date = formattedDateTime.split(' ')[0];
+    String hour = formattedDateTime.split(' ')[1];
+
+    return date + " " + hour;
   }
 }

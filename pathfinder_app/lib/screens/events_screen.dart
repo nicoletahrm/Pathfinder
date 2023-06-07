@@ -18,13 +18,14 @@ class _EventsScreenState extends State<EventsScreen> {
 
   init() async {
     events = await trailRepository.getEvents();
+    print(events);
   }
 
   @override
   void initState() {
     super.initState();
-    //init();
-    //print(events);
+    init();
+    print(events);
   }
 @override
   Widget build(BuildContext context) {

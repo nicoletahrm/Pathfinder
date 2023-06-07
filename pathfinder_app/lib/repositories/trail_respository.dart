@@ -161,9 +161,7 @@ class TrailRepository {
 
   Future<String> upload(File file) async {
     final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-
     final Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
-
     final TaskSnapshot snapshot = await storageRef.putFile(file);
 
     if (snapshot.state == TaskState.success) {
@@ -175,25 +173,11 @@ class TrailRepository {
   }
 
   Future<List<Event>> getEvents() async {
-    // QuerySnapshot<Map<String, dynamic>> snapshot =
-    //     await database.collection("event").get();
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await database.collection("event").get();
 
-    // return snapshot.docs
-    //     .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
-    //     .toList();
-
-QuerySnapshot<Map<String, dynamic>> snapshot =
-         await database.collection("event").get();
-
-     List<Event> events = [];
-
-    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
-        in snapshot.docs) {
-      Map<String, dynamic> data = documentSnapshot.data();
-      Event event = Event.fromJson(data);
-      events.add(event);
-    }
-
-    return events;
+    return snapshot.docs
+        .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
+        .toList();
   }
 }

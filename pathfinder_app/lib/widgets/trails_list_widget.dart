@@ -15,7 +15,6 @@ class TrailsList extends StatelessWidget {
     return Container(
       height: 545.0,
       child: FutureBuilder<void>(
-        //future: init(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

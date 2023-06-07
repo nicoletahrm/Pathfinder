@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../utils/covert.dart';
+
 class Event {
   final DocumentReference<Object>? organizer;
   final DocumentReference<Object>? trail;
   final List<DocumentReference<Object>?> participants;
+  final int maxParticipants;
   final Timestamp time;
   final Timestamp timeAdded;
 
@@ -11,6 +14,7 @@ class Event {
     required this.organizer,
     required this.trail,
     required this.participants,
+    required this.maxParticipants,
     required this.time,
     required this.timeAdded,
   });
@@ -20,6 +24,7 @@ class Event {
       "organizer": organizer,
       "trail": trail,
       "participants": participants,
+      "maxParticipants": maxParticipants,
       "time": time,
       "timeAdded": timeAdded,
     };
@@ -32,6 +37,7 @@ class Event {
       organizer: data["organizer"],
       trail: data["trail"],
       participants: List<DocumentReference<Object>?>.from(data["participants"]),
+      maxParticipants: stringToInt(data["maxParticipants"]),
       time: data["time"] as Timestamp,
       timeAdded: data["timeAdded"] as Timestamp,
     );

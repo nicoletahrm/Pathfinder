@@ -54,7 +54,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
     trail = await trailRepository.getTrailByTitle(widget.title);
     ref = await trailRepository.getRefTrailByTitle(widget.title);
     weatherDataDaily = await getWeather(
-        trail!.destination.latitude, trail!.destination.longitude);
+        trail.destination.latitude, trail.destination.longitude);
     trailReviews = await trailRepository.getTrailReviewsByRef(ref);
 
     for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
@@ -281,7 +281,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                             ),
                                           ]),
                                     ),
-                                    const SizedBox(
+                                    SizedBox(
                                       height: 28.0,
                                     ),
                                     SizedBox(
@@ -341,9 +341,9 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                       Container(
                                         height:
                                             trail.routes.length.toDouble() * 75,
-                                        child: ListView.builder(
-                                          itemCount: trail.routes.length,
-                                          itemBuilder: (context, index) {
+                                        child: Column(
+                                          children: List.generate(
+                                              trail.routes.length, (index) {
                                             if (trail.routes[index] == null) {
                                               return SizedBox();
                                             }
@@ -398,7 +398,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                 ),
                                               ),
                                             );
-                                          },
+                                          }),
                                         ),
                                       ),
                                     Text(
@@ -470,7 +470,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    SizedBox(height: 20),
                                     SizedBox(
                                       height: 330,
                                       child: ListView.builder(

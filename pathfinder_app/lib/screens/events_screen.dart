@@ -50,9 +50,6 @@ class _EventsScreenState extends State<EventsScreen> {
 
   Widget buildEvent(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Event List'),
-      ),
       body: ListView.builder(
         itemCount: events.length,
         itemBuilder: (context, index) {

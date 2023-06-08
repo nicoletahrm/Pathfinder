@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
 import '../controllers/global_controller.dart';
 import 'dart:convert';
@@ -30,7 +31,7 @@ class MapScreenState extends State<MapScreen> {
   List<LatLng> polylineCoordinates = [];
   Set<Marker> markers = {};
 
-  void init() {
+  init() {
     _locationController.onInit();
 
     destination = LatLng(
@@ -50,7 +51,7 @@ class MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    init();
+   // init();
     getPolyPoints();
   }
 
@@ -64,6 +65,27 @@ class MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: init(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CustomCircularProgressIndicator(),
+            ],
+          ));
+        } else if (snapshot.hasError) {
+          return Text('Failed to initialize route: ${snapshot.error}');
+        } else {
+          return buildRoute(context);
+        }
+      },
+    );
+  }
+
+  Widget buildRoute(BuildContext context) {
     PolylineId polylineId = PolylineId('route');
 
     Set<Polyline> polylines = {

@@ -58,13 +58,62 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   }
 
   Widget buildReview(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return InkWell(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ImageSliderScreen(images: widget.images),
-        ),
-      ),
+      onTap: () {
+        if (widget.images.isNotEmpty) {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => ImageSliderScreen(images: widget.images),
+          //   ),
+          // );
+          showDialog(
+              context: context,
+              barrierColor: Colors.transparent,
+              builder: (BuildContext context) {
+                return Stack(
+                  children: [
+                    Container(
+                      color: Colors.transparent,
+                    ),
+                    PageView.builder(
+                      itemCount: widget.images.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 300,
+                          child: Image.network(
+                            widget.images[index],
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              });
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("No Images"),
+                content: Text("No images available."),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text("OK"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
       child: Container(
         margin: EdgeInsets.fromLTRB(10, 10, 10, 20),
         width: 500,

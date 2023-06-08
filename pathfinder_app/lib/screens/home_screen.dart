@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "It's time for another hike!",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.logout_outlined),
+                      icon: Icon(Icons.logout_outlined),
                       onPressed: () async {
                         SharedPreferences pref =
                             await SharedPreferences.getInstance();
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30.0),
+                SizedBox(height: 30.0),
                 Row(
                   children: [
                     Expanded(
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 10.0),
+                    SizedBox(width: 10.0),
                     GestureDetector(
                       onTap: () {
                         showDifficultyFilterDialog();

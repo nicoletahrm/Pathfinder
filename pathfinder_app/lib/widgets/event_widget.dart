@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
+import 'package:pathfinder_app/widgets/trail_widget.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
@@ -59,6 +60,14 @@ class _EventWidgetState extends State<EventWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              child: TrailWidget(
+                index: 0,
+                margin: 1,
+                trail: trail!,
+              ),
+            ),
+            SizedBox(height: 10),
             Text(
               'Organizer: ${user.username}',
               style: TextStyle(fontSize: 18),

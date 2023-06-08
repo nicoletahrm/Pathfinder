@@ -18,17 +18,36 @@ class _EventsScreenState extends State<EventsScreen> {
 
   init() async {
     events = await trailRepository.getEvents();
-    print(events);
   }
 
   @override
   void initState() {
     super.initState();
-    init();
-    print(events);
   }
-@override
+
+  @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: init(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CustomCircularProgressIndicator(),
+            ],
+          ));
+        } else if (snapshot.hasError) {
+          return Text('Failed to initialize events: ${snapshot.error}');
+        } else {
+          return buildTrail(context);
+        }
+      },
+    );
+  }
+
+  Widget buildTrail(BuildContext context) {
     return Container(
       height: 545.0,
       child: FutureBuilder<void>(

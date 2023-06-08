@@ -19,10 +19,9 @@ import 'add_review_screen.dart';
 import 'map_screen.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
-  final int index;
   final String title;
 
-  TrailDetailsScreen({Key? key, required this.index, required this.title})
+  TrailDetailsScreen({Key? key, required this.title})
       : super(key: key);
 
   @override
@@ -46,7 +45,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    init();
+    //init();
   }
 
   Future<void> init() async {
@@ -137,7 +136,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                   return Stack(
                                     children: [
                                       Hero(
-                                        tag: "trail${widget.index}",
+                                        tag: "trail${widget.title}",
                                         child: Image.asset(
                                           trail.images[index].toString(),
                                           height: size.height,

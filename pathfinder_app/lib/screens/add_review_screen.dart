@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../utils/constant_colors.dart';
+import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
 import '../widgets/star_review_widget.dart';
-import '../utils/colors_utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddReviewScreen extends StatefulWidget {
@@ -186,9 +186,8 @@ class _AddReviewScreen extends State<AddReviewScreen> {
               _reviewController,
               (() {}),
             ),
-            const SizedBox(height: 18),
+           SizedBox(height: 18),
 
-            // Grid of added photos
             SingleChildScrollView(
               child: SizedBox(
                 height: size.height / 1.6,
@@ -201,7 +200,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 18),
+           SizedBox(height: 18),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 60,

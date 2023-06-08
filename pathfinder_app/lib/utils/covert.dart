@@ -1,6 +1,7 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-
 import '../models/difficulty.dart';
 
 double stringToDouble(String value) {
@@ -33,4 +34,14 @@ convertTime(Timestamp timestamp) {
   String hour = formattedDateTime.split(' ')[1];
 
   return date + " " + hour;
+}
+
+hexStringToColor(String hexColor) {
+  hexColor = hexColor.toUpperCase().replaceAll("#", "");
+
+  if (hexColor.length == 6) {
+    hexColor = "FF$hexColor";
+  }
+
+  return Color(int.parse(hexColor, radix: 16));
 }

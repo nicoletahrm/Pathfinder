@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
-import '../utils/colors_utils.dart';
 import '../utils/constant_colors.dart';
-import 'images_widget.dart';
+import '../utils/covert.dart';
 
 class ReviewWidget extends StatefulWidget {
   final String content;
@@ -82,7 +81,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                       itemCount: widget.images.length,
                       itemBuilder: (context, index) {
                         return Container(
-                          width: MediaQuery.of(context).size.width,
+                          width: size.width,
                           height: 300,
                           child: Image.network(
                             widget.images[index],

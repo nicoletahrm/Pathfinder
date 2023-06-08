@@ -1,7 +1,6 @@
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/colors_utils.dart';
 import '../utils/constant_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/covert.dart';

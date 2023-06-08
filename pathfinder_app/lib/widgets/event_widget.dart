@@ -5,7 +5,6 @@ import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
-import '../utils/colors_utils.dart';
 import '../utils/covert.dart';
 import 'custom_circular_progress_indicator.dart';
 

@@ -10,11 +10,11 @@ import '../models/review.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/trail_respository.dart';
+import '../utils/covert.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/daily_weather_widget.dart';
 import '../widgets/favorite_widget.dart';
 import '../widgets/review_widget.dart';
-import '../utils/colors_utils.dart';
 import 'add_review_screen.dart';
 import 'map_screen.dart';
 

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
-import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {

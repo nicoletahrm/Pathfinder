@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/utils/colors_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../utils/covert.dart';
 
 Widget logo(String imageName) {
   return Transform.translate(

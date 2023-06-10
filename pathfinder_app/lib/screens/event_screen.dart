@@ -34,6 +34,7 @@ class _EventScreenState extends State<EventScreen> {
     user = await userRepository.getUserByRef(widget.event.organizer);
     trail = await trailRepository.getTrailByRef(widget.event.trail);
     users = await fetchParticipants();
+    //init();
   }
 
   @override
@@ -103,6 +104,15 @@ class _EventScreenState extends State<EventScreen> {
               ),
               SizedBox(height: 15),
               Text(
+                'Id: ${widget.event.id.toString()}',
+                style: GoogleFonts.poppins(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.normal,
+                  color: kDefaultIconDarkColor,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
                 'Date: ${widget.event.time.getDateWithoutTime()}',
                 style: GoogleFonts.poppins(
                   fontSize: 15.0,
@@ -139,7 +149,7 @@ class _EventScreenState extends State<EventScreen> {
               ),
               SizedBox(height: 10),
               Text(
-                'Max number of people: ${widget.event.maxParticipants}',
+                'Max number of people: ${widget.event.maxParticipants.toString()}',
                 style: GoogleFonts.poppins(
                   fontSize: 15.0,
                   fontWeight: FontWeight.normal,

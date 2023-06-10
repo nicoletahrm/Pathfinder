@@ -51,7 +51,7 @@ class MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-   // init();
+    // init();
     getPolyPoints();
   }
 
@@ -124,7 +124,7 @@ class MapScreenState extends State<MapScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(),
+      //bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 

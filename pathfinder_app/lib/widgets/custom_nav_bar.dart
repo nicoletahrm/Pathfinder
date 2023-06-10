@@ -41,7 +41,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const HomeScreen())),
+                        builder: (context) => HomeScreen())),
               ),
               IconButton(
                   icon: const Icon(
@@ -64,7 +64,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const FavoriteTrailsScreen())),
+                        builder: (context) => FavoriteTrailsScreen())),
               ),
               IconButton(
                 icon: const Icon(
@@ -75,7 +75,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ProfileScreen())),
+                        builder: (context) => ProfileScreen())),
               ),
             ],
           )),

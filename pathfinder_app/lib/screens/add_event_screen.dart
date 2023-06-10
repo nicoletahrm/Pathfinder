@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
-import '../models/event.dart';
+import 'package:pathfinder_app/repositories/user_repository.dart';
 import '../models/time.dart';
 import '../models/trail.dart';
 import '../repositories/event_repository.dart';
@@ -18,20 +18,23 @@ class AddEventScreen extends StatefulWidget {
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
-  final user = FirebaseAuth.instance.currentUser;
+  final currentUser = FirebaseAuth.instance.currentUser;
   final EventRepository eventRepository = EventRepository();
   final TrailRepository trailRepository = TrailRepository();
+  final UserRepository userRepository = UserRepository();
+  late DocumentReference<Object?> userRef;
 
   String? selectedTrail;
+  late DocumentReference<Object?> trailRef;
+  String? meetigPlace;
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   int maxParticipants = 0;
   late List<Trail> trails = [];
 
-  late Event event;
-
   Future<void> init() async {
     trails = (await trailRepository.getAllTrails());
+    userRef = await userRepository.getUserRefByEmail(currentUser!.email);
   }
 
   @override
@@ -43,7 +46,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: init(),
+      //future: init(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -84,11 +87,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
             DropdownButtonFormField<String>(
               value: selectedTrail,
               onChanged: (String? newValue) {
-                setState(() {
+                setState(() async {
                   selectedTrail = newValue;
-                  event.trail =
-                      trailRepository.getRefTrailByTitle(selectedTrail!)
-                          as DocumentReference<Object>?;
+                  trailRef =
+                      await trailRepository.getRefTrailByTitle(selectedTrail!);
                 });
               },
               items: trails.map((Trail trail) {
@@ -112,7 +114,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 if (picked != null) {
                   setState(() {
                     selectedDate = picked;
-                    event.time.date = selectedDate!;
                   });
                 }
               },
@@ -131,7 +132,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 if (picked != null) {
                   setState(() {
                     selectedTime = picked;
-                    event.time.time = selectedTime!;
                   });
                 }
               },
@@ -144,11 +144,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
             TextFormField(
               onChanged: (String value) {
                 maxParticipants = int.parse(value);
-                event.maxParticipants = maxParticipants;
               },
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Maximum Participants',
+              ),
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              onChanged: (String value) {
+                meetigPlace = value;
+              },
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                labelText: 'Meeting place',
               ),
             ),
             SizedBox(height: 20),
@@ -157,8 +166,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
               height: 60,
               margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   print('ok');
+
+                  final Time time =
+                      Time(date: selectedDate!, time: selectedTime!);
+
+                  await eventRepository.addEvent(trailRef, userRef, [],
+                      maxParticipants, meetigPlace!, time);
                   Navigator.of(context).pop();
                 },
                 style: ButtonStyle(

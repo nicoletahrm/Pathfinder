@@ -43,7 +43,7 @@ Timestamp timeToTimestamp(Time time) {
     time.time.hour,
     time.time.minute,
   );
-  
+
   return Timestamp.fromDate(dateTime);
 }
 
@@ -53,3 +53,14 @@ Time timestampToTime(Timestamp timestamp) {
   return Time(date: dateTime, time: time);
 }
 
+Timestamp toTimestamp(DateTime dateTime, TimeOfDay timeOfDay) {
+  DateTime date = DateTime(
+    dateTime.year,
+    dateTime.month,
+    dateTime.day,
+    timeOfDay.hour,
+    timeOfDay.minute,
+  );
+
+  return Timestamp.fromDate(date);
+}

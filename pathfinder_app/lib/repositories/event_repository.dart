@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
+import '../models/time.dart';
+import '../models/user.dart';
 
 class EventRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -9,6 +11,10 @@ class EventRepository {
   Future<List<Event>> getEvents() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await database.collection("event").get();
+
+    print("HELLO" + snapshot.docs
+        .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
+        .toList().toString());
 
     return snapshot.docs
         .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
@@ -25,18 +31,33 @@ class EventRepository {
     });
   }
 
-  addEvent(Event event) async {
+  addEvent(
+      DocumentReference<Object?> trail,
+      DocumentReference<Object?> user,
+      List<User> participants,
+      int maxParticipants,
+      String meetingPlace,
+      Time time) async {
+        
     CollectionReference collectionRef = database.collection('event');
     DocumentReference documentRef = collectionRef.doc();
 
     await documentRef.set({
-      'trail': event.trail,
-      'organizer': event.organizer,
-      'participants': event.participants,
-      'maxParticipant': event.maxParticipants,
-      'time': event.time,
-      'timeAdded': event.timeAdded,
-      'meetingPlace': event.meetingPlace
+      'id': documentRef.id,
+      'trail': trail,
+      'organizer': user,
+      'participants': participants,
+      'maxParticipants': maxParticipants,
+      'time': timeToTimestamp(time),
+      'timeAdded': new Timestamp.now(),
+      'meetingPlace': meetingPlace
     });
+  }
+
+  Future<void> updateEvent(
+      String id, DocumentReference<Object?> userRef) async {
+    try {} catch (e) {
+      print('Error updating event: $e');
+    }
   }
 }

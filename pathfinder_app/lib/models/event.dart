@@ -3,6 +3,7 @@ import 'package:pathfinder_app/models/time.dart';
 import '../utils/covert.dart';
 
 class Event {
+  final String id;
   final DocumentReference<Object>? organizer;
   late final DocumentReference<Object>? trail;
   final List<DocumentReference<Object>?> participants;
@@ -12,6 +13,7 @@ class Event {
   final String meetingPlace;
 
   Event({
+    required this.id,
     required this.organizer,
     required this.trail,
     required this.participants,
@@ -23,6 +25,7 @@ class Event {
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "organizer": organizer,
       "trail": trail,
       "participants": participants,
@@ -37,10 +40,11 @@ class Event {
     final data = json;
 
     return Event(
+      id: data["id"],
       organizer: data["organizer"],
       trail: data["trail"],
       participants: List<DocumentReference<Object>?>.from(data["participants"]),
-      maxParticipants: stringToInt(data["maxParticipants"]),
+      maxParticipants: data["maxParticipants"],
       time: timestampToTime(data["time"]),
       timeAdded: data["timeAdded"],
       meetingPlace: data["meetingPlace"],

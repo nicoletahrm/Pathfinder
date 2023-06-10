@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
+import '../repositories/user_repository.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
@@ -24,6 +25,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   late ScrollController _scrollController;
   final user = FirebaseAuth.instance.currentUser;
   final TrailRepository trailRepository = TrailRepository();
+  final UserRepository userRepository = UserRepository();
   late DocumentReference userRef;
   late List<String> images = [];
   late List<File> _selectedImages;
@@ -60,7 +62,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   }
 
   Future<void> init() async {
-    userRef = await trailRepository.getUserRefByEmail(user?.email);
+    userRef = await userRepository.getUserRefByEmail(user?.email);
 
     _scrollController = ScrollController();
 
@@ -79,7 +81,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   @override
   void initState() {
     super.initState();
-    trailRepository.getUserRefByEmail(user?.email);
+    userRepository.getUserRefByEmail(user?.email);
     //init();
   }
 
@@ -183,8 +185,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
               _reviewController,
               (() {}),
             ),
-           SizedBox(height: 18),
-
+            SizedBox(height: 18),
             SingleChildScrollView(
               child: SizedBox(
                 height: size.height / 1.6,
@@ -197,7 +198,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
                 ),
               ),
             ),
-           SizedBox(height: 18),
+            SizedBox(height: 18),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 60,

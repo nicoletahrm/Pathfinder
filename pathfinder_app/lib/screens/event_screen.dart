@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
+import 'package:pathfinder_app/repositories/user_repository.dart';
 import 'package:pathfinder_app/widgets/trail_widget.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
+import '../repositories/event_repository.dart';
 import '../widgets/custom_nav_bar.dart';
-import 'home_screen.dart';
 import '../utils/covert.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 
@@ -22,13 +23,15 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   final TrailRepository trailRepository = TrailRepository();
+  final EventRepository eventRepository = EventRepository();
+  final UserRepository userRepository = UserRepository();
   late User user;
   late Trail? trail;
   late List<User?> users;
   late String buttonText = 'Go';
 
   Future<void> init() async {
-    user = await trailRepository.getUserByRef(widget.event.organizer);
+    user = await userRepository.getUserByRef(widget.event.organizer);
     trail = await trailRepository.getTrailByRef(widget.event.trail);
     users = await fetchParticipants();
   }
@@ -261,11 +264,19 @@ class _EventScreenState extends State<EventScreen> {
     for (DocumentReference<Object>? participantRef
         in widget.event.participants) {
       if (participantRef != null) {
-        User participant = await trailRepository.getUserByRef(participantRef);
+        User participant = await userRepository.getUserByRef(participantRef);
         participants.add(participant);
       }
     }
 
     return participants;
   }
+
+  // void participate() async {
+  //   DocumentReference<Object?> currentUserRef =
+  //       await userRepository.getUserRefByEmail(user.email);
+
+  //   await eventRepository.updateParticipants(
+  //       widget.event., currentUserRef);
+  // }
 }

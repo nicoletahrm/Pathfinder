@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../models/event.dart';
+import '../repositories/event_repository.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
 import 'event_screen.dart';
@@ -13,11 +13,11 @@ class EventsScreen extends StatefulWidget {
 }
 
 class _EventsScreenState extends State<EventsScreen> {
-  final TrailRepository trailRepository = TrailRepository();
+  final EventRepository eventRepository = EventRepository();
   late List<Event> events = [];
 
   init() async {
-    events = await trailRepository.getEvents();
+    events = await eventRepository.getEvents();
   }
 
   @override

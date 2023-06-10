@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import '../models/event.dart';
+import 'package:pathfinder_app/repositories/user_repository.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
 import 'dart:io';
@@ -10,6 +10,7 @@ import '../utils/covert.dart';
 
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
+  final UserRepository userRepository = UserRepository();
 
   Future<List<Trail>> getAllTrails() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
@@ -62,31 +63,8 @@ class TrailRepository {
     return reviews;
   }
 
-  Future<User> getUserByRef(DocumentReference<Object?>? ref) async {
-    final userSnapshot = await ref!.get();
-
-    if (userSnapshot.exists) {
-      final userData = userSnapshot.data() as Map<String, dynamic>;
-      return User.fromJson(userData);
-    }
-
-    throw Exception(
-        'User not found.'); // Throw an exception if the user does not exist
-  }
-
-  Future<DocumentReference> getUserRefByEmail(String? email) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await database
-        .collection("user")
-        .where('email', isEqualTo: email)
-        .get();
-
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
-
-    return documentSnapshot.reference;
-  }
-
   Future<List<String>?> getFavoriteTrails(String? email) async {
-    final userDocRef = await getUserRefByEmail(email);
+    final userDocRef = await userRepository.getUserRefByEmail(email);
     final userDocSnapshot = await userDocRef.get();
 
     if (userDocSnapshot.exists) {
@@ -102,7 +80,7 @@ class TrailRepository {
       String? email, List<String> favoriteTrails) async {
     try {
       // Get the user's document reference
-      final userDocRef = await getUserRefByEmail(email);
+      final userDocRef = await userRepository.getUserRefByEmail(email);
 
       // Update the favoriteTrails field in the user's document
       await userDocRef.update({'trails': favoriteTrails});
@@ -170,14 +148,5 @@ class TrailRepository {
     }
 
     throw Exception('Image upload failed.');
-  }
-
-  Future<List<Event>> getEvents() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await database.collection("event").get();
-
-    return snapshot.docs
-        .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
-        .toList();
   }
 }

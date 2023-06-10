@@ -105,7 +105,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
       },
     );
   }
-
+  
   Widget buildTrail(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 

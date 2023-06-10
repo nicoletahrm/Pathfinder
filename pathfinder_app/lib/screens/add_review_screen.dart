@@ -80,7 +80,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   void initState() {
     super.initState();
     trailRepository.getUserRefByEmail(user?.email);
-    init();
+    //init();
   }
 
   @override
@@ -110,10 +110,8 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
   Widget buildTrail(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // Initialize grid items
     List<Widget> gridItems = [];
 
-    // Add existing images to grid items
     for (String imagePath in images) {
       gridItems.add(
         GestureDetector(
@@ -140,7 +138,6 @@ class _AddReviewScreen extends State<AddReviewScreen> {
       );
     }
 
-    // Add a placeholder for adding more photos
     gridItems.add(
       GestureDetector(
         onTap: () {

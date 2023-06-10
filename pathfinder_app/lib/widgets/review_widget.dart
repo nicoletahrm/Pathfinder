@@ -138,7 +138,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                           color: hexStringToColor("#44564a"),
                         ),
                       ),
-                      const SizedBox(width: 3.0),
+                      SizedBox(width: 3.0),
                       Text(
                         widget.rating.toString(),
                         style: GoogleFonts.poppins(
@@ -147,8 +147,8 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                           color: kDefaultIconDarkColor,
                         ),
                       ),
-                      const SizedBox(width: 3.0),
-                      const Icon(Icons.star, color: kRatingColor, size: 17),
+                      SizedBox(width: 3.0),
+                      Icon(Icons.star, color: kRatingColor, size: 17),
                     ],
                   ),
                   Row(

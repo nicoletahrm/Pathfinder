@@ -3,7 +3,7 @@ import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../models/event.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
-import '../widgets/event_widget.dart';
+import 'event_screen.dart';
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key? key}) : super(key: key);
@@ -69,21 +69,23 @@ class _EventsScreenState extends State<EventsScreen> {
 
   Widget buildEvent(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: events.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('Event ${index + 1}'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EventWidget(event: events[index]),
-                ),
-              );
-            },
-          );
-        },
+      body: SafeArea(
+        child: ListView.builder(
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Event ${index + 1}'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventScreen(event: events[index]),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
       bottomNavigationBar: CustomBottomNavBar(),
     );

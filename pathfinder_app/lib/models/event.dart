@@ -9,6 +9,7 @@ class Event {
   final int maxParticipants;
   final Timestamp time;
   final Timestamp timeAdded;
+  final String meetingPlace;
 
   Event({
     required this.organizer,
@@ -17,6 +18,7 @@ class Event {
     required this.maxParticipants,
     required this.time,
     required this.timeAdded,
+    required this.meetingPlace,
   });
 
   Map<String, dynamic> toJson() {
@@ -27,6 +29,7 @@ class Event {
       "maxParticipants": maxParticipants,
       "time": time,
       "timeAdded": timeAdded,
+      "meetingPlace": meetingPlace,
     };
   }
 
@@ -40,6 +43,7 @@ class Event {
       maxParticipants: stringToInt(data["maxParticipants"]),
       time: data["time"] as Timestamp,
       timeAdded: data["timeAdded"] as Timestamp,
+      meetingPlace: data["meetingPlace"],
     );
   }
 }

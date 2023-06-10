@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../models/difficulty.dart';
@@ -30,10 +29,19 @@ convertTime(Timestamp timestamp) {
 
   String formattedDateTime = DateFormat('dd-MM HH:mm').format(dateTime);
 
-  String date = formattedDateTime.split(' ')[0];
   String hour = formattedDateTime.split(' ')[1];
 
-  return date + " " + hour;
+  return hour;
+}
+
+convertTimeToDate(Timestamp timestamp) {
+  DateTime dateTime = timestamp.toDate();
+
+  String formattedDateTime = DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+
+  String date = formattedDateTime.split(' ')[0];
+
+  return date;
 }
 
 hexStringToColor(String hexColor) {

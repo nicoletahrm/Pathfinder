@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
 import '../repositories/event_repository.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
+import 'add_event_screen.dart';
 import 'event_screen.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -86,6 +88,18 @@ class _EventsScreenState extends State<EventsScreen> {
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: hexStringToColor("#44564a"),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddEventScreen(),
+            ),
+          );
+        },
+        child: Icon(Icons.add),
       ),
       bottomNavigationBar: CustomBottomNavBar(),
     );

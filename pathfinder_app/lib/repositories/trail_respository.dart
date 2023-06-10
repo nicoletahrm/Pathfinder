@@ -2,11 +2,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
-import '../models/review.dart';
 import '../models/trail.dart';
 import 'dart:io';
 import '../models/user.dart';
-import '../utils/covert.dart';
 
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -42,25 +40,6 @@ class TrailRepository {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
     return documentSnapshot.reference;
-  }
-
-  Future<List<Review>> getTrailReviewsByRef(DocumentReference ref) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection('review')
-        .where('trail', isEqualTo: ref)
-        .get();
-
-    List<Review> reviews = [];
-
-    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
-        in snapshot.docs) {
-      Map<String, dynamic> data = documentSnapshot.data();
-      Review review = Review.fromJson(data);
-      reviews.add(review);
-    }
-
-    return reviews;
   }
 
   Future<List<String>?> getFavoriteTrails(String? email) async {
@@ -103,38 +82,6 @@ class TrailRepository {
     }
 
     return null;
-  }
-
-  void addReview(String content, List<String> images, String rating,
-      DocumentReference<Object?>? ref, DocumentReference<Object?>? user) async {
-    try {
-      CollectionReference collectionRef = database.collection('review');
-
-      DocumentReference documentRef = collectionRef.doc();
-
-      await documentRef.set({
-        'content': content,
-        'rating': rating,
-        'trail': ref,
-        'user': user,
-        'images': images,
-      });
-
-      final trailSnapshot = await ref?.get();
-
-      Map<String, dynamic>? trailData =
-          trailSnapshot?.data() as Map<String, dynamic>?;
-      double currentRating = stringToDouble(trailData?['rating'] ?? 0);
-
-      double averageRating = (stringToDouble(rating) + currentRating) / 2;
-      String averageRatingString = averageRating.toString();
-
-      await ref?.update({'rating': averageRatingString});
-
-      print('Data added to Firestore successfully!');
-    } catch (error) {
-      print('Error adding data to Firestore: $error');
-    }
   }
 
   Future<String> upload(File file) async {

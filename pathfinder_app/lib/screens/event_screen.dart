@@ -103,7 +103,7 @@ class _EventScreenState extends State<EventScreen> {
               ),
               SizedBox(height: 15),
               Text(
-                'Date: ${convertTimeToDate(widget.event.time)}',
+                'Date: ${widget.event.time.getDateWithoutTime()}',
                 style: GoogleFonts.poppins(
                   fontSize: 15.0,
                   fontWeight: FontWeight.normal,
@@ -112,7 +112,7 @@ class _EventScreenState extends State<EventScreen> {
               ),
               SizedBox(height: 10),
               Text(
-                'Time: ${convertTime(widget.event.time)}',
+                'Time: ${widget.event.time.getFormattedTime()}',
                 style: GoogleFonts.poppins(
                   fontSize: 15.0,
                   fontWeight: FontWeight.normal,

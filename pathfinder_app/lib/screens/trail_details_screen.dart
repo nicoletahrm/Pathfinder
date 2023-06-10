@@ -9,6 +9,7 @@ import 'package:pathfinder_app/utils/constant_colors.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
+import '../repositories/review_repository.dart';
 import '../repositories/trail_respository.dart';
 import '../utils/covert.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
@@ -21,8 +22,7 @@ import 'map_screen.dart';
 class TrailDetailsScreen extends StatefulWidget {
   final String title;
 
-  TrailDetailsScreen({Key? key, required this.title})
-      : super(key: key);
+  TrailDetailsScreen({Key? key, required this.title}) : super(key: key);
 
   @override
   _TrailDetailsScreenState createState() => _TrailDetailsScreenState();
@@ -32,6 +32,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   final GlobalController _globalController = GlobalController();
   late ScrollController _scrollController;
   final TrailRepository trailRepository = TrailRepository();
+  final ReviewRepository reviewRepository = ReviewRepository();
   late List<Daily> weatherDataDaily;
   final dates = <Widget>[];
   final currentDate = DateTime.now();
@@ -54,7 +55,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
     ref = await trailRepository.getRefTrailByTitle(widget.title);
     weatherDataDaily = await getWeather(
         trail.destination.latitude, trail.destination.longitude);
-    trailReviews = await trailRepository.getTrailReviewsByRef(ref);
+    trailReviews = await reviewRepository.getTrailReviewsByRef(ref);
 
     for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
       final date = currentDate.add(Duration(days: i));
@@ -105,7 +106,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
       },
     );
   }
-  
+
   Widget buildTrail(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 

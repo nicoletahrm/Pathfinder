@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
+import '../repositories/review_repository.dart';
 import '../repositories/user_repository.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
@@ -26,6 +27,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   final user = FirebaseAuth.instance.currentUser;
   final TrailRepository trailRepository = TrailRepository();
   final UserRepository userRepository = UserRepository();
+  final ReviewRepository reviewRepository = ReviewRepository();
   late DocumentReference userRef;
   late List<String> images = [];
   late List<File> _selectedImages;
@@ -206,7 +208,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   _uploadPhotos();
-                  trailRepository.addReview(
+                  reviewRepository.addReview(
                     _reviewController.text,
                     images,
                     rating.toString(),

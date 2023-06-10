@@ -24,4 +24,19 @@ class EventRepository {
       'participants': FieldValue.arrayUnion([participantRef])
     });
   }
+
+  addEvent(Event event) async {
+    CollectionReference collectionRef = database.collection('event');
+    DocumentReference documentRef = collectionRef.doc();
+
+    await documentRef.set({
+      'trail': event.trail,
+      'organizer': event.organizer,
+      'participants': event.participants,
+      'maxParticipant': event.maxParticipants,
+      'time': event.time,
+      'timeAdded': event.timeAdded,
+      'meetingPlace': event.meetingPlace
+    });
+  }
 }

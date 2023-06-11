@@ -488,7 +488,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                         },
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    SizedBox(height: 20),
                                   ],
                                 ),
                               ),

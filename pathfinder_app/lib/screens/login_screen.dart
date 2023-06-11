@@ -89,130 +89,135 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: hexStringToColor("#ffffff"),
-        body: ListView(
-          physics: const BouncingScrollPhysics(),
-          shrinkWrap: false,
-          reverse: true,
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Stack(
-                    children: [
-                      logo("assets/images/image4.jpg"),
-                      Container(
-                        height: getHeight(),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: hexStringToColor("#ffffff"),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40),
+        body: SafeArea(
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            shrinkWrap: false,
+            reverse: true,
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Stack(
+                      children: [
+                        logo("assets/images/image4.jpg"),
+                        Container(
+                          height: getHeight(),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: hexStringToColor("#ffffff"),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(40),
+                              topRight: Radius.circular(40),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Log In",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: hexStringToColor("#44564a"),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 0, 0, 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      reusableTextField("E-mail", Icons.mail,
+                                          false, _emailTextController, (() {
+                                        validateField(
+                                            _emailTextController.text, "Email");
+                                      })),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      reusableTextField(
+                                          "Password",
+                                          Icons.lock_outline,
+                                          true,
+                                          _passwordTextController, (() {
+                                        validateField(
+                                            _passwordTextController.text,
+                                            "Password");
+                                      })),
+                                      Padding(
+                                        padding: const EdgeInsets.all(0),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const ForgotPasswordScreen()));
+                                                  },
+                                                  child: Text(
+                                                    'Forgot password?',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 15,
+                                                      color: hexStringToColor(
+                                                          "#44564a"),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ))
+                                            ]),
+                                      ),
+                                      loginButton(context, true, () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs.setString(
+                                            "email", _emailTextController.text);
+                                        try {
+                                          FirebaseAuth.instance
+                                              .signInWithEmailAndPassword(
+                                            email: _emailTextController.text,
+                                            password:
+                                                _passwordTextController.text,
+                                          )
+                                              .then((value) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const HomeScreen()));
+                                          });
+                                        } on FirebaseAuthException catch (e) {
+                                          showErrorMessage(e.code);
+                                        }
+                                      }),
+                                      signUpOption(true),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Log In",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold,
-                                  color: hexStringToColor("#44564a"),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 0, 0, 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    reusableTextField("E-mail", Icons.mail,
-                                        false, _emailTextController, (() {
-                                      validateField(
-                                          _emailTextController.text, "Email");
-                                    })),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    reusableTextField(
-                                        "Password",
-                                        Icons.lock_outline,
-                                        true,
-                                        _passwordTextController, (() {
-                                      validateField(
-                                          _passwordTextController.text,
-                                          "Password");
-                                    })),
-                                    Padding(
-                                      padding: const EdgeInsets.all(0),
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const ForgotPasswordScreen()));
-                                                },
-                                                child: Text(
-                                                  'Forgot password?',
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 15,
-                                                    color: hexStringToColor(
-                                                        "#44564a"),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ))
-                                          ]),
-                                    ),
-                                    loginButton(context, true, () async {
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      prefs.setString(
-                                          "email", _emailTextController.text);
-                                      try {
-                                        FirebaseAuth.instance
-                                            .signInWithEmailAndPassword(
-                                          email: _emailTextController.text,
-                                          password:
-                                              _passwordTextController.text,
-                                        )
-                                            .then((value) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const HomeScreen()));
-                                        });
-                                      } on FirebaseAuthException catch (e) {
-                                        showErrorMessage(e.code);
-                                      }
-                                    }),
-                                    signUpOption(true),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
+import 'package:pathfinder_app/widgets/comment_widget.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
@@ -116,7 +116,7 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
                           return AlertDialog(
                             title: Text(
                               'People going',
-                              style: normalFont,
+                              style: darkBoldFont,
                             ),
                             content: SizedBox(
                               width: double.maxFinite,
@@ -206,6 +206,18 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
               ),
             ),
           ),
+          SizedBox(height: 20),
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: 3,
+              itemBuilder: (BuildContext context, int index) {
+                return CommentWidget();
+              },
+            ),
+          ),
+          SizedBox(height: 20),
         ],
       ),
     )));

@@ -8,6 +8,7 @@ import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/event_repository.dart';
 import '../utils/covert.dart';
+import '../utils/fonts.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/event_widget.dart';
 
@@ -115,11 +116,7 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
                           return AlertDialog(
                             title: Text(
                               'People going',
-                              style: GoogleFonts.poppins(
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold,
-                                color: kDefaultIconDarkColor,
-                              ),
+                              style: normalFont,
                             ),
                             content: SizedBox(
                               width: double.maxFinite,
@@ -134,14 +131,8 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
                                       backgroundImage:
                                           AssetImage(participant.profilePhoto),
                                     ),
-                                    title: Text(
-                                      participant.username,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.normal,
-                                        color: kDefaultIconDarkColor,
-                                      ),
-                                    ),
+                                    title: Text(participant.username,
+                                        style: normalFont),
                                   );
                                 },
                               ),
@@ -211,11 +202,7 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
               ),
               child: Text(
                 buttonText,
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: boldFont,
               ),
             ),
           ),

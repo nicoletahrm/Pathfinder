@@ -79,7 +79,7 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
                           ),
                         ),
                       ]),
-                  const SizedBox(
+                  SizedBox(
                     height: 30.0,
                   ),
                   TrailsList(trails: trails),

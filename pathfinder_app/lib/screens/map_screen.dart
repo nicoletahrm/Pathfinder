@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
-import '../widgets/custom_nav_bar.dart';
 import '../controllers/global_controller.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;

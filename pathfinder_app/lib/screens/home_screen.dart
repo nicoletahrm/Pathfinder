@@ -45,12 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     init();
   }
 
-  @override
   Widget build(BuildContext context) {
-    return buildTrailsList(context);
-  }
-
-  Widget buildTrailsList(BuildContext context) {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

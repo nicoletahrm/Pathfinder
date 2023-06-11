@@ -12,22 +12,16 @@ class EventRepository {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await database.collection("event").get();
 
-    print("HELLO" + snapshot.docs
-        .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
-        .toList().toString());
-
     return snapshot.docs
         .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
         .toList();
   }
 
-  Future<void> updateParticipants(DocumentReference<Object> eventRef,
-      DocumentReference<Object> participantRef) async {
-    await FirebaseFirestore.instance
-        .collection('event')
-        .doc(eventRef.id)
-        .update({
-      'participants': FieldValue.arrayUnion([participantRef])
+  Future<void> updateParticipants(
+      Event event, DocumentReference<Object?> participantRef) async {
+    await FirebaseFirestore.instance.collection('event').doc(event.id).update({
+      'participants': FieldValue.arrayUnion([participantRef]),
+      'maxParticipants': event.maxParticipants - 1,
     });
   }
 
@@ -38,7 +32,6 @@ class EventRepository {
       int maxParticipants,
       String meetingPlace,
       Time time) async {
-        
     CollectionReference collectionRef = database.collection('event');
     DocumentReference documentRef = collectionRef.doc();
 

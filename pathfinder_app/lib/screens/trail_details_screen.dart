@@ -43,12 +43,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   late Trail trail;
   late DocumentReference ref;
 
-  @override
-  void initState() {
-    super.initState();
-    //init();
-  }
-
   Future<void> init() async {
     _scrollController = ScrollController();
     trail = await trailRepository.getTrailByTitle(widget.title);
@@ -83,6 +77,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
         );
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

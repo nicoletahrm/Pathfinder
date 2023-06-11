@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/screens/event_details_screen.dart';
 import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
 import '../repositories/event_repository.dart';
@@ -6,7 +7,6 @@ import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
 import 'add_event_screen.dart';
 import '../widgets/event_widget.dart';
-import 'home_screen.dart';
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key? key}) : super(key: key);
@@ -89,7 +89,8 @@ class _EventsScreenState extends State<EventsScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
+                              builder: (context) =>
+                                  EventDetailsScreen(event: events[index]),
                             ),
                           );
                         },

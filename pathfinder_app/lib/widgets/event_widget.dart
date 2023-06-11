@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
-import 'package:pathfinder_app/widgets/favorite_widget.dart';
 import 'package:pathfinder_app/widgets/trail_widget.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
@@ -78,7 +77,7 @@ class _EventWidgetState extends State<EventWidget> {
   }
 
   Widget buildEvent(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
 
     return Container(
       child: Padding(
@@ -171,127 +170,6 @@ class _EventWidgetState extends State<EventWidget> {
                 trail: trail!,
               ),
             ),
-            SizedBox(height: 10),
-            // Container(
-            //   margin: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
-            //   child: Row(
-            //     children: List<Widget>.generate(
-            //       widget.event.participants.length,
-            //       (index) {
-            //         return GestureDetector(
-            //           onTap: () {
-            //             showDialog(
-            //               context: context,
-            //               builder: (BuildContext context) {
-            //                 return AlertDialog(
-            //                   title: Text(
-            //                     'People going',
-            //                     style: GoogleFonts.poppins(
-            //                       fontSize: 17.0,
-            //                       fontWeight: FontWeight.bold,
-            //                       color: kDefaultIconDarkColor,
-            //                     ),
-            //                   ),
-            //                   content: SizedBox(
-            //                     width: double.maxFinite,
-            //                     child: ListView.builder(
-            //                       shrinkWrap: true,
-            //                       itemCount: users.length,
-            //                       itemBuilder:
-            //                           (BuildContext context, int index) {
-            //                         User participant = users[index]!;
-            //                         return ListTile(
-            //                           leading: CircleAvatar(
-            //                             radius: 20.0,
-            //                             backgroundImage: AssetImage(
-            //                                 participant.profilePhoto),
-            //                           ),
-            //                           title: Text(
-            //                             participant.username,
-            //                             style: GoogleFonts.poppins(
-            //                               fontSize: 15.0,
-            //                               fontWeight: FontWeight.normal,
-            //                               color: kDefaultIconDarkColor,
-            //                             ),
-            //                           ),
-            //                         );
-            //                       },
-            //                     ),
-            //                   ),
-            //                   actions: [
-            //                     TextButton(
-            //                       onPressed: () {
-            //                         Navigator.of(context).pop();
-            //                       },
-            //                       child: Text('Close'),
-            //                     ),
-            //                   ],
-            //                 );
-            //               },
-            //             );
-            //           },
-            //           child: Container(
-            //             margin: EdgeInsets.only(right: 5.0),
-            //             child: CircleAvatar(
-            //               radius: 12.0,
-            //               backgroundImage:
-            //                   AssetImage(users[index]!.profilePhoto),
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // ),
-            // Container(
-            //   width: MediaQuery.of(context).size.width,
-            //   height: 60,
-            //   margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
-            //   child: ElevatedButton(
-            //     onPressed: () async {
-            //       if (widget.event.maxParticipants < 0) {
-            //         AlertDialog(
-            //           title: Text(''),
-            //           content: Text('Max participant is full'),
-            //           actions: [
-            //             ElevatedButton(
-            //               child: Text('Cancel'),
-            //               onPressed: () {
-            //                 Navigator.of(context).pop();
-            //               },
-            //             ),
-            //           ],
-            //         );
-            //       } else {
-            //         await eventRepository.updateParticipants(
-            //             widget.event, userRef);
-            //         setState(() =>
-            //             buttonText = buttonText == 'Go' ? "Don't go" : 'Go');
-            //       }
-            //     },
-            //     style: ButtonStyle(
-            //       backgroundColor: MaterialStateProperty.resolveWith((states) {
-            //         if (states.contains(MaterialState.pressed)) {
-            //           return Colors.black26;
-            //         }
-            //         return hexStringToColor("#44564a");
-            //       }),
-            //       shape: MaterialStateProperty.all(
-            //         RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(12.0),
-            //         ),
-            //       ),
-            //     ),
-            //     child: Text(
-            //       buttonText,
-            //       style: GoogleFonts.poppins(
-            //         fontSize: 18,
-            //         color: Colors.white,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

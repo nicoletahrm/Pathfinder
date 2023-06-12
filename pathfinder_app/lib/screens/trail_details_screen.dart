@@ -18,6 +18,7 @@ import '../widgets/favorite_widget.dart';
 import '../widgets/review_widget.dart';
 import 'add_review_screen.dart';
 import 'map_screen.dart';
+import 'package:connectivity/connectivity.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final String title;
@@ -33,7 +34,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   late ScrollController _scrollController;
   final TrailRepository trailRepository = TrailRepository();
   final ReviewRepository reviewRepository = ReviewRepository();
-  late List<Daily> weatherDataDaily;
+  late List<Daily>? weatherDataDaily;
   final dates = <Widget>[];
   final currentDate = DateTime.now();
   final _dayFormatter = DateFormat('d');
@@ -42,16 +43,25 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   late User user;
   late Trail trail;
   late DocumentReference ref;
+  late bool isConnected;
 
   Future<void> init() async {
     _scrollController = ScrollController();
+    isConnected = await checkInternetConnectivity();
     trail = await trailRepository.getTrailByTitle(widget.title);
     ref = await trailRepository.getRefTrailByTitle(widget.title);
-    weatherDataDaily = await getWeather(
-        trail.destination.latitude, trail.destination.longitude);
+
+    if (isConnected == true) {
+      weatherDataDaily = await getWeather(
+          trail.destination.latitude, trail.destination.longitude);
+    } else {
+      // Display a message indicating that internet connectivity is required
+      weatherDataDaily = [];
+    }
+
     trailReviews = await reviewRepository.getTrailReviewsByRef(ref);
 
-    for (int i = 0; i < weatherDataDaily.length; i = i + 1) {
+    for (int i = 0; i < weatherDataDaily!.length; i = i + 1) {
       final date = currentDate.add(Duration(days: i));
 
       dates.add(Row(
@@ -82,6 +92,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    init();
   }
 
   @override
@@ -287,17 +298,16 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                       height: 100.0,
                                       width: MediaQuery.of(context).size.width,
                                       child: ListView.builder(
-                                          physics:
-                                              const BouncingScrollPhysics(),
+                                          physics: BouncingScrollPhysics(),
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: weatherDataDaily.length,
+                                          itemCount: weatherDataDaily!.length,
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return Stack(children: <Widget>[
                                               DailyWeatherWidget(
                                                   index: index,
                                                   daily:
-                                                      weatherDataDaily[index],
+                                                      weatherDataDaily![index],
                                                   date: dates[index]),
                                             ]);
                                           }),
@@ -499,6 +509,11 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                 )
               ]))),
     );
+  }
+
+  Future<bool> checkInternetConnectivity() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
   }
 
   Future<List<Daily>> getWeather(double lat, double lon) async {

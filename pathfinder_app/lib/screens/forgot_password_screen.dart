@@ -59,7 +59,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
             children: [
               Stack(
                 children: [
-                  logo("assets/images/image4.jpg"),
+                  logo("assets/images/auth.cover.jpg"),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,
@@ -71,7 +71,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                      padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -83,17 +83,17 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
                               color: hexStringToColor("#44564a"),
                             ),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: 20,
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 20),
+                            padding: EdgeInsets.fromLTRB(15, 0, 0, 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 reusableNormalTextField("E-mail", Icons.email,
                                     _emailTextController, (() {})),
-                                const SizedBox(
+                                SizedBox(
                                   height: 20,
                                 ),
                                 resetPasswordButton(context, forgotPassword()),
@@ -109,7 +109,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const LoginScreen()));
+                                                          LoginScreen()));
                                             },
                                             child: Text(
                                               'Log In',

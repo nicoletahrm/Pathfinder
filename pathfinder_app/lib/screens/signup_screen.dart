@@ -33,14 +33,69 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future signUp() async {
-    if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailTextController.text,
-        password: _passwordTextController.text,
+    if (_usernameTextController.text.isEmpty ||
+        _emailTextController.text.isEmpty ||
+        _passwordTextController.text.isEmpty ||
+        _confirmPasswordTextController.text.isEmpty) {
+      showValidationDialog(
+        context,
+        "Empty fields",
+        "Please fill in all fields.",
       );
+    } else if (!passwordConfirmed()) {
+      showValidationDialog(
+        context,
+        "Signup failed",
+        "Passwords don't match.",
+      );
+    } else {
+      try {
+        // Check if username or email already exists
+        final QuerySnapshot usernameSnapshot = await FirebaseFirestore.instance
+            .collection('user')
+            .where('username', isEqualTo: _usernameTextController.text)
+            .limit(1)
+            .get();
 
-      //add user details
-      addUserDetails(_usernameTextController.text, _emailTextController.text);
+        final QuerySnapshot emailSnapshot = await FirebaseFirestore.instance
+            .collection('user')
+            .where('email', isEqualTo: _emailTextController.text)
+            .limit(1)
+            .get();
+
+        if (usernameSnapshot.docs.isNotEmpty) {
+          showValidationDialog(
+            context,
+            "Signup failed",
+            "Username already exists.",
+          );
+        } else if (emailSnapshot.docs.isNotEmpty) {
+          showValidationDialog(
+            context,
+            "Signup failed",
+            "An account with this email already exists.",
+          );
+        } else {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailTextController.text,
+            password: _passwordTextController.text,
+          );
+
+          addUserDetails(
+              _usernameTextController.text, _emailTextController.text);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        }
+      } catch (error) {
+        showValidationDialog(
+          context,
+          "Signup failed",
+          "An error occurred during signup. Please try again.",
+        );
+      }
     }
   }
 
@@ -72,20 +127,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: true,
-          backgroundColor: hexStringToColor("#44564a"),
+          backgroundColor: hexStringToColor("#ffffff"),
           body: ListView(
             shrinkWrap: false,
             reverse: true,
             children: [
-              // Padding(
-              //   padding: EdgeInsets.only(
-              //       bottom: (MediaQuery.of(context).viewInsets.bottom)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Stack(
                     children: [
-                      logo("assets/images/image4.jpg"),
+                      logo("assets/images/auth_cover.jpg"),
                       Container(
                         height: height,
                         width: double.infinity,
@@ -147,15 +199,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         Icons.lock_outline,
                                         _confirmPasswordTextController,
                                         (() {})),
-                                    const SizedBox(
+                                    SizedBox(
                                       height: 20,
                                     ),
                                     loginButton(context, false, () {
-                                      signUp().then((value) => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomeScreen())));
+                                      signUp();
                                     }),
                                     signUpOption(false),
                                   ],

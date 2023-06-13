@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: hexStringToColor("#ffffff"),
         body: SafeArea(
           child: ListView(
-            physics: const BouncingScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             shrinkWrap: false,
             reverse: true,
             children: [
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     Stack(
                       children: [
-                        logo("assets/images/image4.jpg"),
+                        logo("assets/images/auth_cover.jpg"),
                         Container(
                           height: getHeight(),
                           width: double.infinity,
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: hexStringToColor("#44564a"),
                                   ),
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   height: 20,
                                 ),
                                 Padding(

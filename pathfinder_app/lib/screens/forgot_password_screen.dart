@@ -22,27 +22,54 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
   }
 
   Future forgotPassword() async {
-    //try {
-    await FirebaseAuth.instance
-        .sendPasswordResetEmail(email: _emailTextController.text.trim());
-    // ignore: use_build_context_synchronously
-    // showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return const AlertDialog(
-    //         content: Text('Password reset link sent! Check your email.'),
-    //       );
-    //     });
-    //} on FirebaseAuthException catch (ex) {
-    // print(ex);
-    // showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return AlertDialog(
-    //         content: Text(ex.message.toString()),
-    //       );
-    //     });
-    //}
+    final String email = _emailTextController.text.trim();
+
+    if (email.isEmpty) {
+      showValidationDialog(
+        context,
+        "Validation Error",
+        "Please enter your email address.",
+      );
+      return;
+    }
+
+    if (!isEmailValid(email)) {
+      showValidationDialog(
+        context,
+        "Validation Error",
+        "Please enter a valid email address.",
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      showValidationDialog(
+        context,
+        "Email Sent",
+        "Password reset link sent! Check your email.",
+      );
+    } catch (error) {
+      String errorMessage = 'An error occurred. Please try again later.';
+
+      if (error is FirebaseAuthException) {
+        if (error.code == 'user-not-found') {
+          errorMessage = 'No user found with the provided email.';
+        }
+      }
+
+      showValidationDialog(context, "Fail", errorMessage);
+    }
+  }
+
+  bool isEmailValid(String email) {
+    final RegExp emailRegex = RegExp(
+      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+      caseSensitive: false,
+      multiLine: false,
+    );
+    return emailRegex.hasMatch(email);
   }
 
   @override
@@ -59,7 +86,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
             children: [
               Stack(
                 children: [
-                  logo("assets/images/auth.cover.jpg"),
+                  logo("assets/images/auth_cover.jpg"),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.6,
                     width: double.infinity,
@@ -96,9 +123,9 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                resetPasswordButton(context, forgotPassword()),
+                                resetPasswordButton(context, forgotPassword),
                                 Padding(
-                                  padding: const EdgeInsets.all(0),
+                                  padding: EdgeInsets.all(0),
                                   child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

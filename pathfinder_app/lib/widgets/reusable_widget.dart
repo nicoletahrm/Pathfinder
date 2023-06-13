@@ -14,10 +14,7 @@ Widget logo(String imageName) {
 }
 
 TextField reusablePasswordTextField(
-    String text,
-    IconData icon,
-    TextEditingController controller,
-    onChanged()) {
+    String text, IconData icon, TextEditingController controller, onChanged()) {
   return TextField(
       onChanged: onChanged(),
       controller: controller,
@@ -139,14 +136,14 @@ Dialog showValidationDialogWidget(context, String title, String content) {
   );
 }
 
-Container resetPasswordButton(BuildContext context, Future onTop) {
+Container resetPasswordButton(BuildContext context, Function onPressed) {
   return Container(
       width: MediaQuery.of(context).size.width,
       height: 60,
       margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
       child: ElevatedButton(
         onPressed: () {
-          onTop;
+          onPressed();
         },
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -157,11 +154,7 @@ Container resetPasswordButton(BuildContext context, Future onTop) {
             }),
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)))),
-        child: Text('Reset password',
-            style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.bold)),
+        child: Text('Reset password', style: darkBoldFont),
       ));
 }
 

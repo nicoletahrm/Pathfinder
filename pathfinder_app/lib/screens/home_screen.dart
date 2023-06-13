@@ -96,10 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: reusableTextField(
+                      child: reusableNormalTextField(
                         "Search a place...",
                         Icons.search_outlined,
-                        false,
                         _searchTextController,
                         () {
                           searchTrailByTitle(_searchTextController.text);

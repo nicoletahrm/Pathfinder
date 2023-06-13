@@ -65,7 +65,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: hexStringToColor("#ffffff"),
-                      borderRadius: const BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         topRight: Radius.circular(40),
                       ),
@@ -91,7 +91,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                reusableTextField("E-mail", Icons.email, false,
+                                reusableNormalTextField("E-mail", Icons.email,
                                     _emailTextController, (() {})),
                                 const SizedBox(
                                   height: 20,

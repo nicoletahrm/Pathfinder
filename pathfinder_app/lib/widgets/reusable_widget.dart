@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../utils/covert.dart';
+import '../utils/fonts.dart';
 
 Widget logo(String imageName) {
   return Transform.translate(
-      offset: const Offset(0, -400),
+      offset: Offset(0, -400),
       child: Image.asset(
         imageName,
         scale: 2.0,
@@ -13,14 +13,41 @@ Widget logo(String imageName) {
       ));
 }
 
-TextField reusableTextField(String text, IconData icon, bool isPasswordType,
-    TextEditingController controller, onChanged()) {
+TextField reusablePasswordTextField(
+    String text,
+    IconData icon,
+    TextEditingController controller,
+    onChanged()) {
+  return TextField(
+      onChanged: onChanged(),
+      controller: controller,
+      obscureText: true,
+      cursorColor: Colors.black,
+      cursorHeight: 25,
+      style: GoogleFonts.poppins(fontSize: 18),
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          icon,
+          color: Colors.black45,
+        ),
+        labelText: text,
+        labelStyle: TextStyle(color: Colors.black45, fontSize: 18),
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        fillColor: hexStringToColor("#f0f3f1"),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(width: 0, style: BorderStyle.none),
+        ),
+      ),
+      keyboardType: TextInputType.visiblePassword);
+}
+
+TextField reusableNormalTextField(
+    String text, IconData icon, TextEditingController controller, onChanged()) {
   return TextField(
     onChanged: onChanged(),
     controller: controller,
-    obscureText: isPasswordType,
-    enableSuggestions: !isPasswordType,
-    autocorrect: !isPasswordType,
     cursorColor: Colors.black,
     cursorHeight: 25,
     style: GoogleFonts.poppins(fontSize: 18),
@@ -30,7 +57,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
         color: Colors.black45,
       ),
       labelText: text,
-      labelStyle: const TextStyle(color: Colors.black45, fontSize: 18),
+      labelStyle: TextStyle(color: Colors.black45, fontSize: 18),
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       fillColor: hexStringToColor("#f0f3f1"),
@@ -38,9 +65,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
           borderRadius: BorderRadius.circular(12.0),
           borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
     ),
-    keyboardType: isPasswordType
-        ? TextInputType.visiblePassword
-        : TextInputType.emailAddress,
+    keyboardType: TextInputType.emailAddress,
   );
 }
 
@@ -48,7 +73,7 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
   return Container(
       width: MediaQuery.of(context).size.width,
       height: 60,
-      margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+      margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
       child: ElevatedButton(
         onPressed: () {
           onTop();
@@ -70,11 +95,55 @@ Container loginButton(BuildContext context, bool isLogin, Function onTop) {
       ));
 }
 
+void showValidationDialog(BuildContext context, String title, String content) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return showValidationDialogWidget(context, title, content);
+    },
+  );
+}
+
+Dialog showValidationDialogWidget(context, String title, String content) {
+  return Dialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(title, style: darkBoldFont),
+          SizedBox(height: 10),
+          Text(content, style: normalFont),
+          SizedBox(height: 10),
+          ElevatedButton(
+            child: Text(
+              "OK",
+              style: boldFont,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: hexStringToColor("#44564a"),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Container resetPasswordButton(BuildContext context, Future onTop) {
   return Container(
       width: MediaQuery.of(context).size.width,
       height: 60,
-      margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+      margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
       child: ElevatedButton(
         onPressed: () {
           onTop;
@@ -98,7 +167,7 @@ Container resetPasswordButton(BuildContext context, Future onTop) {
 
 Widget profileMenu(BuildContext context, String text, Function onTop) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     child: TextButton(
       style: TextButton.styleFrom(
         foregroundColor: Colors.black,
@@ -112,9 +181,9 @@ Widget profileMenu(BuildContext context, String text, Function onTop) {
       child: Row(
         children: [
           logo("assets/images/logo1.png"),
-          const SizedBox(width: 20),
+          SizedBox(width: 20),
           Expanded(child: Text(text)),
-          const Icon(Icons.arrow_forward_ios),
+          Icon(Icons.arrow_forward_ios),
         ],
       ),
     ),
@@ -130,13 +199,13 @@ TextField textField(String text, TextEditingController controller, onChanged) {
     style: GoogleFonts.poppins(fontSize: 18),
     decoration: InputDecoration(
       labelText: text,
-      labelStyle: const TextStyle(color: Colors.black45, fontSize: 18),
+      labelStyle: TextStyle(color: Colors.black45, fontSize: 18),
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       fillColor: hexStringToColor("#f0f3f1"),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
+          borderSide: BorderSide(width: 0, style: BorderStyle.none)),
     ),
   );
 }

@@ -1,10 +1,7 @@
-// ignore_for_file: unused_field
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/forgot_password_screen.dart';
 import 'package:pathfinder_app/screens/home_screen.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:pathfinder_app/screens/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/covert.dart';
@@ -24,57 +21,13 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isKeyboardOn = false;
   late double height;
 
-  void showErrorMessage(String message) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(message),
-          );
-        });
-  }
-
-  String _errorMessage = "";
-
-  void validateField(String val, String field) {
-    switch (field) {
-      case 'Email':
-        if (val.isEmpty) {
-          setState(() {
-            _errorMessage = '$field can not be empty';
-          });
-        } else if (!EmailValidator.validate(val, true)) {
-          setState(() {
-            _errorMessage = 'Invalid $field';
-          });
-        } else {
-          setState(() {
-            _errorMessage = '';
-          });
-        }
-        break;
-      case 'Password':
-        if (val.isEmpty) {
-          setState(() {
-            _errorMessage = '$field can not be empty';
-          });
-        } else {
-          setState(() {
-            _errorMessage = '';
-          });
-        }
-        break;
-    }
-  }
-
   Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = prefs.getString("email");
-    //print(email);
     runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: email == null ? const LoginScreen() : const HomeScreen(),
+      home: email == null ? LoginScreen() : HomeScreen(),
     ));
   }
 
@@ -136,23 +89,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      reusableTextField("E-mail", Icons.mail,
-                                          false, _emailTextController, (() {
-                                        validateField(
-                                            _emailTextController.text, "Email");
-                                      })),
-                                      const SizedBox(
+                                      reusableNormalTextField(
+                                          "E-mail",
+                                          Icons.mail,
+                                          _emailTextController,
+                                          (() {})),
+                                      SizedBox(
                                         height: 20,
                                       ),
-                                      reusableTextField(
-                                          "Password",
-                                          Icons.lock_outline,
-                                          true,
-                                          _passwordTextController, (() {
-                                        validateField(
-                                            _passwordTextController.text,
-                                            "Password");
-                                      })),
+                                      reusablePasswordTextField(
+                                        "Password",
+                                        Icons.lock_outline,
+                                        _passwordTextController,
+                                        () {},
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.all(0),
                                         child: Row(
@@ -185,7 +135,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 .getInstance();
                                         prefs.setString(
                                             "email", _emailTextController.text);
-                                        try {
+
+                                        if (_emailTextController.text.isEmpty ||
+                                            _passwordTextController
+                                                .text.isEmpty) {
+                                          showValidationDialog(
+                                            context,
+                                            "Empty fields",
+                                            "Please fill in all fields.",
+                                          );
+                                        } else {
                                           FirebaseAuth.instance
                                               .signInWithEmailAndPassword(
                                             email: _emailTextController.text,
@@ -194,13 +153,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                           )
                                               .then((value) {
                                             Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const HomeScreen()));
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomeScreen()),
+                                            );
+                                          }).catchError((error) {
+                                            showValidationDialog(
+                                              context,
+                                              "Login failed",
+                                              "Incorrect email or password.",
+                                            );
                                           });
-                                        } on FirebaseAuthException catch (e) {
-                                          showErrorMessage(e.code);
                                         }
                                       }),
                                       signUpOption(true),

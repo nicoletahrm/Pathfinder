@@ -2,8 +2,8 @@ import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/constant_colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/covert.dart';
+import '../utils/fonts.dart';
 import '../widgets/custom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import '../models/trail.dart';
@@ -19,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final user = FirebaseAuth.instance.currentUser;
   final TextEditingController _searchTextController = TextEditingController();
   final TrailRepository trailRepository = TrailRepository();
   late List<Trail> trails = [];
@@ -111,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         showDifficultyFilterDialog();
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           vertical: 14.0,
                           horizontal: 16.0,
                         ),
@@ -133,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        bottomNavigationBar: const CustomBottomNavBar(),
+        bottomNavigationBar: CustomBottomNavBar(),
       ),
     );
   }
@@ -160,38 +159,43 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Filter by Difficulty'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text('Easy'),
-                onTap: () {
-                  selectedDifficulty = 'easy';
-                  filterTrailsByDifficulty(selectedDifficulty);
-                  Navigator.of(context).pop();
-                },
+        return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Choose a difficulty:", style: darkBoldFont2),
+                  ListTile(
+                    title: Text('Easy', style: normalFont),
+                    onTap: () {
+                      selectedDifficulty = 'easy';
+                      filterTrailsByDifficulty(selectedDifficulty);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Mediu', style: normalFont),
+                    onTap: () {
+                      selectedDifficulty = 'mediu';
+                      filterTrailsByDifficulty(selectedDifficulty);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Hard', style: normalFont),
+                    onTap: () {
+                      selectedDifficulty = 'hard';
+                      filterTrailsByDifficulty(selectedDifficulty);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
-              ListTile(
-                title: const Text('Mediu'),
-                onTap: () {
-                  selectedDifficulty = 'mediu';
-                  filterTrailsByDifficulty(selectedDifficulty);
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('Hard'),
-                onTap: () {
-                  selectedDifficulty = 'hard';
-                  filterTrailsByDifficulty(selectedDifficulty);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
+            ));
       },
     );
   }

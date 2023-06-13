@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/custom_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,20 +22,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isKeyboardOn = false;
   late double height;
 
-  Future<void> main() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString("email");
-    runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: email == null ? LoginScreen() : HomeScreen(),
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
-    main();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -61,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: hexStringToColor("#ffffff"),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(40),
                               topRight: Radius.circular(40),
                             ),
@@ -83,8 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 20,
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 0, 0, 20),
+                                  padding: EdgeInsets.fromLTRB(15, 0, 0, 20),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -115,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                const ForgotPasswordScreen()));
+                                                                ForgotPasswordScreen()));
                                                   },
                                                   child: Text(
                                                     'Forgot password?',
@@ -139,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         if (_emailTextController.text.isEmpty ||
                                             _passwordTextController
                                                 .text.isEmpty) {
-                                          showValidationDialog(
+                                          CustomDialog.show(
                                             context,
                                             "Empty fields",
                                             "Please fill in all fields.",
@@ -159,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       HomeScreen()),
                                             );
                                           }).catchError((error) {
-                                            showValidationDialog(
+                                            CustomDialog.show(
                                               context,
                                               "Login failed",
                                               "Incorrect email or password.",
@@ -210,11 +198,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   getHeight() {
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-
     if (isKeyboardVisible) {
       return MediaQuery.of(context).size.height * 0.5;
     }
-
     return MediaQuery.of(context).size.height * 0.7;
   }
 }

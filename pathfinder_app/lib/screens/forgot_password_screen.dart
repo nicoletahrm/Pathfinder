@@ -4,6 +4,7 @@ import 'package:pathfinder_app/screens/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
+import '../widgets/custom_dialog.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
     final String email = _emailTextController.text.trim();
 
     if (email.isEmpty) {
-      showValidationDialog(
+      CustomDialog.show(
         context,
         "Validation Error",
         "Please enter your email address.",
@@ -34,7 +35,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
     }
 
     if (!isEmailValid(email)) {
-      showValidationDialog(
+      CustomDialog.show(
         context,
         "Validation Error",
         "Please enter a valid email address.",
@@ -45,7 +46,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-      showValidationDialog(
+      CustomDialog.show(
         context,
         "Email Sent",
         "Password reset link sent! Check your email.",

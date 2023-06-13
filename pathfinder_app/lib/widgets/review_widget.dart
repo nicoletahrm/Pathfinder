@@ -5,6 +5,7 @@ import '../models/user.dart';
 import '../repositories/user_repository.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
+import 'custom_dialog.dart';
 
 class ReviewWidget extends StatefulWidget {
   final String content;
@@ -43,7 +44,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: init(),
+      //future: init(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -94,23 +95,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                 );
               });
         } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("No Images"),
-                content: Text("No images available."),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          );
+          CustomDialog.show(context, "No Images", "No images available.");
         }
       },
       child: Container(

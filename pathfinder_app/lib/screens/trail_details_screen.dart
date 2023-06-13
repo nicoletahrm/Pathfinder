@@ -16,9 +16,10 @@ import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/daily_weather_widget.dart';
 import '../widgets/favorite_widget.dart';
 import '../widgets/review_widget.dart';
+import '../widgets/route_widget.dart';
 import 'add_review_screen.dart';
-import 'map_screen.dart';
 import 'package:connectivity/connectivity.dart';
+import '../utils/fonts.dart';
 
 class TrailDetailsScreen extends StatefulWidget {
   final String title;
@@ -158,7 +159,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                       Container(
                                           height: size.height,
                                           width: size.width,
-                                          decoration: const BoxDecoration(
+                                          decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               begin: Alignment.topCenter,
                                               end: Alignment.bottomCenter,
@@ -207,7 +208,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                               fontSize: 28.0,
                                               fontWeight: FontWeight.bold,
                                               color: kLightColor)),
-                                      const SizedBox(
+                                      SizedBox(
                                         width: 3.0,
                                       ),
                                       Text(trail.rating.toStringAsPrecision(2),
@@ -215,13 +216,13 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                               fontSize: 18.0,
                                               fontWeight: FontWeight.normal,
                                               color: kLightColor)),
-                                      const SizedBox(
+                                      SizedBox(
                                         width: 3.0,
                                       ),
-                                      const Icon(Icons.star,
+                                      Icon(Icons.star,
                                           color: kRatingColor, size: 17),
                                     ]),
-                                    const SizedBox(
+                                    SizedBox(
                                       height: 12.0,
                                     ),
                                     SizedBox(
@@ -238,7 +239,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: kLightColor)),
-                                                const SizedBox(
+                                                SizedBox(
                                                   height: 10.0,
                                                 ),
                                                 Text(
@@ -258,7 +259,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: kLightColor)),
-                                                const SizedBox(
+                                                SizedBox(
                                                   height: 10.0,
                                                 ),
                                                 Text(
@@ -278,7 +279,7 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: kLightColor)),
-                                                const SizedBox(
+                                                SizedBox(
                                                   height: 10.0,
                                                 ),
                                                 Text(trail.difficulty.name,
@@ -348,75 +349,22 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                   children: [
                                     if (trail.routes.isNotEmpty)
                                       Container(
-                                        height:
-                                            trail.routes.length.toDouble() * 75,
-                                        child: Column(
-                                          children: List.generate(
-                                              trail.routes.length, (index) {
+                                          height:
+                                              trail.routes.length.toDouble() *
+                                                  75,
+                                          child: Column(
+                                              children: List.generate(
+                                                  trail.routes.length, (index) {
                                             if (trail.routes[index] == null) {
                                               return SizedBox();
                                             }
-                                            return Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 60,
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.push<bool>(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          MapScreen(
-                                                        destination: GeoPoint(
-                                                          trail.destination
-                                                              .latitude,
-                                                          trail.destination
-                                                              .longitude,
-                                                        ),
-                                                        route:
-                                                            trail.routes[index],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty
-                                                          .resolveWith(
-                                                              (states) {
-                                                    if (states.contains(
-                                                        MaterialState
-                                                            .pressed)) {
-                                                      return Colors.black26;
-                                                    }
-                                                    return Colors.grey;
-                                                  }),
-                                                ),
-                                                child: Text(
-                                                  trail.routes[index],
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 15,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            );
-                                          }),
-                                        ),
-                                      ),
+                                            return RouteWidget(
+                                                destination: trail.destination,
+                                                route: trail.routes[index]);
+                                          }))),
                                     Text(
                                       trail.content,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.normal,
-                                        color: hexStringToColor("#44564a"),
-                                      ),
+                                      style: normalFont,
                                     ),
                                     SizedBox(height: 28),
                                     Align(

@@ -1,5 +1,4 @@
 // ignore_for_file: sdk_version_since, deprecated_member_use
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -96,7 +95,6 @@ class TrailMapScreenState extends State<TrailMapScreen> {
             GoogleMap(
               mapType: MapType.normal,
               initialCameraPosition: initialCameraPosition,
-              //markers: markers,
               polylines: polylines,
               zoomControlsEnabled: true,
               onMapCreated: (GoogleMapController mapController) {

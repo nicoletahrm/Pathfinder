@@ -47,13 +47,13 @@ class _FavoriteTrailsScreenState extends State<FavoriteTrailsScreen> {
           return Text('Failed to initialize trails: ${snapshot.error}');
         } else {
           // Build the UI with the initialized trails list.
-          return buildTrailsList(context);
+          return buildFavoriteIcon(context);
         }
       },
     );
   }
 
-  Widget buildTrailsList(BuildContext context) {
+  Widget buildFavoriteIcon(BuildContext context) {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

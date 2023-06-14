@@ -14,23 +14,22 @@ import '../repositories/trail_respository.dart';
 import '../utils/covert.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/daily_weather_widget.dart';
-import '../widgets/favorite_widget.dart';
 import '../widgets/review_widget.dart';
 import '../widgets/route_widget.dart';
 import 'add_review_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import '../utils/fonts.dart';
 
-class TrailDetailsScreen extends StatefulWidget {
+class TrailDetailScreen extends StatefulWidget {
   final String title;
 
-  TrailDetailsScreen({Key? key, required this.title}) : super(key: key);
+  TrailDetailScreen({Key? key, required this.title}) : super(key: key);
 
   @override
-  _TrailDetailsScreenState createState() => _TrailDetailsScreenState();
+  _TrailDetailScreenState createState() => _TrailDetailScreenState();
 }
 
-class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
+class _TrailDetailScreenState extends State<TrailDetailScreen> {
   final GlobalController _globalController = GlobalController();
   late ScrollController _scrollController;
   final TrailRepository trailRepository = TrailRepository();
@@ -56,7 +55,6 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
       weatherDataDaily = await getWeather(
           trail.destination.latitude, trail.destination.longitude);
     } else {
-      // Display a message indicating that internet connectivity is required
       weatherDataDaily = [];
     }
 
@@ -186,12 +184,12 @@ class _TrailDetailsScreenState extends State<TrailDetailsScreen> {
                                   ),
                                   child: Icon(Icons.arrow_back),
                                 )),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                  top: 30.0,
-                                  left: size.width - 70,
-                                ),
-                                child: FavoriteButton(title: widget.title)),
+                            // Padding(
+                            //     padding: EdgeInsets.only(
+                            //       top: 30.0,
+                            //       left: size.width - 70,
+                            //     ),
+                            //     child: FavoriteButton(title: widget.title)),
                             Positioned(
                               bottom: 0.0,
                               right: 10.0,

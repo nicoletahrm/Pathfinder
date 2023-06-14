@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/screens/trail_details_screen.dart';
 import '../models/trail.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import '../screens/trail_detail_screen.dart';
 import '../utils/constant_colors.dart';
 
 class TrailWidget extends StatelessWidget {
@@ -21,7 +21,7 @@ class TrailWidget extends StatelessWidget {
             pageBuilder: (context, animation, secondaryAnimation) {
               return FadeTransition(
                   opacity: animation,
-                  child: TrailDetailsScreen(
+                  child: TrailDetailScreen(
                     title: trail.title,
                   ));
             },

@@ -22,8 +22,21 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isKeyboardOn = false;
   late double height;
 
+Future<void> main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString("email");
+    print(email);
+    runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: email == null ? const LoginScreen() : const HomeScreen(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
+     main();
+     
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

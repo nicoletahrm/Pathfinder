@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../screens/map_screen.dart';
+import '../screens/trail_map_screen.dart';
 import '../utils/covert.dart';
 
 class RouteWidget extends StatefulWidget {
@@ -27,7 +27,7 @@ class _RouteWidgetScreen extends State<RouteWidget> {
           Navigator.push<bool>(
             context,
             MaterialPageRoute(
-              builder: (context) => MapScreen(
+              builder: (context) => TrailMapScreen(
                 destination: GeoPoint(
                   widget.destination.latitude,
                   widget.destination.longitude,

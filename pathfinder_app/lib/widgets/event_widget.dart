@@ -155,7 +155,16 @@ class _EventWidgetState extends State<EventWidget> {
             ),
             SizedBox(height: 5),
             Text(
-              'Free spots: ${widget.event.maxParticipants.toString()}',
+              'Free spots: ${widget.event.maxParticipants - widget.event.participants.length}',
+              style: GoogleFonts.poppins(
+                fontSize: 15.0,
+                fontWeight: FontWeight.normal,
+                color: kDefaultIconDarkColor,
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'Max participants: ${widget.event.maxParticipants}',
               style: GoogleFonts.poppins(
                 fontSize: 15.0,
                 fontWeight: FontWeight.normal,

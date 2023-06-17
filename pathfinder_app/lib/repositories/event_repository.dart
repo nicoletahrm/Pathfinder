@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
 import '../models/time.dart';
-import '../models/user.dart';
 
 class EventRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -25,13 +24,8 @@ class EventRepository {
     });
   }
 
-  addEvent(
-      DocumentReference<Object?> trail,
-      DocumentReference<Object?> user,
-      List<User> participants,
-      int maxParticipants,
-      String meetingPlace,
-      Time time) async {
+  void addEvent(DocumentReference<Object?> trail, DocumentReference<Object?> user,
+      int maxParticipants, String meetingPlace, Time time) async {
     CollectionReference collectionRef = database.collection('event');
     DocumentReference documentRef = collectionRef.doc();
 
@@ -39,11 +33,12 @@ class EventRepository {
       'id': documentRef.id,
       'trail': trail,
       'organizer': user,
-      'participants': participants,
+      'participants': [],
       'maxParticipants': maxParticipants,
       'time': timeToTimestamp(time),
       'timeAdded': new Timestamp.now(),
-      'meetingPlace': meetingPlace
+      'meetingPlace': meetingPlace,
+      'comments': [],
     });
   }
 

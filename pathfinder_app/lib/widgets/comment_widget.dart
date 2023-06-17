@@ -5,10 +5,8 @@ import '../models/comment.dart';
 import '../models/user.dart';
 import '../repositories/comment_repositroy.dart';
 import '../repositories/user_repository.dart';
-import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
 import 'custom_circular_progress_indicator.dart';
-import 'custom_dialog.dart';
 
 class CommentWidget extends StatefulWidget {
   final String content;
@@ -33,6 +31,8 @@ class _CommentWidgetState extends State<CommentWidget> {
   bool showReplyTextField = false;
   TextEditingController replyController = TextEditingController();
   late List<Comment> repliesList;
+
+  bool showAllReplies = false;
 
   Future<void> init() async {
     user = await userRepository.getUserByRef(widget.ref);
@@ -68,95 +68,57 @@ class _CommentWidgetState extends State<CommentWidget> {
   }
 
   Widget buildReview(BuildContext context) {
-    bool showAllReplies = false; // Flag to track if all replies should be shown
-
     return InkWell(
         child: Container(
-            margin: EdgeInsets.fromLTRB(10, 10, 10, 20),
-            width: 500,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundImage: AssetImage(user.profilePhoto),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 20),
+      width: 500,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: AssetImage(user.profilePhoto),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              user.username,
-                              style: GoogleFonts.poppins(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                color: hexStringToColor("#44564a"),
-                              ),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              widget.content,
-                              style: GoogleFonts.poppins(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.normal,
-                                color: kDefaultIconDarkColor,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          user.username,
+                          style: GoogleFonts.poppins(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: hexStringToColor("#44564a"),
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          widget.content,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal,
+                            color: kDefaultIconDarkColor,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              if (repliesList.length > 0)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (repliesList.length > 0)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                showAllReplies = true;
-                              });
-                            },
-                            child: Text(
-                                'Show all replies (${repliesList.length})'),
-                          ),
-
-                          if (showAllReplies) // Update this condition
-                          ...repliesList.map((reply) {
-                            return Container(
-                              margin: EdgeInsets.only(left: 20),
-                              child: Text(reply.toJson()['content']),
-                            );
-                          }).toList(),
-
-                          if (showAllReplies && repliesList.length > 2)
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  showAllReplies = false;
-                                });
-                              },
-                              child: Text('Hide replies'),
-                            ),
-                        ],
-                      ),
                   ],
                 ),
-            ])));
+              ),
+            ],
+          ),
+        ],
+      ),
+    ));
   }
 
   Future<List<Comment>> fetchComments() async {

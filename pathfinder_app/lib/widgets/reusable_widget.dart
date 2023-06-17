@@ -66,6 +66,41 @@ TextField reusableNormalTextField(
   );
 }
 
+TextField reusableIntTextField(String text, IconData icon,
+    TextEditingController controller, ValueChanged<int> onChanged) {
+  return TextField(
+    onChanged: (value) {
+      if (value.isNotEmpty) {
+        final intValue = int.parse(value);
+        onChanged(intValue);
+      } else {
+        onChanged(0);
+      }
+    },
+    controller: controller,
+    cursorColor: Colors.black,
+    cursorHeight: 25,
+    style: GoogleFonts.poppins(fontSize: 18),
+    decoration: InputDecoration(
+      prefixIcon: Icon(
+        icon,
+        color: Colors.black45,
+      ),
+      labelText: text,
+      labelStyle: TextStyle(color: Colors.black45, fontSize: 18),
+      filled: true,
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      fillColor: hexStringToColor("#f0f3f1"),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+      ),
+    ),
+    keyboardType: TextInputType.number,
+    //inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+  );
+}
+
 Container loginButton(BuildContext context, bool isLogin, Function onTop) {
   return Container(
       width: MediaQuery.of(context).size.width,
@@ -201,4 +236,30 @@ TextField textField(String text, TextEditingController controller, onChanged) {
           borderSide: BorderSide(width: 0, style: BorderStyle.none)),
     ),
   );
+}
+
+Container customButton(BuildContext context, String text, Function onPressed) {
+  return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      margin: EdgeInsets.fromLTRB(60, 10, 60, 30),
+      child: ElevatedButton(
+        onPressed: () {
+          onPressed();
+        },
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.pressed)) {
+                return Colors.black26;
+              }
+              return Color.fromARGB(255, 18, 30, 19);
+            }),
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)))),
+        child: Text(text,
+            style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.bold)),
+      ));
 }

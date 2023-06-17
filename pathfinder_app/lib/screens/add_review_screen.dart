@@ -33,36 +33,6 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   late List<File> _selectedImages;
   late double rating;
 
-  void _uploadPhotos() async {
-    for (var i = 0; i < _selectedImages.length; i++) {
-      try {
-        final String downloadUrl =
-            await trailRepository.upload(_selectedImages[i]);
-
-        print('Image uploaded: $downloadUrl');
-      } catch (e) {
-        print('Image upload failed: $e');
-      }
-    }
-  }
-
-  Future<void> _getFromGallery() async {
-    List<XFile> pickedFiles = await ImagePicker().pickMultiImage();
-    List<File> selectedImages = [];
-    for (var i = 0; i < pickedFiles.length; i++) {
-      selectedImages.add(File(pickedFiles[i].path));
-    }
-    setState(() {
-      for (var i = 0; i < selectedImages.length; i++) {
-        images.add(selectedImages[i].path);
-      }
-    });
-  }
-
-  void handleRating(double value) {
-    rating = value;
-  }
-
   Future<void> init() async {
     userRef = await userRepository.getUserRefByEmail(user?.email);
 
@@ -73,7 +43,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
           _scrollController.position.minScrollExtent) {
         _scrollController.animateTo(
           0,
-          duration: const Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
       }
@@ -84,7 +54,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   void initState() {
     super.initState();
     userRepository.getUserRefByEmail(user?.email);
-    //init();
+    init();
   }
 
   @override
@@ -246,5 +216,35 @@ class _AddReviewScreen extends State<AddReviewScreen> {
         ),
       ]),
     ));
+  }
+
+  void _uploadPhotos() async {
+    for (var i = 0; i < _selectedImages.length; i++) {
+      try {
+        final String downloadUrl =
+            await trailRepository.upload(_selectedImages[i]);
+
+        print('Image uploaded: $downloadUrl');
+      } catch (e) {
+        print('Image upload failed: $e');
+      }
+    }
+  }
+
+  Future<void> _getFromGallery() async {
+    List<XFile> pickedFiles = await ImagePicker().pickMultiImage();
+    List<File> selectedImages = [];
+    for (var i = 0; i < pickedFiles.length; i++) {
+      selectedImages.add(File(pickedFiles[i].path));
+    }
+    setState(() {
+      for (var i = 0; i < selectedImages.length; i++) {
+        images.add(selectedImages[i].path);
+      }
+    });
+  }
+
+  void handleRating(double value) {
+    rating = value;
   }
 }

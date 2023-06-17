@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/models/comment.dart';
+import 'package:pathfinder_app/repositories/comment_repositroy.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
 import 'package:pathfinder_app/widgets/comment_widget.dart';
@@ -25,17 +27,20 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
   final TrailRepository trailRepository = TrailRepository();
   final EventRepository eventRepository = EventRepository();
   final UserRepository userRepository = UserRepository();
+  final CommentRepository commentRepository = CommentRepository();
   late User user;
   late DocumentReference<Object?> userRef;
   late Trail? trail;
   late List<User?> users;
   late String buttonText = 'Go';
+  late List<Comment> comments;
 
   Future<void> init() async {
     user = await userRepository.getUserByRef(widget.event.organizer);
     trail = await trailRepository.getTrailByRef(widget.event.trail);
     users = await fetchParticipants();
     userRef = await userRepository.getUserRefByEmail(user.email);
+    comments = await commentRepository.getComments();
   }
 
   @override
@@ -211,9 +216,12 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
             height: 200,
             child: ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: 3,
+              itemCount: widget.event.comments.length,
               itemBuilder: (BuildContext context, int index) {
-                return CommentWidget();
+                return CommentWidget(
+                  content: comments[index].content,
+                  userRef: comments[index].user,
+                );
               },
             ),
           ),
@@ -233,7 +241,18 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
         participants.add(participant);
       }
     }
-
     return participants;
+  }
+
+  Future<List<Comment>> fetchComments() async {
+    List<Comment> comments = [];
+
+    for (DocumentReference<Object>? commentRef in widget.event.comments) {
+      if (commentRef != null) {
+        Comment comment = await commentRepository.getCommentByRef(commentRef);
+        comments.add(comment);
+      }
+    }
+    return comments;
   }
 }

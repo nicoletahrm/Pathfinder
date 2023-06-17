@@ -93,7 +93,7 @@ class TrailMapScreenState extends State<TrailMapScreen> {
         child: Stack(
           children: [
             GoogleMap(
-              mapType: MapType.normal,
+              mapType: MapType.normal, 
               initialCameraPosition: initialCameraPosition,
               polylines: polylines,
               zoomControlsEnabled: true,

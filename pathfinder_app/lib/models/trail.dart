@@ -31,6 +31,7 @@ class Trail {
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "title": title,
       "content": content,
       "coverImage": coverImage,

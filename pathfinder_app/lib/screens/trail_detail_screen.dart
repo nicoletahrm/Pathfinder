@@ -22,8 +22,13 @@ import '../utils/fonts.dart';
 
 class TrailDetailScreen extends StatefulWidget {
   final String title;
+  final String heroTag;
 
-  TrailDetailScreen({Key? key, required this.title}) : super(key: key);
+  const TrailDetailScreen({
+    Key? key,
+    required this.title,
+    required this.heroTag,
+  }) : super(key: key);
 
   @override
   _TrailDetailScreenState createState() => _TrailDetailScreenState();
@@ -146,7 +151,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                   return Stack(
                                     children: [
                                       Hero(
-                                        tag: "trail${widget.title}",
+                                        tag: widget.heroTag,
                                         child: Image.asset(
                                           trail.images[index].toString(),
                                           height: size.height,

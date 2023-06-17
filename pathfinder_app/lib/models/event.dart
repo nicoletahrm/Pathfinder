@@ -11,6 +11,7 @@ class Event {
   late final Time time;
   final Timestamp timeAdded;
   final String meetingPlace;
+  final List<DocumentReference<Object>?> comments;
 
   Event({
     required this.id,
@@ -21,6 +22,7 @@ class Event {
     required this.time,
     required this.timeAdded,
     required this.meetingPlace,
+    required this.comments,
   });
 
   Map<String, dynamic> toJson() {
@@ -33,6 +35,7 @@ class Event {
       "time": timeToTimestamp(time),
       "timeAdded": timeAdded,
       "meetingPlace": meetingPlace,
+      "comments": comments,
     };
   }
 
@@ -48,6 +51,7 @@ class Event {
       time: timestampToTime(data["time"]),
       timeAdded: data["timeAdded"],
       meetingPlace: data["meetingPlace"],
+      comments: List<DocumentReference<Object>?>.from(data["comments"]),
     );
   }
 }

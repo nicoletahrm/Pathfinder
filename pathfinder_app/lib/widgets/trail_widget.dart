@@ -9,36 +9,39 @@ class TrailWidget extends StatelessWidget {
   final double margin;
   final Trail trail;
 
-  const TrailWidget({Key? key, required this.index, required this.margin, required this.trail})
+  const TrailWidget(
+      {Key? key,
+      required this.index,
+      required this.margin,
+      required this.trail})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final String heroTag = 'trail_${trail.hashCode}_$index';
+    ;
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
               return FadeTransition(
-                  opacity: animation,
-                  child: TrailDetailScreen(
-                    title: trail.title,
-                  ));
-            },
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
                 opacity: animation,
-                child: child,
+                child: TrailDetailScreen(
+                  title: trail.title,
+                  heroTag: heroTag,
+                ),
               );
             },
+            // Existing code...
           ),
         );
       },
       child: Stack(
         children: <Widget>[
           Hero(
-            tag: "trail$index",
+            tag: heroTag, // Use the unique heroTag
             child: Container(
               height: 160.0,
               width: 700.0,

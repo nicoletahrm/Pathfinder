@@ -40,7 +40,7 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
     trail = await trailRepository.getTrailByRef(widget.event.trail);
     users = await fetchParticipants();
     userRef = await userRepository.getUserRefByEmail(user.email);
-    comments = await commentRepository.getComments();
+    comments = await fetchComments();
   }
 
   @override
@@ -219,9 +219,9 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
               itemCount: widget.event.comments.length,
               itemBuilder: (BuildContext context, int index) {
                 return CommentWidget(
-                  content: comments[index].content,
-                  userRef: comments[index].user,
-                );
+                    content: comments[index].content,
+                    ref: comments[index].user,
+                    replies: comments[index].replies);
               },
             ),
           ),

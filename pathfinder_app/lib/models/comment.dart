@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Comment {
-  final String? content;
-  final DocumentReference<Object?>? user;
-  final List<DocumentReference<Object>>? replies;
+  final String content;
+  final DocumentReference<Object>? user;
+  final List<DocumentReference<Object>?>? replies;
 
   Comment({
     required this.content,
@@ -15,7 +15,7 @@ class Comment {
     return {
       "content": content,
       "user": user,
-      "replies": replies ?? [],
+      "replies": replies,
     };
   }
 
@@ -23,9 +23,9 @@ class Comment {
     final data = json;
 
     return Comment(
-      content: data["content"] ?? '',
+      content: data["content"],
       user: data["user"],
-      replies: List<DocumentReference<Object>>.from(data['replies'] ?? []),
+     replies: List<DocumentReference<Object>?>.from(data["replies"]),
     );
   }
 }

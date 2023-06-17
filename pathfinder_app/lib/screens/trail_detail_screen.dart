@@ -189,12 +189,6 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                   ),
                                   child: Icon(Icons.arrow_back),
                                 )),
-                            // Padding(
-                            //     padding: EdgeInsets.only(
-                            //       top: 30.0,
-                            //       left: size.width - 70,
-                            //     ),
-                            //     child: FavoriteButton(title: widget.title)),
                             Positioned(
                               bottom: 0.0,
                               right: 10.0,

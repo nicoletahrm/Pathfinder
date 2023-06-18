@@ -24,7 +24,7 @@ class EventRepository {
     });
   }
 
-  void addEvent(DocumentReference<Object?> trail, DocumentReference<Object?> user,
+  addEvent(DocumentReference<Object?> trail, DocumentReference<Object?> user,
       int maxParticipants, String meetingPlace, Time time) async {
     CollectionReference collectionRef = database.collection('event');
     DocumentReference documentRef = collectionRef.doc();

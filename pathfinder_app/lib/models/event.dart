@@ -5,7 +5,7 @@ import '../utils/covert.dart';
 class Event {
   final String id;
   final DocumentReference<Object>? organizer;
-  late final DocumentReference<Object>? trail;
+  late final DocumentReference<Object?>? trail;
   final List<DocumentReference<Object>?> participants;
   late final int maxParticipants;
   late final Time time;

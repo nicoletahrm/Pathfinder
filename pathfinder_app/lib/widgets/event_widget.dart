@@ -27,7 +27,7 @@ class _EventWidgetState extends State<EventWidget> {
   late User user;
   late DocumentReference<Object?> userRef;
   late Trail? trail;
-  late List<User?> users;
+  late List<User?> users = [];
   late String buttonText = 'Go';
 
   Future<void> init() async {
@@ -40,7 +40,6 @@ class _EventWidgetState extends State<EventWidget> {
   @override
   void initState() {
     super.initState();
-    init();
   }
 
   @override
@@ -59,26 +58,13 @@ class _EventWidgetState extends State<EventWidget> {
         } else if (snapshot.hasError) {
           return Text('Failed to initialize event: ${snapshot.error}');
         } else {
-          return buildTrail(context);
+          return buildEventWidget(context);
         }
       },
     );
   }
 
-  Widget buildTrail(BuildContext context) {
-    return Container(
-      child: FutureBuilder<void>(
-        future: init(),
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          return buildEvent(context);
-        },
-      ),
-    );
-  }
-
-  Widget buildEvent(BuildContext context) {
-    //Size size = MediaQuery.of(context).size;
-
+  Widget buildEventWidget(BuildContext context) {
     return Container(
       child: Padding(
         padding: EdgeInsets.all(20.0),

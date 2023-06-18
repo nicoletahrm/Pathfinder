@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
 import '../models/trail.dart';
 import 'dart:io';
-import '../models/user.dart';
 
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -42,18 +41,18 @@ class TrailRepository {
     return documentSnapshot.reference;
   }
 
-  Future<List<String>?> getFavoriteTrails(String? email) async {
-    final userDocRef = await userRepository.getUserRefByEmail(email);
-    final userDocSnapshot = await userDocRef.get();
+  // Future<List<String>?> getFavoriteTrails(String? email) async {
+  //   final userDocRef = await userRepository.getUserRefByEmail(email);
+  //   final userDocSnapshot = await userDocRef.get();
 
-    if (userDocSnapshot.exists) {
-      final userData = userDocSnapshot.data() as Map<String, dynamic>;
-      final user = User.fromJson(userData);
+  //   if (userDocSnapshot.exists) {
+  //     final userData = userDocSnapshot.data() as Map<String, dynamic>;
+  //     final user = User.fromJson(userData);
 
-      return user.trails;
-    }
-    return null;
-  }
+  //     return user.trails;
+  //   }
+  //   return null;
+  // }
 
   Future<void> updateFavoriteTrails(
       String? email, List<String> favoriteTrails) async {

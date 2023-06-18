@@ -3,6 +3,7 @@ import 'package:pathfinder_app/screens/event_details_screen.dart';
 import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
 import '../repositories/event_repository.dart';
+import '../utils/fonts.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/custom_nav_bar.dart';
 import 'add_event_screen.dart';
@@ -17,7 +18,7 @@ class EventsScreen extends StatefulWidget {
 
 class _EventsScreenState extends State<EventsScreen> {
   final EventRepository eventRepository = EventRepository();
-  late List<Event> events = [];
+  late List<Event> events;
 
   init() async {
     events = await eventRepository.getEvents();
@@ -26,6 +27,7 @@ class _EventsScreenState extends State<EventsScreen> {
   @override
   void initState() {
     super.initState();
+    init();
   }
 
   @override
@@ -51,6 +53,27 @@ class _EventsScreenState extends State<EventsScreen> {
   }
 
   Widget buildEvents(BuildContext context) {
+    if (events.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Text("No events found.", style: darkBoldFont),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: hexStringToColor("#44564a"),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddEventScreen(),
+              ),
+            );
+          },
+          child: Icon(Icons.add),
+        ),
+        bottomNavigationBar: CustomBottomNavBar(),
+      );
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Container(

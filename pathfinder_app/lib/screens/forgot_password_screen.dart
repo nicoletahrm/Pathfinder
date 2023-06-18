@@ -120,7 +120,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 reusableNormalTextField("E-mail", Icons.email,
-                                    _emailTextController, (() {})),
+                                    _emailTextController, true, (() {})),
                                 SizedBox(
                                   height: 20,
                                 ),

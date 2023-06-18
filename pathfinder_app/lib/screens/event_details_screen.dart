@@ -213,8 +213,20 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
                       ],
                     );
                   } else {
-                    await eventRepository.updateParticipants(
-                        widget.event, userRef);
+                    bool isParticipant =
+                        widget.event.participants.contains(userRef);
+
+                    if (isParticipant) {
+                      await eventRepository.removeParticipant(
+                          widget.event, userRef);
+                      await userRepository.addEventToUser(
+                          user, widget.event.id);
+                    } else {
+                      await eventRepository.updateParticipants(
+                          widget.event, userRef);
+                      await userRepository.removeEventToUser(
+                          user, widget.event.id);
+                    }
                   }
                 },
                 style: ButtonStyle(

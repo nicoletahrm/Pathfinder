@@ -39,20 +39,6 @@ class TrailRepository {
     return documentSnapshot.reference;
   }
 
-  // Future<void> updateFavoriteTrails(
-  //     String? email, List<String> favoriteTrails) async {
-  //   try {
-  //     // Get the user's document reference
-  //     final userDocRef = await userRepository.getUserRefByEmail(email);
-
-  //     // Update the favoriteTrails field in the user's document
-  //     await userDocRef.update({'trails': favoriteTrails});
-  //   } catch (e) {
-  //     // Handle any errors that occur during the update process
-  //     print('Error updating favorite trails: $e');
-  //   }
-  // }
-
   Future<Trail?> getTrailByRef(DocumentReference<Object?>? ref) async {
     if (ref == null) {
       return null;

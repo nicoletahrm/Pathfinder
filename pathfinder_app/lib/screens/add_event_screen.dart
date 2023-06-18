@@ -212,6 +212,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               'Meeting place',
               Icons.location_pin,
               meetingPlaceController,
+              true,
               () {
                 meetigPlace = meetingPlaceController.text;
               },

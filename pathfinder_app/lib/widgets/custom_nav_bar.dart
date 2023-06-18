@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../screens/events_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/profile/profile_screen.dart';
+import '../screens/profile_screen.dart';
 import '../screens/user_hikes_screen.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -37,7 +37,7 @@ class CustomBottomNavBar extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(
-                  Icons.home_outlined,
+                  Icons.home,
                   size: 30,
                   color: Colors.black54,
                 ),
@@ -70,12 +70,15 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(
-                  Icons.perm_identity_outlined,
+                  Icons.person,
                   size: 30,
                   color: Colors.black54,
                 ),
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen())),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ProfileScreen(email: currentUser!.email!))),
               ),
             ],
           )),

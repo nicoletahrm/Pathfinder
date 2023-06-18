@@ -37,20 +37,11 @@ class MapScreenState extends State<MapScreen> {
       widget.destination.latitude,
       widget.destination.longitude,
     );
-
-    // markers.clear();
-    // markers = {
-    //   Marker(
-    //     markerId: const MarkerId('destination'),
-    //     position: LatLng(destination.latitude, destination.longitude),
-    //   )
-    // };
   }
 
   @override
   void initState() {
     super.initState();
-    // init();
     getPolyPoints();
   }
 
@@ -104,7 +95,6 @@ class MapScreenState extends State<MapScreen> {
             GoogleMap(
               mapType: MapType.normal,
               initialCameraPosition: initialCameraPosition,
-              //markers: markers,
               polylines: polylines,
               zoomControlsEnabled: true,
               onMapCreated: (GoogleMapController mapController) {
@@ -123,7 +113,6 @@ class MapScreenState extends State<MapScreen> {
           ],
         ),
       ),
-      //bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
@@ -134,7 +123,6 @@ class MapScreenState extends State<MapScreen> {
     setState(() {});
   }
 
-  // Function to read the KML/KMZ file and extract coordinates
   Future<List<LatLng>> extractCoordinatesFromKmlFile(
       String filePath, String trailName) async {
     List<LatLng> coordinates = [];

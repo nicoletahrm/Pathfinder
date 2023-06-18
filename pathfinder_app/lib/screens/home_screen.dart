@@ -99,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Search a place...",
                         Icons.search_outlined,
                         _searchTextController,
+                        true,
                         () {
                           searchTrailByTitle(_searchTextController.text);
                         },

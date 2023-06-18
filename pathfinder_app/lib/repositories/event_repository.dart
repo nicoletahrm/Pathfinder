@@ -20,7 +20,13 @@ class EventRepository {
       Event event, DocumentReference<Object?> participantRef) async {
     await FirebaseFirestore.instance.collection('event').doc(event.id).update({
       'participants': FieldValue.arrayUnion([participantRef]),
-      'maxParticipants': event.maxParticipants - 1,
+    });
+  }
+
+  Future<void> removeParticipant(
+      Event event, DocumentReference<Object?> participantRef) async {
+    await FirebaseFirestore.instance.collection('event').doc(event.id).update({
+      'participants': FieldValue.arrayRemove([participantRef]),
     });
   }
 
@@ -50,8 +56,7 @@ class EventRepository {
       return Event.fromJson(eventData);
     }
 
-    throw Exception(
-        'Event not found.');
+    throw Exception('Event not found.');
   }
 
   Future<void> updateEvent(

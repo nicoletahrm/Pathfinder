@@ -33,14 +33,13 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
     print(widget.email);
     ref = (await userRepository.getUserRefByEmail(widget.email));
     user = await userRepository.getUserByRef(ref);
-    print(user.username);
     events = await fetchEvents();
   }
 
   @override
   void initState() {
     super.initState();
-    init();
+    //init();
   }
 
   @override

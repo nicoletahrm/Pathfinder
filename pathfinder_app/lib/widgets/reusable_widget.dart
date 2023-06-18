@@ -13,9 +13,10 @@ Widget logo(String imageName) {
       ));
 }
 
-TextField reusablePasswordTextField(
-    String text, IconData icon, TextEditingController controller, onChanged()) {
+TextField reusablePasswordTextField(String text, IconData icon,
+    TextEditingController controller, bool isEnable, onChanged()) {
   return TextField(
+      enabled: isEnable,
       onChanged: onChanged(),
       controller: controller,
       obscureText: true,
@@ -40,9 +41,10 @@ TextField reusablePasswordTextField(
       keyboardType: TextInputType.visiblePassword);
 }
 
-TextField reusableNormalTextField(
-    String text, IconData icon, TextEditingController controller, onChanged()) {
+TextField reusableNormalTextField(String text, IconData icon,
+    TextEditingController controller, bool isEnable, onChanged()) {
   return TextField(
+    enabled: isEnable,
     onChanged: onChanged(),
     controller: controller,
     cursorColor: Colors.black,
@@ -242,7 +244,7 @@ Container customButton(BuildContext context, String text, Function onPressed) {
   return Container(
       width: MediaQuery.of(context).size.width,
       height: 50,
-      margin: EdgeInsets.fromLTRB(60, 10, 60, 30),
+      margin: EdgeInsets.fromLTRB(60, 10, 60, 10),
       child: ElevatedButton(
         onPressed: () {
           onPressed();

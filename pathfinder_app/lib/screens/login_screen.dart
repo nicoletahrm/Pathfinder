@@ -94,6 +94,7 @@ Future<void> main() async {
                                           "E-mail",
                                           Icons.mail,
                                           _emailTextController,
+                                          true,
                                           (() {})),
                                       SizedBox(
                                         height: 20,
@@ -102,6 +103,7 @@ Future<void> main() async {
                                         "Password",
                                         Icons.lock_outline,
                                         _passwordTextController,
+                                        true,
                                         () {},
                                       ),
                                       Padding(

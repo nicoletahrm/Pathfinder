@@ -13,8 +13,7 @@ class UserRepository {
       return User.fromJson(userData);
     }
 
-    throw Exception(
-        'User not found.'); // Throw an exception if the user does not exist
+    throw Exception('User not found.');
   }
 
   Future<DocumentReference> getUserRefByEmail(String? email) async {
@@ -27,7 +26,7 @@ class UserRepository {
 
     return documentSnapshot.reference;
   }
-  
+
   Future<List<DocumentReference<Object>?>?> getUserEvents(String? email) async {
     final userDocRef = await getUserRefByEmail(email);
     final userDocSnapshot = await userDocRef.get();
@@ -39,5 +38,17 @@ class UserRepository {
       return user.events;
     }
     return null;
+  }
+
+  Future<void> addEventToUser(User user, String id) async {
+    await database.doc(user.id).update({
+      'events': FieldValue.arrayUnion([id]),
+    });
+  }
+
+  Future<void> removeEventToUser(User user, String id) async {
+    await database.doc(user.id).update({
+      'events': FieldValue.arrayRemove([id]),
+    });
   }
 }

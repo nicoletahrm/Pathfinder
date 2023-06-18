@@ -50,7 +50,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
     } else {
       try {
-        // Check if username or email already exists
         final QuerySnapshot usernameSnapshot = await FirebaseFirestore.instance
             .collection('user')
             .where('username', isEqualTo: _usernameTextController.text)
@@ -100,9 +99,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future addUserDetails(String username, String email) async {
-    await FirebaseFirestore.instance
-        .collection("user")
-        .add({'username': username, 'email': email, 'hikes': []});
+    await FirebaseFirestore.instance.collection("user").add({
+      'username': username,
+      'email': email,
+      'profilePhoto': 'assets/images/profile_photo,jpg',
+      'hikes': []
+    });
   }
 
   bool passwordConfirmed() {
@@ -173,6 +175,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         "Username",
                                         Icons.person_outline,
                                         _usernameTextController,
+                                        true,
                                         (() {})),
                                     SizedBox(
                                       height: 20,
@@ -181,6 +184,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         "E-mail",
                                         Icons.mail,
                                         _emailTextController,
+                                        true,
                                         (() {})),
                                     SizedBox(
                                       height: 20,
@@ -189,6 +193,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         "Password",
                                         Icons.lock_outline,
                                         _passwordTextController,
+                                        true,
                                         (() {})),
                                     SizedBox(
                                       height: 20,
@@ -197,6 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         "Confirm password",
                                         Icons.lock_outline,
                                         _confirmPasswordTextController,
+                                        true,
                                         (() {})),
                                     SizedBox(
                                       height: 20,

@@ -150,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                          padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

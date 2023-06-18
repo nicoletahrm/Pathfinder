@@ -167,9 +167,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               'Username',
                               Icons.person_outline,
                               _usernameController,
-                              _isEditing,
-                              () => null,
-                            )
+                              _isEditing, () {
+                              _usernameController.text = user.username;
+                            })
                           : Column(
                               children: [
                                 Text("Username:", style: darkBoldFont),
@@ -178,13 +178,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                       SizedBox(height: 15.0),
                       _isEditing
-                          ? reusableNormalTextField(
-                              'Email:',
-                              Icons.mail,
-                              _locationController,
-                              _isEditing,
-                              () => null,
-                            )
+                          ? reusableNormalTextField('Email:', Icons.mail,
+                              _emailController, _isEditing, () {
+                              _emailController.text = user.email;
+                            })
                           : Column(
                               children: [
                                 Text("Email:", style: darkBoldFont),
@@ -197,9 +194,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               'Location:',
                               Icons.location_city,
                               _locationController,
-                              _isEditing,
-                              () => null,
-                            )
+                              _isEditing, () {
+                              _locationController.text = user.location;
+                            })
                           : Column(
                               children: [
                                 Text("Location:", style: darkBoldFont),
@@ -207,25 +204,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                       SizedBox(height: 15.0),
-                      _isEditing
-                          ? reusablePasswordTextField(
-                              'Password',
-                              Icons.lock_outline,
-                              _passwordController,
-                              _isEditing,
-                              () => null,
-                            )
-                          : SizedBox(),
-                      SizedBox(height: 10.0),
-                      _isEditing
-                          ? reusablePasswordTextField(
-                              'Confirm password',
-                              Icons.lock_outline,
-                              _passwordController,
-                              _isEditing,
-                              () => null,
-                            )
-                          : SizedBox(),
+                      // _isEditing
+                      //     ? reusablePasswordTextField(
+                      //         'New password',
+                      //         Icons.lock_outline,
+                      //         _passwordController,
+                      //         _isEditing,
+                      //         () {},
+                      //       )
+                      //     : SizedBox(),
+                      // SizedBox(height: 10.0),
+                      // _isEditing
+                      //     ? reusablePasswordTextField(
+                      //         'Confirm new password',
+                      //         Icons.lock_outline,
+                      //         _passwordController,
+                      //         _isEditing,
+                      //         () => null,
+                      //       )
+                      //     : SizedBox(),
                       _isEditing
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

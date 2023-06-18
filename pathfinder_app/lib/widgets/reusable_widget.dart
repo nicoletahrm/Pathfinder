@@ -95,11 +95,10 @@ TextField reusableIntTextField(String text, IconData icon,
       fillColor: hexStringToColor("#f0f3f1"),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0),
-        borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+        borderSide: BorderSide(width: 0, style: BorderStyle.none),
       ),
     ),
     keyboardType: TextInputType.number,
-    //inputFormatters: [FilteringTextInputFormatter.digitsOnly],
   );
 }
 
@@ -193,31 +192,6 @@ Container resetPasswordButton(BuildContext context, Function onPressed) {
                 borderRadius: BorderRadius.circular(12.0)))),
         child: Text('Reset password', style: darkBoldFont),
       ));
-}
-
-Widget profileMenu(BuildContext context, String text, Function onTop) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    child: TextButton(
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.black,
-        padding: const EdgeInsets.all(20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        backgroundColor: hexStringToColor('FFF5F6F9'),
-      ),
-      onPressed: () {
-        onTop();
-      },
-      child: Row(
-        children: [
-          logo("assets/images/logo1.png"),
-          SizedBox(width: 20),
-          Expanded(child: Text(text)),
-          Icon(Icons.arrow_forward_ios),
-        ],
-      ),
-    ),
-  );
 }
 
 TextField textField(String text, TextEditingController controller, onChanged) {

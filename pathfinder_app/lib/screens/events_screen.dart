@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pathfinder_app/screens/event_details_screen.dart';
 import 'package:pathfinder_app/utils/covert.dart';
@@ -10,7 +11,7 @@ import 'add_event_screen.dart';
 import '../widgets/event_widget.dart';
 
 class EventsScreen extends StatefulWidget {
-  const EventsScreen({Key? key}) : super(key: key);
+  EventsScreen({Key? key}) : super(key: key);
 
   @override
   _EventsScreenState createState() => _EventsScreenState();
@@ -19,6 +20,7 @@ class EventsScreen extends StatefulWidget {
 class _EventsScreenState extends State<EventsScreen> {
   final EventRepository eventRepository = EventRepository();
   late List<Event> events;
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   init() async {
     events = await eventRepository.getEvents();
@@ -137,8 +139,9 @@ class _EventsScreenState extends State<EventsScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  EventDetailsScreen(event: events[index]),
+                              builder: (context) => EventDetailsScreen(
+                                  event: events[index],
+                                  email: currentUser!.email!),
                             ),
                           );
                         },

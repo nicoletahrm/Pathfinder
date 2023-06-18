@@ -1,5 +1,4 @@
 // ignore_for_file: sdk_version_since, deprecated_member_use
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -77,7 +76,6 @@ class MapScreenState extends State<MapScreen> {
 
   Widget buildRoute(BuildContext context) {
     PolylineId polylineId = PolylineId('route');
-
     Set<Polyline> polylines = {
       Polyline(
           polylineId: polylineId,
@@ -168,7 +166,6 @@ class MapScreenState extends State<MapScreen> {
     } catch (e) {
       print('Error extracting coordinates: $e');
     }
-
     return coordinates;
   }
 }

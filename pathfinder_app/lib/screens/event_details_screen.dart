@@ -16,8 +16,10 @@ import '../widgets/event_widget.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final Event event;
+  final String email;
 
-  EventDetailsScreen({Key? key, required this.event}) : super(key: key);
+  EventDetailsScreen({Key? key, required this.event, required this.email})
+      : super(key: key);
 
   @override
   _EventWidgetScreenState createState() => _EventWidgetScreenState();
@@ -28,28 +30,23 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
   final EventRepository eventRepository = EventRepository();
   final UserRepository userRepository = UserRepository();
   final CommentRepository commentRepository = CommentRepository();
-  late User user;
-  late DocumentReference<Object?> userRef;
+  late DocumentReference<Object?> currentUserRef;
   late Trail? trail;
   late List<User?> users;
   late String buttonText;
   late List<Comment> comments;
 
   Future<void> init() async {
-    user = await userRepository.getUserByRef(widget.event.organizer);
     trail = await trailRepository.getTrailByRef(widget.event.trail);
-    users = await fetchParticipants();
-    userRef = await userRepository.getUserRefByEmail(user.email);
+    users =
+        await userRepository.getEventParticipants(widget.event.participants);
+    currentUserRef = await userRepository.getUserRefByEmail(widget.email);
     comments = await fetchComments();
 
-    if (widget.event.participants.contains(userRef)) {
-      //setState(() {
+    if (widget.event.participants.contains(currentUserRef)) {
       buttonText = "Don't go";
-      //});
     } else {
-      //setState(() {
       buttonText = "Go";
-      //});
     }
   }
 
@@ -155,14 +152,13 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
                                   itemCount: users.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    User participant = users[index]!;
                                     return ListTile(
                                       leading: CircleAvatar(
                                         radius: 20.0,
                                         backgroundImage: AssetImage(
-                                            participant.profilePhoto),
+                                            users[index]!.profilePhoto),
                                       ),
-                                      title: Text(participant.username,
+                                      title: Text(users[index]!.username,
                                           style: normalFont),
                                     );
                                   },
@@ -214,18 +210,19 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
                     );
                   } else {
                     bool isParticipant =
-                        widget.event.participants.contains(userRef);
+                        widget.event.participants.contains(currentUserRef);
 
-                    if (isParticipant) {
+                    if (isParticipant == true) {
                       await eventRepository.removeParticipant(
-                          widget.event, userRef);
-                      await userRepository.addEventToUser(
-                          user, widget.event.id);
+                          widget.event, currentUserRef);
+                      await userRepository.removeEventToUser(
+                          currentUserRef, widget.event.id);
                     } else {
                       await eventRepository.updateParticipants(
-                          widget.event, userRef);
-                      await userRepository.removeEventToUser(
-                          user, widget.event.id);
+                          widget.event, currentUserRef);
+
+                      await userRepository.addEventToUser(
+                          currentUserRef, widget.event.id);
                     }
                   }
                 },
@@ -268,19 +265,6 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
       )),
       bottomNavigationBar: CustomBottomNavBar(),
     );
-  }
-
-  Future<List<User>> fetchParticipants() async {
-    List<User> participants = [];
-
-    for (DocumentReference<Object>? participantRef
-        in widget.event.participants) {
-      if (participantRef != null) {
-        User participant = await userRepository.getUserByRef(participantRef);
-        participants.add(participant);
-      }
-    }
-    return participants;
   }
 
   Future<List<Comment>> fetchComments() async {

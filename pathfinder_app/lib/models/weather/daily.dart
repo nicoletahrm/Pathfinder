@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:pathfinder_app/models/weather/weather.dart';
-
 import 'temp.dart';
 
 class Daily {
@@ -47,11 +46,9 @@ class Daily {
         'rain': rain,
       };
 
-  /// Parses the string and returns the resulting Json object as [Daily].
   factory Daily.fromJson(String data) {
     return Daily.fromFrom(json.decode(data) as Map<String, dynamic>);
   }
 
-  /// Converts [Daily] to a JSON string.
   String toJson() => json.encode(toFrom());
 }

@@ -26,8 +26,6 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
   final UserRepository userRepository = UserRepository();
   final EventRepository eventRepository = EventRepository();
   late List<Event> events;
-  late String query;
-  String selectedDifficulty = '';
 
   Future<void> init() async {
     print(widget.email);
@@ -136,8 +134,8 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              EventDetailsScreen(event: events[index]),
+                          builder: (context) => EventDetailsScreen(
+                              event: events[index], email: widget.email),
                         ),
                       );
                     },

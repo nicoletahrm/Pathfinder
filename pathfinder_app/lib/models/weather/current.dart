@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'weather.dart';
 
 class Current {

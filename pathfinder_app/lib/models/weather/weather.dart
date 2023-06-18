@@ -28,6 +28,5 @@ class Weather {
     return Weather.fromJson(json.decode(data) as Map<String, dynamic>);
   }
 
-  /// Converts [Weather] to a JSON string.
   String toJsonn() => json.encode(toJson());
 }

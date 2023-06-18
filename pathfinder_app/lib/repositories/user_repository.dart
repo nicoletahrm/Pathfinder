@@ -40,16 +40,38 @@ class UserRepository {
     return null;
   }
 
-  Future<void> addEventToUser(User user, String id) async {
-    await database.doc(user.id).update({
-      'events': FieldValue.arrayUnion([id]),
-    });
+  Future<void> addEventToUser(
+      DocumentReference<Object?> userRef, String eventId) async {
+    User user = await getUserByRef(userRef);
+    DocumentReference<Object>? eventRef = database.doc('event/$eventId');
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection('user');
+
+    QuerySnapshot querySnapshot =
+        await collectionRef.where('id', isEqualTo: user.id).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      await collectionRef.doc(user.id).update({
+        'events': FieldValue.arrayUnion([eventRef]),
+      });
+    }
   }
 
-  Future<void> removeEventToUser(User user, String id) async {
-    await database.doc(user.id).update({
-      'events': FieldValue.arrayRemove([id]),
-    });
+  Future<void> removeEventToUser(
+      DocumentReference<Object?> userRef, String eventId) async {
+    User user = await getUserByRef(userRef);
+    DocumentReference<Object>? eventRef = database.doc('event/$eventId');
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection('user');
+
+    QuerySnapshot querySnapshot =
+        await collectionRef.where('id', isEqualTo: user.id).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      await collectionRef.doc(user.id).update({
+        'events': FieldValue.arrayRemove([eventRef]),
+      });
+    }
   }
 
   Future<void> updateUser(
@@ -75,5 +97,18 @@ class UserRepository {
     } catch (error) {
       print('Error updating user data: $error');
     }
+  }
+
+  Future<List<User>> getEventParticipants(
+      List<DocumentReference<Object>?> eventParticipants) async {
+    List<User> participants = [];
+
+    for (DocumentReference<Object>? participantRef in eventParticipants) {
+      if (participantRef != null) {
+        User participant = await getUserByRef(participantRef);
+        participants.add(participant);
+      }
+    }
+    return participants;
   }
 }

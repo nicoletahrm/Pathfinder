@@ -27,7 +27,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
   bool _isEditing = false;
 
   Future<void> init() async {
@@ -39,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     _usernameController.dispose();
     _emailController.dispose();
-    _passwordController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -59,14 +58,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  void _saveProfile() {
+  void _saveProfile() async {
     String username = _usernameController.text;
     String email = _emailController.text;
-    String password = _passwordController.text;
+    String location = _locationController.text;
 
-    _usernameController.clear();
-    _emailController.clear();
-    _passwordController.clear();
+    await userRepository.updateUser(user.id, username, email, location);
 
     setState(() {
       _isEditing = false;
@@ -80,10 +77,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _cancelEditing() {
-    _usernameController.clear();
-    _emailController.clear();
-    _passwordController.clear();
-
     setState(() {
       _isEditing = false;
     });
@@ -204,25 +197,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                       SizedBox(height: 15.0),
-                      // _isEditing
-                      //     ? reusablePasswordTextField(
-                      //         'New password',
-                      //         Icons.lock_outline,
-                      //         _passwordController,
-                      //         _isEditing,
-                      //         () {},
-                      //       )
-                      //     : SizedBox(),
-                      // SizedBox(height: 10.0),
-                      // _isEditing
-                      //     ? reusablePasswordTextField(
-                      //         'Confirm new password',
-                      //         Icons.lock_outline,
-                      //         _passwordController,
-                      //         _isEditing,
-                      //         () => null,
-                      //       )
-                      //     : SizedBox(),
                       _isEditing
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

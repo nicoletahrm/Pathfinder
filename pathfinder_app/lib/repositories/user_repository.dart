@@ -51,4 +51,29 @@ class UserRepository {
       'events': FieldValue.arrayRemove([id]),
     });
   }
+
+  Future<void> updateUser(
+      String id, String username, String email, String location) async {
+    try {
+      CollectionReference collectionRef =
+          FirebaseFirestore.instance.collection('user');
+
+      QuerySnapshot querySnapshot =
+          await collectionRef.where('id', isEqualTo: id).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        await collectionRef.doc(id).update({
+          'username': username,
+          'email': email,
+          'location': location,
+        });
+
+        print('User data updated successfully!');
+      } else {
+        print('User not found!');
+      }
+    } catch (error) {
+      print('Error updating user data: $error');
+    }
+  }
 }

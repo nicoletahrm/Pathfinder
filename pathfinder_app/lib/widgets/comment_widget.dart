@@ -61,13 +61,13 @@ class _CommentWidgetState extends State<CommentWidget> {
         } else if (snapshot.hasError) {
           return Text('Failed to initialize event: ${snapshot.error}');
         } else {
-          return buildReview(context);
+          return buildComment(context);
         }
       },
     );
   }
 
-  Widget buildReview(BuildContext context) {
+  Widget buildComment(BuildContext context) {
     return InkWell(
         child: Container(
       margin: EdgeInsets.fromLTRB(10, 10, 10, 20),

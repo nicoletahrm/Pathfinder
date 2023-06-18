@@ -1,22 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User {
+  final String id;
   final String username;
   final String email;
   final String profilePhoto;
-  //final List<String> trails;
+  final List<DocumentReference<Object>?> events;
 
   User(
-      {required this.username,
+      {required this.id,
+      required this.username,
       required this.email,
       required this.profilePhoto,
-      //required this.trails
-      });
+      required this.events});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      id: json['id'],
       username: json['username'],
       email: json['email'],
       profilePhoto: json['profilePhoto'],
-     // trails: List<String>.from(json['trails']),
+      events: List<DocumentReference<Object>?>.from(json["events"]),
     );
   }
 }

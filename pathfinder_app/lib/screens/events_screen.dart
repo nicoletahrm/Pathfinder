@@ -55,9 +55,34 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget buildEvents(BuildContext context) {
     if (events.isEmpty) {
       return Scaffold(
-        body: Center(
-          child: Text("No events found.", style: darkBoldFont),
-        ),
+        body: Container(
+            padding: EdgeInsets.only(
+              top: 80.0,
+              bottom: 0.0,
+              left: 20.0,
+              right: 20.0,
+            ),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Let's find some hikes!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 28.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "ProximaNovaBold",
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 25.0),
+              Center(
+                child: Text("No hikes found.", style: darkBoldFont),
+              ),
+            ])),
         floatingActionButton: FloatingActionButton(
           backgroundColor: hexStringToColor("#44564a"),
           onPressed: () {

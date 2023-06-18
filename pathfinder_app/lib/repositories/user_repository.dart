@@ -27,4 +27,17 @@ class UserRepository {
 
     return documentSnapshot.reference;
   }
+  
+  Future<List<DocumentReference<Object>?>?> getUserEvents(String? email) async {
+    final userDocRef = await getUserRefByEmail(email);
+    final userDocSnapshot = await userDocRef.get();
+
+    if (userDocSnapshot.exists) {
+      final userData = userDocSnapshot.data() as Map<String, dynamic>;
+      final user = User.fromJson(userData);
+
+      return user.events;
+    }
+    return null;
+  }
 }

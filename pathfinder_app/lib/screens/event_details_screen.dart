@@ -9,6 +9,8 @@ import '../models/event.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/event_repository.dart';
+import '../utils/covert.dart';
+import '../utils/fonts.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/event_widget.dart';
 
@@ -30,7 +32,7 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
   late DocumentReference<Object?> userRef;
   late Trail? trail;
   late List<User?> users;
-  late String buttonText = 'Go';
+  late String buttonText;
   late List<Comment> comments;
 
   Future<void> init() async {
@@ -39,12 +41,22 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
     users = await fetchParticipants();
     userRef = await userRepository.getUserRefByEmail(user.email);
     comments = await fetchComments();
+
+    if (widget.event.participants.contains(userRef)) {
+      //setState(() {
+      buttonText = "Don't go";
+      //});
+    } else {
+      //setState(() {
+      buttonText = "Go";
+      //});
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    init();
+    //init();
   }
 
   @override
@@ -119,114 +131,112 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
                 event: widget.event,
               ),
             ),
-            // Container(
-            //   margin: EdgeInsets.only(
-            //       top: 0.0, bottom: 10.0, left: 30.0, right: 30.0),
-            //   child: Row(
-            //     children: List<Widget>.generate(
-            //       widget.event.participants.length,
-            //       (index) {
-            //         return GestureDetector(
-            //           onTap: () {
-            //             showDialog(
-            //               context: context,
-            //               builder: (BuildContext context) {
-            //                 return AlertDialog(
-            //                   title: Text(
-            //                     'People going',
-            //                     style: darkBoldFont,
-            //                   ),
-            //                   content: SizedBox(
-            //                     width: double.maxFinite,
-            //                     child: ListView.builder(
-            //                       shrinkWrap: true,
-            //                       itemCount: users.length,
-            //                       itemBuilder:
-            //                           (BuildContext context, int index) {
-            //                         User participant = users[index]!;
-            //                         return ListTile(
-            //                           leading: CircleAvatar(
-            //                             radius: 20.0,
-            //                             backgroundImage: AssetImage(
-            //                                 participant.profilePhoto),
-            //                           ),
-            //                           title: Text(participant.username,
-            //                               style: normalFont),
-            //                         );
-            //                       },
-            //                     ),
-            //                   ),
-            //                   actions: [
-            //                     TextButton(
-            //                       onPressed: () {
-            //                         Navigator.of(context).pop();
-            //                       },
-            //                       child: Text('Close'),
-            //                     ),
-            //                   ],
-            //                 );
-            //               },
-            //             );
-            //           },
-            //           child: Container(
-            //             margin: EdgeInsets.only(right: 5.0),
-            //             child: CircleAvatar(
-            //               radius: 12.0,
-            //               backgroundImage:
-            //                   AssetImage(users[index]!.profilePhoto),
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // ),
-            // Container(
-            //   width: MediaQuery.of(context).size.width,
-            //   height: 60,
-            //   margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            //   child: ElevatedButton(
-            //     onPressed: () async {
-            //       if (widget.event.maxParticipants < 0) {
-            //         AlertDialog(
-            //           title: Text(''),
-            //           content: Text('Max participant is full'),
-            //           actions: [
-            //             ElevatedButton(
-            //               child: Text('Cancel'),
-            //               onPressed: () {
-            //                 Navigator.of(context).pop();
-            //               },
-            //             ),
-            //           ],
-            //         );
-            //       } else {
-            //         await eventRepository.updateParticipants(
-            //             widget.event, userRef);
-            //         setState(() =>
-            //             buttonText = buttonText == 'Go' ? "Don't go" : 'Go');
-            //       }
-            //     },
-            //     style: ButtonStyle(
-            //       backgroundColor: MaterialStateProperty.resolveWith((states) {
-            //         if (states.contains(MaterialState.pressed)) {
-            //           return Colors.black26;
-            //         }
-            //         return hexStringToColor("#44564a");
-            //       }),
-            //       shape: MaterialStateProperty.all(
-            //         RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(12.0),
-            //         ),
-            //       ),
-            //     ),
-            //     child: Text(
-            //       buttonText,
-            //       style: boldFont,
-            //     ),
-            //   ),
-            // ),
-            SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.only(
+                  top: 0.0, bottom: 10.0, left: 30.0, right: 30.0),
+              child: Row(
+                children: List<Widget>.generate(
+                  widget.event.participants.length,
+                  (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(
+                                'People going',
+                                style: darkBoldFont,
+                              ),
+                              content: SizedBox(
+                                width: double.maxFinite,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: users.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    User participant = users[index]!;
+                                    return ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 20.0,
+                                        backgroundImage: AssetImage(
+                                            participant.profilePhoto),
+                                      ),
+                                      title: Text(participant.username,
+                                          style: normalFont),
+                                    );
+                                  },
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Close'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 5.0),
+                        child: CircleAvatar(
+                          radius: 12.0,
+                          backgroundImage:
+                              AssetImage(users[index]!.profilePhoto),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (widget.event.maxParticipants == 0) {
+                    AlertDialog(
+                      title: Text(''),
+                      content: Text('Participants is full'),
+                      actions: [
+                        ElevatedButton(
+                          child: Text('Cancel', style: boldFont),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  } else {
+                    await eventRepository.updateParticipants(
+                        widget.event, userRef);
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                    if (states.contains(MaterialState.pressed)) {
+                      return Colors.black26;
+                    }
+                    return hexStringToColor("#44564a");
+                  }),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  buttonText,
+                  style: boldFont,
+                ),
+              ),
+            ),
+            // SizedBox(height: 20),
             // SizedBox(
             //   height: 200,
             //   child: ListView.builder(
@@ -240,7 +250,7 @@ class _EventWidgetScreenState extends State<EventDetailsScreen> {
             //     },
             //   ),
             // ),
-            // SizedBox(height: 20),
+            SizedBox(height: 20),
           ],
         ),
       )),

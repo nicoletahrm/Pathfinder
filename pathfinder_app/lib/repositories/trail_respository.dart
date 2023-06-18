@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:pathfinder_app/repositories/user_repository.dart';
 import '../models/trail.dart';
 import 'dart:io';
 
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
-  final UserRepository userRepository = UserRepository();
 
   Future<List<Trail>> getAllTrails() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
@@ -41,32 +39,19 @@ class TrailRepository {
     return documentSnapshot.reference;
   }
 
-  // Future<List<String>?> getFavoriteTrails(String? email) async {
-  //   final userDocRef = await userRepository.getUserRefByEmail(email);
-  //   final userDocSnapshot = await userDocRef.get();
+  // Future<void> updateFavoriteTrails(
+  //     String? email, List<String> favoriteTrails) async {
+  //   try {
+  //     // Get the user's document reference
+  //     final userDocRef = await userRepository.getUserRefByEmail(email);
 
-  //   if (userDocSnapshot.exists) {
-  //     final userData = userDocSnapshot.data() as Map<String, dynamic>;
-  //     final user = User.fromJson(userData);
-
-  //     return user.trails;
+  //     // Update the favoriteTrails field in the user's document
+  //     await userDocRef.update({'trails': favoriteTrails});
+  //   } catch (e) {
+  //     // Handle any errors that occur during the update process
+  //     print('Error updating favorite trails: $e');
   //   }
-  //   return null;
   // }
-
-  Future<void> updateFavoriteTrails(
-      String? email, List<String> favoriteTrails) async {
-    try {
-      // Get the user's document reference
-      final userDocRef = await userRepository.getUserRefByEmail(email);
-
-      // Update the favoriteTrails field in the user's document
-      await userDocRef.update({'trails': favoriteTrails});
-    } catch (e) {
-      // Handle any errors that occur during the update process
-      print('Error updating favorite trails: $e');
-    }
-  }
 
   Future<Trail?> getTrailByRef(DocumentReference<Object?>? ref) async {
     if (ref == null) {

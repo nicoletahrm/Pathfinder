@@ -1,10 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../screens/events_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/user_hikes_screen.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
-  const CustomBottomNavBar({
+  final currentUser = FirebaseAuth.instance.currentUser;
+
+  CustomBottomNavBar({
     Key? key,
   }) : super(key: key);
 
@@ -37,10 +41,8 @@ class CustomBottomNavBar extends StatelessWidget {
                   size: 30,
                   color: Colors.black54,
                 ),
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreen())),
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen())),
               ),
               IconButton(
                   icon: const Icon(
@@ -63,7 +65,8 @@ class CustomBottomNavBar extends StatelessWidget {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomeScreen())),
+                        builder: (context) =>
+                            UserHikesScreen(email: currentUser!.email!))),
               ),
               IconButton(
                 icon: const Icon(
@@ -71,10 +74,8 @@ class CustomBottomNavBar extends StatelessWidget {
                   size: 30,
                   color: Colors.black54,
                 ),
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfileScreen())),
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen())),
               ),
             ],
           )),

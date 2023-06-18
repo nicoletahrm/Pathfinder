@@ -28,7 +28,7 @@ class _EventWidgetState extends State<EventWidget> {
   late DocumentReference<Object?> userRef;
   late Trail? trail;
   late List<User?> users = [];
-  late String buttonText = 'Go';
+  late String buttonText;
 
   Future<void> init() async {
     user = await userRepository.getUserByRef(widget.event.organizer);
@@ -40,6 +40,7 @@ class _EventWidgetState extends State<EventWidget> {
   @override
   void initState() {
     super.initState();
+    //init();
   }
 
   @override
@@ -148,15 +149,15 @@ class _EventWidgetState extends State<EventWidget> {
                 color: kDefaultIconDarkColor,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
-              'Max participants: ${widget.event.maxParticipants}',
-              style: GoogleFonts.poppins(
-                fontSize: 15.0,
-                fontWeight: FontWeight.normal,
-                color: kDefaultIconDarkColor,
-              ),
-            ),
+            // SizedBox(height: 5),
+            // Text(
+            //   'Max participants: ${widget.event.maxParticipants}',
+            //   style: GoogleFonts.poppins(
+            //     fontSize: 15.0,
+            //     fontWeight: FontWeight.normal,
+            //     color: kDefaultIconDarkColor,
+            //   ),
+            // ),
             SizedBox(height: 20),
             Container(
               child: TrailWidget(

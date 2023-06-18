@@ -100,10 +100,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future addUserDetails(String username, String email) async {
-    await FirebaseFirestore.instance.collection("user").add({
-      'username': username,
-      'email': email,
-    });
+    await FirebaseFirestore.instance
+        .collection("user")
+        .add({'username': username, 'email': email, 'hikes': []});
   }
 
   bool passwordConfirmed() {

@@ -42,6 +42,18 @@ class EventRepository {
     });
   }
 
+  Future<Event> getEventByRef(DocumentReference<Object?>? ref) async {
+    final eventSnapshot = await ref!.get();
+
+    if (eventSnapshot.exists) {
+      final eventData = eventSnapshot.data() as Map<String, dynamic>;
+      return Event.fromJson(eventData);
+    }
+
+    throw Exception(
+        'Event not found.');
+  }
+
   Future<void> updateEvent(
       String id, DocumentReference<Object?> userRef) async {
     try {} catch (e) {

@@ -44,12 +44,7 @@ class GlobalController {
     });
   }
 
-  Future<List<Daily>> getWeatherByLatAndLon(double lat, double lon) async {
-    var weatherData = await getWeatherData(lat, lon);
-    return weatherData.daily;
-  }
-
-  Future<WeatherDataDaily> getWeatherData(double lat, double lon) async {
+  Future<List<Daily>> getWeatherData(double lat, double lon) async {
     WeatherDataDaily? weatherData;
 
     var response = await http.get(Uri.parse(apiURL(lat, lon)));
@@ -57,7 +52,7 @@ class GlobalController {
 
     weatherData = WeatherDataDaily.fromJson(jsonString);
 
-    return weatherData;
+    return weatherData.daily;
   }
 
   String apiURL(var lat, var lon) {
@@ -65,6 +60,7 @@ class GlobalController {
 
     url =
         "http://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&appid=$apiKey&exclude=minutely&units=metric";
+        
     return url;
   }
 }

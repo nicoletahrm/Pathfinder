@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 25.0),
+                SizedBox(height: 25.0),
                 TrailsList(trails: filteredTrails),
               ],
             ),

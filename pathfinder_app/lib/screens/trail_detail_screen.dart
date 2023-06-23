@@ -57,7 +57,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
     ref = await trailRepository.getRefTrailByTitle(widget.title);
 
     if (isConnected == true) {
-      weatherDataDaily = await getWeather(
+      weatherDataDaily = await await _globalController.getWeatherData(
           trail.destination.latitude, trail.destination.longitude);
     } else {
       weatherDataDaily = [];
@@ -460,11 +460,5 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
     return connectivityResult != ConnectivityResult.none;
   }
-
-  Future<List<Daily>> getWeather(double lat, double lon) async {
-    List<Daily> dailyWeather =
-        await _globalController.getWeatherByLatAndLon(lat, lon);
-
-    return dailyWeather;
-  }
+ 
 }

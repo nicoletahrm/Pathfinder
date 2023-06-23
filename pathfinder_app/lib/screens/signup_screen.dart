@@ -103,7 +103,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'username': username,
       'email': email,
       'profilePhoto': 'assets/images/profile_photo,jpg',
-      'hikes': []
+      'events': [],
+      'location': ''
     });
   }
 

@@ -34,14 +34,13 @@ class TrailWidget extends StatelessWidget {
                 ),
               );
             },
-            // Existing code...
           ),
         );
       },
       child: Stack(
         children: <Widget>[
           Hero(
-            tag: heroTag, // Use the unique heroTag
+            tag: heroTag,
             child: Container(
               height: 160.0,
               width: 700.0,

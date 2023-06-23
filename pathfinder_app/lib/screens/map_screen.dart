@@ -1,20 +1,14 @@
-// ignore_for_file: sdk_version_since, deprecated_member_use
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pathfinder_app/screens/draw_route.dart';
+import '../utils/covert.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../controllers/global_controller.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:xml/xml.dart' as xml;
 
 class MapScreen extends StatefulWidget {
-  final GeoPoint destination;
-  final String route;
-
-  MapScreen({Key? key, required this.destination, required this.route})
-      : super(key: key);
+  MapScreen({Key? key}) : super(key: key);
 
   @override
   State<MapScreen> createState() => MapScreenState();
@@ -24,31 +18,22 @@ class MapScreenState extends State<MapScreen> {
   final GlobalController _locationController =
       Get.put(GlobalController(), permanent: true);
 
-  late LatLng sourceLocation;
-  late LatLng destination;
-  List<LatLng> polylineCoordinates = [];
-  Set<Marker> markers = {};
+  List<LatLng> _recordedCoordinates = [];
+  List<Polyline> polylineCoordinates = [];
+  bool _isRecordingCoordinates = false;
 
   init() {
     _locationController.onInit();
-
-    destination = LatLng(
-      widget.destination.latitude,
-      widget.destination.longitude,
-    );
   }
 
   @override
   void initState() {
     super.initState();
-    getPolyPoints();
   }
 
   late CameraPosition initialCameraPosition = CameraPosition(
     target: LatLng(
-      widget.destination.latitude,
-      widget.destination.longitude,
-    ),
+        _locationController.getLatitude(), _locationController.getLongitude()),
     zoom: 13,
   );
 
@@ -75,16 +60,7 @@ class MapScreenState extends State<MapScreen> {
   }
 
   Widget buildRoute(BuildContext context) {
-    PolylineId polylineId = PolylineId('route');
-    Set<Polyline> polylines = {
-      Polyline(
-          polylineId: polylineId,
-          points: polylineCoordinates,
-          color: Colors.pink,
-          width: 3,
-          startCap: Cap.roundCap,
-          endCap: Cap.roundCap),
-    };
+    Set<Polyline> polylines = Set.from(polylineCoordinates);
 
     return Scaffold(
       body: SafeArea(
@@ -100,72 +76,85 @@ class MapScreenState extends State<MapScreen> {
               },
               myLocationEnabled: true,
             ),
-            Positioned(
-              top: 30.0,
-              left: 28.0,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Icon(Icons.arrow_back),
-              ),
-            ),
+            Container(
+                width: MediaQuery.of(context).size.width,
+                height: 60,
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DrawMapScreen(list: _recordedCoordinates)));
+                    },
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.black26;
+                          }
+                          return hexStringToColor("#44564a");
+                        }),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0)))),
+                    child: Text('see')))
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _toggleRecordingCoordinates,
+        child: Icon(_isRecordingCoordinates ? Icons.stop : Icons.play_arrow),
       ),
     );
   }
 
-  void getPolyPoints() async {
-    polylineCoordinates = await extractCoordinatesFromKmlFile(
-        'assets/files/trails_map.kml', widget.route);
-
-    setState(() {});
+  void _toggleRecordingCoordinates() {
+    setState(() {
+      _isRecordingCoordinates = !_isRecordingCoordinates;
+      if (_isRecordingCoordinates) {
+        _startRecordingCoordinates();
+      } else {
+        _stopRecordingCoordinates();
+      }
+    });
   }
 
-  Future<List<LatLng>> extractCoordinatesFromKmlFile(
-      String filePath, String trailName) async {
-    List<LatLng> coordinates = [];
-    trailName = trailName.trim();
+  void _startRecordingCoordinates() {
+    polylineCoordinates.clear();
+    _getUserLocation();
+  }
 
-    try {
-      final byteData = await rootBundle.load(filePath);
-      final xmlString = utf8.decode(byteData.buffer.asUint8List());
+  void _stopRecordingCoordinates() {
+    PolylineId polylineId = PolylineId('route');
+    Polyline polyline = Polyline(
+      polylineId: polylineId,
+      points: _recordedCoordinates,
+      color: Colors.pink,
+      width: 3,
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+    );
+    print(_recordedCoordinates);
 
-      final document = xml.XmlDocument.parse(xmlString);
-      final placemarkElements = document.findAllElements('Placemark');
+    setState(() {
+      polylineCoordinates.add(polyline);
+      //_recordedCoordinates.clear();
+    });
+  }
 
-      for (final placemarkElement in placemarkElements) {
-        final nameElement = placemarkElement.findElements('name').single;
-        final name = nameElement.text.trim();
+  void _getUserLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    LatLng userLocation = LatLng(position.latitude, position.longitude);
 
-        if (name == trailName) {
-          final lineStringElement =
-              placemarkElement.findElements('LineString').firstOrNull;
-          final coordinatesElement =
-              lineStringElement?.findElements('coordinates').firstOrNull;
+    setState(() {
+      _recordedCoordinates.add(userLocation);
+    });
 
-          if (coordinatesElement != null) {
-            final coordinatesText = coordinatesElement.text;
-            final coordinateValues = coordinatesText.trim().split('\n');
-
-            for (final coordinateValue in coordinateValues) {
-              final trimmedValue = coordinateValue.trim();
-              if (trimmedValue.isNotEmpty) {
-                final coordinateTokens = trimmedValue.split(',');
-
-                if (coordinateTokens.length == 3) {
-                  final longitude = double.parse(coordinateTokens[0]);
-                  final latitude = double.parse(coordinateTokens[1]);
-
-                  coordinates.add(LatLng(latitude, longitude));
-                }
-              }
-            }
-          }
-        }
-      }
-    } catch (e) {
-      print('Error extracting coordinates: $e');
+    if (_isRecordingCoordinates) {
+      _getUserLocation();
     }
-    return coordinates;
   }
 }

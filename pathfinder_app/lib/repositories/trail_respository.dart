@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import '../models/trail.dart';
-import 'dart:io';
 
 class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -54,16 +52,4 @@ class TrailRepository {
     return null;
   }
 
-  Future<String> upload(File file) async {
-    final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    final Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
-    final TaskSnapshot snapshot = await storageRef.putFile(file);
-
-    if (snapshot.state == TaskState.success) {
-      final String downloadUrl = await storageRef.getDownloadURL();
-      return downloadUrl;
-    }
-
-    throw Exception('Image upload failed.');
-  }
 }

@@ -53,7 +53,7 @@ dependencies:
   weather:
   get: ^4.6.5
   geocoding: ^2.1.0
-  http: ^0.13.5
+  http: ^0.13.6
   intl: ^0.17.0
   flutter_rating_bar: ^4.0.1
   image_picker: ^0.8.7+5
@@ -91,7 +91,6 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/files/
-    - assets/files/file.kml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

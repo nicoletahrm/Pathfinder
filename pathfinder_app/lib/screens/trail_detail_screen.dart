@@ -379,7 +379,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                     Container(
                                       width: MediaQuery.of(context).size.width,
                                       height: 60,
-                                      margin: const EdgeInsets.fromLTRB(
+                                      margin: EdgeInsets.fromLTRB(
                                           0, 10, 0, 20),
                                       child: ElevatedButton(
                                         onPressed: () {
@@ -460,5 +460,4 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
     return connectivityResult != ConnectivityResult.none;
   }
- 
 }

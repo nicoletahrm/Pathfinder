@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../repositories/review_repository.dart';
 import '../repositories/user_repository.dart';
+import '../storage/firebase_storage.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
@@ -222,7 +223,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
     for (var i = 0; i < _selectedImages.length; i++) {
       try {
         final String downloadUrl =
-            await trailRepository.upload(_selectedImages[i]);
+            await upload(_selectedImages[i]);
 
         print('Image uploaded: $downloadUrl');
       } catch (e) {

@@ -204,10 +204,6 @@ class MapScreenState extends State<MapScreen> {
     final filePath = await getTemporaryFilePath();
     await saveKmlFile(kmlContent, filePath);
 
-    print('KML file saved at: $filePath');
-    final fileContent = await File(filePath).readAsString();
-    print('KML file content:\n$fileContent');
-
     await firebaseStorage
         .ref(filePath)
         .putString(kmlContent, format: firebase_storage.PutStringFormat.raw);

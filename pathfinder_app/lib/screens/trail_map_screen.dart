@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pathfinder_app/storage/firebase_storage.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../controllers/global_controller.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 
 class TrailMapScreen extends StatefulWidget {
@@ -28,6 +28,8 @@ class TrailMapScreenState extends State<TrailMapScreen> {
   late LatLng destination;
   List<LatLng> polylineCoordinates = [];
   Set<Marker> markers = {};
+  late List<LatLng> coordinates;
+  late String routeName;
 
   init() {
     _locationController.onInit();
@@ -93,7 +95,7 @@ class TrailMapScreenState extends State<TrailMapScreen> {
         child: Stack(
           children: [
             GoogleMap(
-              mapType: MapType.normal, 
+              mapType: MapType.normal,
               initialCameraPosition: initialCameraPosition,
               polylines: polylines,
               zoomControlsEnabled: true,
@@ -113,64 +115,57 @@ class TrailMapScreenState extends State<TrailMapScreen> {
           ],
         ),
       ),
-      //bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 
-  void getPolyPoints() async {
-    polylineCoordinates = await extractCoordinatesFromKmlFile(
-        'assets/files/trails_map.kml', widget.route);
+  getPolyPoints() async {
+    await downloadAndParseKmlFilee(widget.route);
 
     setState(() {});
   }
 
-  // Function to read the KML/KMZ file and extract coordinates
-  Future<List<LatLng>> extractCoordinatesFromKmlFile(
-      String filePath, String trailName) async {
-    List<LatLng> coordinates = [];
-    trailName = trailName.trim();
+  Future<void> downloadAndParseKmlFilee(String filePath) async {
+    final kmlFilePath = filePath;
 
-    try {
-      final byteData = await rootBundle.load(filePath);
-      final xmlString = utf8.decode(byteData.buffer.asUint8List());
+    // Download the KML file from Firebase Storage
+    final downloadUrl = await firebaseStorage.ref(kmlFilePath).getDownloadURL();
 
-      final document = xml.XmlDocument.parse(xmlString);
-      final placemarkElements = document.findAllElements('Placemark');
+    final response = await http.get(Uri.parse(downloadUrl));
+    final kmlContent = response.body;
 
-      for (final placemarkElement in placemarkElements) {
-        final nameElement = placemarkElement.findElements('name').single;
-        final name = nameElement.text.trim();
+    // Parse the KML file and extract the data
+    final document = xml.XmlDocument.parse(kmlContent);
 
-        if (name == trailName) {
-          final lineStringElement =
-              placemarkElement.findElements('LineString').firstOrNull;
-          final coordinatesElement =
-              lineStringElement?.findElements('coordinates').firstOrNull;
+    final placemarkElement = document.findAllElements('Placemark').singleOrNull;
+    if (placemarkElement != null) {
+      final nameElement = placemarkElement.findElements('name').singleOrNull;
+      final lineStringElement =
+          placemarkElement.findElements('LineString').firstOrNull;
+      final coordinatesElement =
+          lineStringElement?.findElements('coordinates').firstOrNull;
 
-          if (coordinatesElement != null) {
-            final coordinatesText = coordinatesElement.text;
-            final coordinateValues = coordinatesText.trim().split('\n');
+      if (nameElement != null && coordinatesElement != null) {
+        routeName = nameElement.text.trim();
+        final coordinatesText = coordinatesElement.text;
+        final coordinateValues = coordinatesText.trim().split(' ');
 
-            for (final coordinateValue in coordinateValues) {
-              final trimmedValue = coordinateValue.trim();
-              if (trimmedValue.isNotEmpty) {
-                final coordinateTokens = trimmedValue.split(',');
+        for (final coordinateValue in coordinateValues) {
+          final trimmedValue = coordinateValue.trim();
+          if (trimmedValue.isNotEmpty) {
+            final coordinateTokens = trimmedValue.split(',');
 
-                if (coordinateTokens.length == 3) {
-                  final longitude = double.parse(coordinateTokens[0]);
-                  final latitude = double.parse(coordinateTokens[1]);
+            if (coordinateTokens.length == 3) {
+              final longitude = double.parse(coordinateTokens[0]);
+              final latitude = double.parse(coordinateTokens[1]);
 
-                  coordinates.add(LatLng(latitude, longitude));
-                }
-              }
+              polylineCoordinates.add(LatLng(latitude, longitude));
             }
           }
         }
-      }
-    } catch (e) {
-      print('Error extracting coordinates: $e');
-    }
 
-    return coordinates;
+        // Print or process the extracted data as needed
+        print('Route Name: $routeName');
+      }
+    }
   }
 }

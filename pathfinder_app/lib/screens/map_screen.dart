@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pathfinder_app/screens/draw_route.dart';
 import '../utils/covert.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../controllers/global_controller.dart';
+import 'package:xml/xml.dart' as xml;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key? key}) : super(key: key);
@@ -17,6 +21,7 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen> {
   final GlobalController _locationController =
       Get.put(GlobalController(), permanent: true);
+  final firebaseStorage = firebase_storage.FirebaseStorage.instance;
 
   List<LatLng> _recordedCoordinates = [];
   List<Polyline> polylineCoordinates = [];
@@ -24,6 +29,7 @@ class MapScreenState extends State<MapScreen> {
 
   init() {
     _locationController.onInit();
+    main();
   }
 
   @override
@@ -156,5 +162,54 @@ class MapScreenState extends State<MapScreen> {
     if (_isRecordingCoordinates) {
       _getUserLocation();
     }
+  }
+
+  String generateKmlContent(List<LatLng> points, String routeName) {
+    final builder = xml.XmlBuilder();
+    builder.processing('xml', 'version="1.0" encoding="UTF-8"');
+    builder.element('kml', nest: () {
+      builder.attribute('xmlns', 'http://www.opengis.net/kml/2.2');
+      builder.element('Document', nest: () {
+        builder.element('Placemark', nest: () {
+          builder.element('name', nest: () {
+            builder.text(routeName);
+          });
+          builder.element('LineString', nest: () {
+            builder.element('coordinates', nest: () {
+              final coordinates = points
+                  .map((point) => '${point.longitude},${point.latitude},0');
+              builder.text(coordinates.join(' '));
+            });
+          });
+        });
+      });
+    });
+
+    final xmlDoc = builder.buildDocument();
+    return xmlDoc.toString();
+  }
+
+  Future<String> getTemporaryFilePath() async {
+    final directory = await getTemporaryDirectory();
+    return directory.path + '/route.kml';
+  }
+
+  Future<void> saveKmlFile(String kmlContent, String filePath) async {
+    final file = File(filePath);
+    await file.writeAsString(kmlContent);
+  }
+
+  void main() async {
+    final kmlContent = generateKmlContent(_recordedCoordinates, 'My route');
+    final filePath = await getTemporaryFilePath();
+    await saveKmlFile(kmlContent, filePath);
+
+    print('KML file saved at: $filePath');
+    final fileContent = await File(filePath).readAsString();
+    print('KML file content:\n$fileContent');
+
+    await firebaseStorage
+        .ref(filePath)
+        .putString(kmlContent, format: firebase_storage.PutStringFormat.raw);
   }
 }

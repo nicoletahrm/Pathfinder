@@ -243,8 +243,8 @@ Container customButton(BuildContext context, String text, Function onPressed) {
 Container normalButton(BuildContext context, String text, Function onPressed) {
   return Container(
       width: MediaQuery.of(context).size.width,
-      height: 50,
-      margin: EdgeInsets.fromLTRB(60, 10, 60, 10),
+      height: 60,
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: ElevatedButton(
         onPressed: () {
           onPressed();
@@ -262,7 +262,6 @@ Container normalButton(BuildContext context, String text, Function onPressed) {
             ),
           ),
         ),
-        child: Text(text,
-            style: lightBoldFont),
+        child: Text(text, style: lightBoldFont),
       ));
 }

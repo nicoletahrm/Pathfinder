@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/comment.dart';
 import '../models/user.dart';
 import '../repositories/comment_repositroy.dart';
 import '../repositories/user_repository.dart';
@@ -10,14 +9,15 @@ import 'custom_circular_progress_indicator.dart';
 
 class CommentWidget extends StatefulWidget {
   final String content;
-  final DocumentReference<Object?>? ref;
-  final List<DocumentReference<Object>?>? replies;
+  final DocumentReference<Object?>? userRef;
+  final String eventRef;
 
   const CommentWidget(
       {Key? key,
       required this.content,
-      required this.ref,
-      required this.replies})
+      required this.userRef,
+      required this.eventRef,
+      })
       : super(key: key);
 
   @override
@@ -30,13 +30,11 @@ class _CommentWidgetState extends State<CommentWidget> {
   late User user;
   bool showReplyTextField = false;
   TextEditingController replyController = TextEditingController();
-  late List<Comment> repliesList;
 
   bool showAllReplies = false;
 
   Future<void> init() async {
-    user = await userRepository.getUserByRef(widget.ref);
-    repliesList = await fetchComments();
+    user = await userRepository.getUserByRef(widget.userRef);
   }
 
   @override
@@ -79,7 +77,7 @@ class _CommentWidgetState extends State<CommentWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
-                radius: 25,
+                radius: 20,
                 backgroundImage: AssetImage(user.profilePhoto),
               ),
               SizedBox(width: 20),
@@ -92,7 +90,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                         Text(
                           user.username,
                           style: GoogleFonts.poppins(
-                            fontSize: 18.0,
+                            fontSize: 15.0,
                             fontWeight: FontWeight.bold,
                             color: hexStringToColor("#44564a"),
                           ),
@@ -104,7 +102,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                         Text(
                           widget.content,
                           style: GoogleFonts.poppins(
-                            fontSize: 16.0,
+                            fontSize: 13.0,
                             fontWeight: FontWeight.normal,
                             color: kDefaultIconDarkColor,
                           ),
@@ -119,17 +117,5 @@ class _CommentWidgetState extends State<CommentWidget> {
         ],
       ),
     ));
-  }
-
-  Future<List<Comment>> fetchComments() async {
-    List<Comment> comments = [];
-
-    for (DocumentReference<Object>? commentRef in widget.replies!) {
-      if (commentRef != null) {
-        Comment comment = await commentRepository.getCommentByRef(commentRef);
-        comments.add(comment);
-      }
-    }
-    return comments;
   }
 }

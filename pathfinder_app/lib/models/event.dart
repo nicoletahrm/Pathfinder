@@ -51,7 +51,7 @@ class Event {
       time: timestampToTime(data["time"]),
       timeAdded: data["timeAdded"],
       meetingPlace: data["meetingPlace"],
-      comments: List<String>.from(data["comments"]),
+      comments: List<DocumentReference<Object>?>.from(data["comments"]),
     );
   }
 }

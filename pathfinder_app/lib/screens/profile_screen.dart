@@ -102,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ));
         } else if (snapshot.hasError) {
-          return Text('Failed to initialize event: ${snapshot.error}');
+          return Text('Failed to initialize profile: ${snapshot.error}');
         } else {
           return buildProfile(context);
         }

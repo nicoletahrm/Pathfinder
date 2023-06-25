@@ -24,4 +24,24 @@ class CommentRepository {
 
     throw Exception('Comment not found.');
   }
+
+  addComment(Comment c, String eventRef) async {
+    try {
+      CollectionReference collectionRef = database.collection('comment');
+      DocumentReference<Object?> documentRef = collectionRef.doc();
+
+      Comment comment = Comment(
+        content: c.content,
+        user: c.user,
+      );
+
+      await documentRef.set({
+        'content': comment.content,
+        'user': comment.user,
+      });
+      print('Data added to Firestore successfully!');
+    } catch (error) {
+      print('Error adding data to Firestore: $error');
+    }
+  }
 }

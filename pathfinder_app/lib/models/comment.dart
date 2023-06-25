@@ -13,7 +13,6 @@ class Comment {
     return {
       "content": content,
       "user": user,
-      //"replies": replies,
     };
   }
 

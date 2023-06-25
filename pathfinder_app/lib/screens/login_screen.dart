@@ -8,6 +8,7 @@ import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/custom_dialog.dart';
+import 'admin_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -22,21 +23,25 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isKeyboardOn = false;
   late double height;
 
-Future<void> main() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString("email");
-    print(email);
-    runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: email == null ? const LoginScreen() : const HomeScreen(),
-    ));
-  }
+  // Future<void> main() async {
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var email = prefs.getString("email");
+  //   print(email);
+  //   runApp(MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     home: email == null
+  //         ? LoginScreen()
+  //         : email == 'admin@admin.com'
+  //             ? AdminScreen()
+  //             : HomeScreen(),
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
-     main();
-     
+    //main();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -132,44 +137,7 @@ Future<void> main() async {
                                                   ))
                                             ]),
                                       ),
-                                      loginButton(context, true, () async {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        prefs.setString(
-                                            "email", _emailTextController.text);
-
-                                        if (_emailTextController.text.isEmpty ||
-                                            _passwordTextController
-                                                .text.isEmpty) {
-                                          CustomDialog.show(
-                                            context,
-                                            "Empty fields",
-                                            "Please fill in all fields.",
-                                          );
-                                        } else {
-                                          FirebaseAuth.instance
-                                              .signInWithEmailAndPassword(
-                                            email: _emailTextController.text,
-                                            password:
-                                                _passwordTextController.text,
-                                          )
-                                              .then((value) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HomeScreen()),
-                                            );
-                                          }).catchError((error) {
-                                            CustomDialog.show(
-                                              context,
-                                              "Login failed",
-                                              "Incorrect email or password.",
-                                            );
-                                          });
-                                        }
-                                      }),
+                                      loginButton(context, true, login),
                                       signUpOption(true),
                                     ],
                                   ),
@@ -217,5 +185,45 @@ Future<void> main() async {
       return MediaQuery.of(context).size.height * 0.5;
     }
     return MediaQuery.of(context).size.height * 0.7;
+  }
+
+  void login() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("email", _emailTextController.text);
+
+    if (_emailTextController.text.isEmpty ||
+        _passwordTextController.text.isEmpty) {
+      CustomDialog.show(
+        context,
+        "Empty fields",
+        "Please fill in all fields.",
+      );
+    } else {
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+        email: _emailTextController.text,
+        password: _passwordTextController.text,
+      )
+          .then((value) {
+        final email = value.user?.email ?? '';
+        if (email.toLowerCase() == 'admin@admin.com') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminScreen()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        }
+      }).catchError((error) {
+        CustomDialog.show(
+          context,
+          "Login failed",
+          "Incorrect email or password.",
+        );
+      });
+    }
   }
 }

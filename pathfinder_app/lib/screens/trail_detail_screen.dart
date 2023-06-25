@@ -14,6 +14,7 @@ import '../repositories/trail_respository.dart';
 import '../utils/covert.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../widgets/daily_weather_widget.dart';
+import '../widgets/reusable_widget.dart';
 import '../widgets/review_widget.dart';
 import '../widgets/route_widget.dart';
 import 'add_review_screen.dart';
@@ -24,7 +25,7 @@ class TrailDetailScreen extends StatefulWidget {
   final String title;
   final String heroTag;
 
-  const TrailDetailScreen({
+  TrailDetailScreen({
     Key? key,
     required this.title,
     required this.heroTag,
@@ -108,7 +109,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
           return Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               CustomCircularProgressIndicator(),
             ],
           ));
@@ -335,7 +336,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                     color: Colors.grey.withOpacity(0.3),
                                     spreadRadius: 2,
                                     blurRadius: 15,
-                                    offset: const Offset(0, 3),
+                                    offset: Offset(0, 3),
                                   ),
                                 ],
                               ),
@@ -350,18 +351,19 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                               trail.routes.length.toDouble() *
                                                   75,
                                           child: Column(
-                                              children: List.generate(
-                                                  trail.routes.length, (index) {
-                                            if (trail.routes[index] == null) {
-                                              return SizedBox();
-                                            }
-                                            return RouteWidget(
+                                            children:
+                                                trail.routes.keys.map((key) {
+                                              String value = trail.routes[key]!;
+                                              return RouteWidget(
                                                 destination: trail.destination,
-                                                route: trail.routes[index]);
-                                          }))),
+                                                name: value,
+                                                route: key,
+                                              );
+                                            }).toList(),
+                                          )),
                                     Text(
                                       trail.content,
-                                      style: normalFont,
+                                      style: darkNormalFont,
                                     ),
                                     SizedBox(height: 28),
                                     Align(
@@ -376,54 +378,20 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                       ),
                                     ),
                                     SizedBox(height: 20),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 60,
-                                      margin: EdgeInsets.fromLTRB(
-                                          0, 10, 0, 20),
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.push<bool>(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddReviewScreen(ref: ref),
-                                            ),
-                                          ).then((result) {
-                                            setState(() async {
-                                              trail = await trailRepository
-                                                  .getTrailByTitle(
-                                                      widget.title);
-                                            });
-                                          });
-                                        },
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.resolveWith(
-                                                  (states) {
-                                            if (states.contains(
-                                                MaterialState.pressed)) {
-                                              return Colors.black26;
-                                            }
-                                            return hexStringToColor("#44564a");
-                                          }),
-                                          shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                            ),
-                                          ),
+                                    normalButton(context, 'Add review', () {
+                                      Navigator.push<bool>(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AddReviewScreen(ref: ref),
                                         ),
-                                        child: Text(
-                                          'Add review',
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                      ).then((result) {
+                                        setState(() async {
+                                          trail = await trailRepository
+                                              .getTrailByTitle(widget.title);
+                                        });
+                                      });
+                                    }),
                                     SizedBox(height: 20),
                                     SizedBox(
                                       height: 330,

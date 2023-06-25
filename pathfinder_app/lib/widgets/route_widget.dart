@@ -7,8 +7,13 @@ import '../utils/covert.dart';
 class RouteWidget extends StatefulWidget {
   final GeoPoint destination;
   final String route;
+  final String name;
 
-  RouteWidget({Key? key, required this.destination, required this.route})
+  RouteWidget(
+      {Key? key,
+      required this.destination,
+      required this.name,
+      required this.route})
       : super(key: key);
 
   @override
@@ -46,7 +51,7 @@ class _RouteWidgetScreen extends State<RouteWidget> {
           }),
         ),
         child: Text(
-          widget.route,
+          widget.name,
           style: GoogleFonts.poppins(
             fontSize: 15,
             color: Colors.white,

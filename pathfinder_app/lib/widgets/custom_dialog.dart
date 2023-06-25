@@ -36,7 +36,7 @@ class CustomDialogWidget extends StatelessWidget {
           children: [
             Text(title, style: darkBoldFont),
             SizedBox(height: 10),
-            Text(content, style: normalFont),
+            Text(content, style: darkNormalFont),
             SizedBox(height: 10),
             ElevatedButton(
               child: Text(

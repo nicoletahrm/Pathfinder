@@ -6,8 +6,9 @@ class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
 
   Future<List<Trail>> getAllTrails() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await database.collection("trail").orderBy('title').get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("trail").orderBy('title')
+        .get();
 
     return snapshot.docs
         .map((docSnapshot) => Trail.fromJson(docSnapshot.data()))
@@ -51,5 +52,4 @@ class TrailRepository {
 
     return null;
   }
-
 }

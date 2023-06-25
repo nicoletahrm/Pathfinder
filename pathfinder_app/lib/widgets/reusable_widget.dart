@@ -149,7 +149,7 @@ Dialog showValidationDialogWidget(context, String title, String content) {
         children: [
           Text(title, style: darkBoldFont),
           SizedBox(height: 10),
-          Text(content, style: normalFont),
+          Text(content, style: darkNormalFont),
           SizedBox(height: 10),
           ElevatedButton(
             child: Text(
@@ -237,5 +237,32 @@ Container customButton(BuildContext context, String text, Function onPressed) {
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.bold)),
+      ));
+}
+
+Container normalButton(BuildContext context, String text, Function onPressed) {
+  return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      margin: EdgeInsets.fromLTRB(60, 10, 60, 10),
+      child: ElevatedButton(
+        onPressed: () {
+          onPressed();
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.black26;
+            }
+            return hexStringToColor("#44564a");
+          }),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+          ),
+        ),
+        child: Text(text,
+            style: lightBoldFont),
       ));
 }

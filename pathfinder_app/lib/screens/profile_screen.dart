@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : Column(
                               children: [
                                 Text("Username:", style: darkBoldFont),
-                                Text(user.username, style: normalFont),
+                                Text(user.username, style: darkNormalFont),
                               ],
                             ),
                       SizedBox(height: 15.0),
@@ -178,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : Column(
                               children: [
                                 Text("Email:", style: darkBoldFont),
-                                Text(user.email, style: normalFont),
+                                Text(user.email, style: darkNormalFont),
                               ],
                             ),
                       SizedBox(height: 15.0),
@@ -193,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : Column(
                               children: [
                                 Text("Location:", style: darkBoldFont),
-                                Text(user.location, style: normalFont),
+                                Text(user.location, style: darkNormalFont),
                               ],
                             ),
                       SizedBox(height: 15.0),

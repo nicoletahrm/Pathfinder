@@ -20,50 +20,45 @@ Future<String> upload(File file) async {
   throw Exception('Image upload failed.');
 }
 
-Future<void> downloadAndParseKmlFile(
-    String filePath, List<LatLng> list, String routeName) async {
-  final kmlFilePath = filePath;
-  List<LatLng> coordinates = []; // Initialize the coordinates list
 
-  // Download the KML file from Firebase Storage
-  final downloadUrl = await firebaseStorage.ref(kmlFilePath).getDownloadURL();
+  Future<void> downloadAndParseKmlFilee(String filePath, List<LatLng> polylineCoordinates, String routeName) async {
+    final kmlFilePath = filePath;
 
-  final response = await http.get(Uri.parse(downloadUrl));
-  final kmlContent = response.body;
+    // Download the KML file from Firebase Storage
+    final downloadUrl = await firebaseStorage.ref(kmlFilePath).getDownloadURL();
 
-  // Parse the KML file and extract the data
-  final document = xml.XmlDocument.parse(kmlContent);
+    final response = await http.get(Uri.parse(downloadUrl));
+    final kmlContent = response.body;
 
-  final placemarkElement = document.findAllElements('Placemark').singleOrNull;
-  if (placemarkElement != null) {
-    final nameElement = placemarkElement.findElements('name').singleOrNull;
-   final lineStringElement =
-              placemarkElement.findElements('LineString').firstOrNull;
-          final coordinatesElement =
-              lineStringElement?.findElements('coordinates').firstOrNull;
+    // Parse the KML file and extract the data
+    final document = xml.XmlDocument.parse(kmlContent);
 
-    if (nameElement != null && coordinatesElement != null) {
-      routeName = nameElement.text.trim();
-      final coordinatesText = coordinatesElement.text;
-      final coordinateValues = coordinatesText.trim().split('\n');
+    final placemarkElement = document.findAllElements('Placemark').singleOrNull;
+    if (placemarkElement != null) {
+      final nameElement = placemarkElement.findElements('name').singleOrNull;
+      final lineStringElement =
+          placemarkElement.findElements('LineString').firstOrNull;
+      final coordinatesElement =
+          lineStringElement?.findElements('coordinates').firstOrNull;
 
-      for (final coordinateValue in coordinateValues) {
-        final trimmedValue = coordinateValue.trim();
-        if (trimmedValue.isNotEmpty) {
-          final coordinateTokens = trimmedValue.split(',');
+      if (nameElement != null && coordinatesElement != null) {
+        routeName = nameElement.text.trim();
+        final coordinatesText = coordinatesElement.text;
+        final coordinateValues = coordinatesText.trim().split(' ');
 
-          if (coordinateTokens.length == 3) {
-            final longitude = double.parse(coordinateTokens[0]);
-            final latitude = double.parse(coordinateTokens[1]);
+        for (final coordinateValue in coordinateValues) {
+          final trimmedValue = coordinateValue.trim();
+          if (trimmedValue.isNotEmpty) {
+            final coordinateTokens = trimmedValue.split(',');
 
-            list.add(LatLng(latitude, longitude));
+            if (coordinateTokens.length == 3) {
+              final longitude = double.parse(coordinateTokens[0]);
+              final latitude = double.parse(coordinateTokens[1]);
+
+              polylineCoordinates.add(LatLng(latitude, longitude));
+            }
           }
         }
       }
-
-      // Print or process the extracted data as needed
-      print('Route Name: $routeName');
-      print('Coordinates: $coordinates');
     }
   }
-}

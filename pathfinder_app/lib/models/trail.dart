@@ -13,7 +13,7 @@ class Trail {
   final double altitude;
   final GeoPoint destination;
   final List<dynamic> images;
-  final List<dynamic> routes;
+  final Map<dynamic, dynamic> routes;
 
   Trail({
     required this.id,
@@ -59,7 +59,7 @@ class Trail {
       rating: stringToDouble(data["rating"]),
       destination: data["destination"],
       images: List<String>.from(data['images'] ?? []),
-      routes: List<String>.from(data['routes'] ?? []),
+      routes: Map<String, String>.from(data['routes'] ?? {}),
     );
   }
 }

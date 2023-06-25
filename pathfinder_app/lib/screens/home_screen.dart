@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text("Choose a difficulty:", style: darkBoldFont2),
                   ListTile(
-                    title: Text('Easy', style: normalFont),
+                    title: Text('Easy', style: darkNormalFont),
                     onTap: () {
                       selectedDifficulty = 'easy';
                       filterTrailsByDifficulty(selectedDifficulty);
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   ListTile(
-                    title: Text('Mediu', style: normalFont),
+                    title: Text('Mediu', style: darkNormalFont),
                     onTap: () {
                       selectedDifficulty = 'mediu';
                       filterTrailsByDifficulty(selectedDifficulty);
@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   ListTile(
-                    title: Text('Hard', style: normalFont),
+                    title: Text('Hard', style: darkNormalFont),
                     onTap: () {
                       selectedDifficulty = 'hard';
                       filterTrailsByDifficulty(selectedDifficulty);

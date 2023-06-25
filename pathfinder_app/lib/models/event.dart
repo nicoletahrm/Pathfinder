@@ -11,7 +11,7 @@ class Event {
   late final Time time;
   final Timestamp timeAdded;
   final String meetingPlace;
-  final List<DocumentReference<Object>?> comments;
+  final List<dynamic> comments;
 
   Event({
     required this.id,
@@ -51,7 +51,7 @@ class Event {
       time: timestampToTime(data["time"]),
       timeAdded: data["timeAdded"],
       meetingPlace: data["meetingPlace"],
-      comments: List<DocumentReference<Object>?>.from(data["comments"]),
+      comments: List<String>.from(data["comments"]),
     );
   }
 }

@@ -37,6 +37,16 @@ class TrailRepository {
     return documentSnapshot.reference;
   }
 
+  Future<Trail> getTrailById(String id) async {
+  QuerySnapshot<Map<String, dynamic>> snapshot =
+      await database.collection("trail").where('id', isEqualTo: id).get();
+
+  DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
+
+  return Trail.fromJson(documentSnapshot.data() as Map<String, dynamic>);
+}
+
+
   Future<Trail?> getTrailByRef(DocumentReference<Object?>? ref) async {
     if (ref == null) {
       return null;

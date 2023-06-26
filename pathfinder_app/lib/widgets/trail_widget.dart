@@ -19,7 +19,6 @@ class TrailWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String heroTag = 'trail_${trail.hashCode}_$index';
-    ;
 
     return GestureDetector(
       onTap: () {
@@ -29,7 +28,7 @@ class TrailWidget extends StatelessWidget {
               return FadeTransition(
                 opacity: animation,
                 child: TrailDetailScreen(
-                  title: trail.title,
+                  trail: trail,
                   heroTag: heroTag,
                 ),
               );
@@ -60,7 +59,7 @@ class TrailWidget extends StatelessWidget {
             margin: EdgeInsets.only(top: margin),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14.0),
-              gradient: const LinearGradient(
+              gradient:LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [

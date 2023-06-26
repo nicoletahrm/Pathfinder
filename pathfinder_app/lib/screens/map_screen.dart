@@ -7,14 +7,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pathfinder_app/screens/record_route_screen.dart';
 import '../controllers/location_controller.dart';
+import '../models/trail.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class MapScreen extends StatefulWidget {
+  final Trail trail;
   final String fileName;
 
-  MapScreen({Key? key, required this.fileName}) : super(key: key);
+  MapScreen({Key? key, required this.fileName, required this.trail})
+      : super(key: key);
 
   @override
   State<MapScreen> createState() => MapScreenState();
@@ -158,6 +161,7 @@ class MapScreenState extends State<MapScreen> {
         MaterialPageRoute(
             builder: (context) => RecordRouteScreen(
                 email: currentUser!.email!,
+                trailId: widget.trail.id!,
                 fileName: widget.fileName,
                 list: _recordedCoordinates)));
   }

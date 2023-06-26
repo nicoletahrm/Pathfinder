@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/repositories/trail_respository.dart';
+import 'package:pathfinder_app/screens/trail_map_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/trail_request.dart';
+import '../models/trail.dart';
+import '../models/route_request.dart';
 import '../repositories/request_repository.dart';
+import '../utils/fonts.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import 'login_screen.dart';
 
@@ -12,7 +16,10 @@ class AdminScreen extends StatefulWidget {
 
 class AdminScreenState extends State<AdminScreen> {
   final RequestRepository requestRepository = RequestRepository();
-  late List<TrailRequest> requests;
+  final TrailRepository trailRepository = TrailRepository();
+  late List<RouteRequest> requests;
+  late Trail newTrail;
+  late Trail trail;
 
   Future<void> init() async {
     requests = await requestRepository.getRequests();
@@ -88,10 +95,22 @@ class AdminScreenState extends State<AdminScreen> {
                 itemBuilder: (context, index) {
                   final request = requests[index];
                   return ListTile(
-                    title: Text(request.title),
-                    subtitle: Text(request.filePath),
-                    onTap: () {
-                      print('Clicked on: ${request.title}');
+                    title: Text(request.route, style: darkNormalFont),
+                    //subtitle: Text(request.filePath),
+                    trailing: Icon(
+                      request.isAccepted ? Icons.check_circle : Icons.cancel,
+                      color: request.isAccepted ? Colors.green : Colors.red,
+                    ),
+                    onTap: () async {
+                      trail =
+                          await trailRepository.getTrailById(request.trailId);
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TrailMapScreen(
+                                  destination: trail.destination,
+                                  route: request.filePath)));
                     },
                   );
                 },

@@ -17,17 +17,19 @@ import '../widgets/daily_weather_widget.dart';
 import '../widgets/reusable_widget.dart';
 import '../widgets/review_widget.dart';
 import '../widgets/route_widget.dart';
-import 'add_review_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import '../utils/fonts.dart';
+import 'add_review_screen.dart';
+import 'map_screen.dart';
+import 'package:path/path.dart' as path;
 
 class TrailDetailScreen extends StatefulWidget {
-  final String title;
+  final Trail trail;
   final String heroTag;
 
   TrailDetailScreen({
     Key? key,
-    required this.title,
+    required this.trail,
     required this.heroTag,
   }) : super(key: key);
 
@@ -47,19 +49,18 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
   final _monthFormatter = DateFormat('MMM');
   late List<Review> trailReviews = [];
   late User user;
-  late Trail trail;
   late DocumentReference ref;
   late bool isConnected;
 
   Future<void> init() async {
     _scrollController = ScrollController();
     isConnected = await checkInternetConnectivity();
-    trail = await trailRepository.getTrailByTitle(widget.title);
-    ref = await trailRepository.getRefTrailByTitle(widget.title);
+    ref = await trailRepository.getRefTrailByTitle(widget.trail.title);
 
     if (isConnected == true) {
       weatherDataDaily = await await _weatherController.getWeatherData(
-          trail.destination.latitude, trail.destination.longitude);
+          widget.trail.destination.latitude,
+          widget.trail.destination.longitude);
     } else {
       weatherDataDaily = [];
     }
@@ -147,14 +148,14 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                           height: size.height * 0.7,
                           child: Stack(children: [
                             PageView.builder(
-                                itemCount: trail.images.length,
+                                itemCount: widget.trail.images.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Stack(
                                     children: [
                                       Hero(
                                         tag: widget.heroTag,
                                         child: Image.asset(
-                                          trail.images[index].toString(),
+                                          widget.trail.images[index].toString(),
                                           height: size.height,
                                           width: size.width,
                                           fit: BoxFit.cover,
@@ -201,7 +202,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(children: [
-                                      Text(widget.title,
+                                      Text(widget.trail.title,
                                           style: GoogleFonts.poppins(
                                               fontSize: 28.0,
                                               fontWeight: FontWeight.bold,
@@ -209,7 +210,9 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                       SizedBox(
                                         width: 3.0,
                                       ),
-                                      Text(trail.rating.toStringAsPrecision(2),
+                                      Text(
+                                          widget.trail.rating
+                                              .toStringAsPrecision(2),
                                           style: GoogleFonts.poppins(
                                               fontSize: 18.0,
                                               fontWeight: FontWeight.normal,
@@ -241,7 +244,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                                   height: 10.0,
                                                 ),
                                                 Text(
-                                                    '${trail.distance.round().toString()}km',
+                                                    '${widget.trail.distance.round().toString()}km',
                                                     style: GoogleFonts.poppins(
                                                         fontSize: 18.0,
                                                         fontWeight:
@@ -261,7 +264,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                                   height: 10.0,
                                                 ),
                                                 Text(
-                                                    '${trail.altitude.round().toString()}m',
+                                                    '${widget.trail.altitude.round().toString()}m',
                                                     style: GoogleFonts.poppins(
                                                         fontSize: 18.0,
                                                         fontWeight:
@@ -280,7 +283,9 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                                 SizedBox(
                                                   height: 10.0,
                                                 ),
-                                                Text(trail.difficulty.name,
+                                                Text(
+                                                    widget
+                                                        .trail.difficulty.name,
                                                     style: GoogleFonts.poppins(
                                                         fontSize: 18.0,
                                                         fontWeight:
@@ -345,24 +350,44 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    if (trail.routes.isNotEmpty)
+                                    if (widget.trail.routes.isNotEmpty)
                                       Container(
-                                          height:
-                                              trail.routes.length.toDouble() *
-                                                  75,
+                                          height: widget.trail.routes.length
+                                                  .toDouble() *
+                                              75,
                                           child: Column(
-                                            children:
-                                                trail.routes.keys.map((key) {
-                                              String value = trail.routes[key]!;
+                                            children: widget.trail.routes.keys
+                                                .map((key) {
+                                              String value =
+                                                  widget.trail.routes[key]!;
                                               return RouteWidget(
-                                                destination: trail.destination,
+                                                destination:
+                                                    widget.trail.destination,
                                                 name: value,
                                                 route: key,
                                               );
                                             }).toList(),
                                           )),
+                                    SizedBox(height: 18),
+                                    customButton(context, 'Record route', () {
+                                      final timestamp =
+                                          DateTime.now().millisecondsSinceEpoch;
+                                      final random =
+                                          path.basenameWithoutExtension(
+                                              Uri.base.toString());
+                                      final fileName =
+                                          'route_$timestamp$random.kml';
+
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MapScreen(
+                                                  trail: widget.trail,
+                                                  fileName: fileName)));
+                                    }),
+                                    SizedBox(height: 18),
                                     Text(
-                                      trail.content,
+                                      widget.trail.content,
                                       style: darkNormalFont,
                                     ),
                                     SizedBox(height: 28),
@@ -387,8 +412,8 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                         ),
                                       ).then((result) {
                                         setState(() async {
-                                          trail = await trailRepository
-                                              .getTrailByTitle(widget.title);
+                                          // widget.trail = await trailRepository
+                                          //     .getTrailByTitle(widget.trail.title);
                                         });
                                       });
                                     }),

@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../screens/events_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/map_screen.dart';
 import '../screens/profile_screen.dart';
-import 'package:path/path.dart' as path;
 
 class CustomBottomNavBar extends StatelessWidget {
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -64,15 +62,8 @@ class CustomBottomNavBar extends StatelessWidget {
                   color: Colors.black54,
                 ),
                 onPressed: () {
-                  final timestamp = DateTime.now().millisecondsSinceEpoch;
-                  final random =
-                      path.basenameWithoutExtension(Uri.base.toString());
-                  final fileName = 'route_$timestamp$random.kml';
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MapScreen(fileName: fileName)));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
                 },
               ),
               IconButton(

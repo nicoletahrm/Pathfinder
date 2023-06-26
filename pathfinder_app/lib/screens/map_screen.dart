@@ -1,18 +1,20 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pathfinder_app/screens/draw_route.dart';
-import '../utils/covert.dart';
+import 'package:pathfinder_app/screens/record_route_screen.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import '../controllers/global_controller.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class MapScreen extends StatefulWidget {
-  MapScreen({Key? key}) : super(key: key);
+  final String fileName;
+
+  MapScreen({Key? key, required this.fileName}) : super(key: key);
 
   @override
   State<MapScreen> createState() => MapScreenState();
@@ -22,6 +24,7 @@ class MapScreenState extends State<MapScreen> {
   final GlobalController _locationController =
       Get.put(GlobalController(), permanent: true);
   final firebaseStorage = firebase_storage.FirebaseStorage.instance;
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   List<LatLng> _recordedCoordinates = [];
   List<Polyline> polylineCoordinates = [];
@@ -82,29 +85,6 @@ class MapScreenState extends State<MapScreen> {
               },
               myLocationEnabled: true,
             ),
-            Container(
-                width: MediaQuery.of(context).size.width,
-                height: 60,
-                margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DrawMapScreen(list: _recordedCoordinates)));
-                    },
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return Colors.black26;
-                          }
-                          return hexStringToColor("#44564a");
-                        }),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0)))),
-                    child: Text('see')))
           ],
         ),
       ),
@@ -145,8 +125,15 @@ class MapScreenState extends State<MapScreen> {
 
     setState(() {
       polylineCoordinates.add(polyline);
-      //_recordedCoordinates.clear();
     });
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RecordRouteScreen(
+                email: currentUser!.email!,
+                fileName: widget.fileName,
+                list: _recordedCoordinates)));
   }
 
   void _getUserLocation() async {
@@ -191,7 +178,8 @@ class MapScreenState extends State<MapScreen> {
 
   Future<String> getTemporaryFilePath() async {
     final directory = await getTemporaryDirectory();
-    return directory.path + '/route.kml';
+    String file = widget.fileName;
+    return directory.path + '/$file';
   }
 
   Future<void> saveKmlFile(String kmlContent, String filePath) async {

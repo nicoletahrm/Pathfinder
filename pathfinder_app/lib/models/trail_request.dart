@@ -1,21 +1,24 @@
 class TrailRequest {
   final String title;
-  final String file;
+  final String source;
   final String sign;
+  final String filePath;
   final bool isAccepted;
 
   TrailRequest({
     required this.title,
-    required this.file,
+    required this.source,
     required this.sign,
+    required this.filePath,
     required this.isAccepted,
   });
 
   Map<String, dynamic> toJson() {
     return {
       "title": title,
-      "file": file,
+      "source": source,
       "sign": sign,
+      "filePath": filePath,
       "isAccepted": isAccepted,
     };
   }
@@ -25,8 +28,9 @@ class TrailRequest {
 
     return TrailRequest(
       title: data["title"],
-      file: data["file"],
+      source: data["source"],
       sign: data["sign"],
+      filePath: data["filePath"],
       isAccepted: data["isAccepted"],
     );
   }

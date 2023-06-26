@@ -6,9 +6,8 @@ class TrailRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
 
   Future<List<Trail>> getAllTrails() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await database
-        .collection("trail").orderBy('title')
-        .get();
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await database.collection("trail").orderBy('title').get();
 
     return snapshot.docs
         .map((docSnapshot) => Trail.fromJson(docSnapshot.data()))
@@ -51,5 +50,36 @@ class TrailRepository {
     }
 
     return null;
+  }
+
+  Future<void> addNewTrail(Trail trail) async {
+    try {
+      CollectionReference trailsCollection =
+          FirebaseFirestore.instance.collection('trail');
+
+      DocumentReference documentReference =
+          await trailsCollection.add(trail.toJson());
+      String trailId = documentReference.id;
+
+      trail = Trail(
+        id: trailId,
+        rating: trail.rating,
+        title: trail.title,
+        content: trail.content,
+        coverImage: trail.coverImage,
+        distance: trail.distance,
+        difficulty: trail.difficulty,
+        altitude: trail.altitude,
+        destination: trail.destination,
+        images: trail.images,
+        routes: trail.routes,
+      );
+
+      await documentReference.set(trail.toJson());
+
+      print('Trail added successfully!');
+    } catch (e) {
+      print('Error adding trail: $e');
+    }
   }
 }

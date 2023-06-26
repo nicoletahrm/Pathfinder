@@ -22,19 +22,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   bool isKeyboardOn = false;
   late double height;
+  late var email;
 
   // Future<void> main() async {
   //   WidgetsFlutterBinding.ensureInitialized();
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var email = prefs.getString("email");
+
+  //   email = prefs.getString("email");
+
   //   print(email);
+
   //   runApp(MaterialApp(
   //     debugShowCheckedModeBanner: false,
-  //     home: email == null
-  //         ? LoginScreen()
-  //         : email == 'admin@admin.com'
-  //             ? AdminScreen()
-  //             : HomeScreen(),
+  //     home: email == null ? LoginScreen() : const HomeScreen(),
   //   ));
   // }
 

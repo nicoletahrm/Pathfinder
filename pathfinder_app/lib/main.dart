@@ -1,41 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pathfinder_app/screens/admin_screen.dart';
+import 'package:pathfinder_app/screens/home_screen.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  runApp(MyApp(prefs: prefs));
 }
 
 class MyApp extends StatelessWidget {
+  final SharedPreferences prefs;
+
+  MyApp({required this.prefs});
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: SharedPreferences.getInstance(),
-      builder: (BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Return a loading screen if SharedPreferences is still loading
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          // Handle error if SharedPreferences fails to load
-          return Text('Error loading SharedPreferences: ${snapshot.error}');
-        } else {
-          // SharedPreferences loaded successfully
-          final prefs = snapshot.data!;
-          final email = prefs.getString("email");
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark,
+    );
 
-          print(email);
+    var email = prefs.getString("email");
 
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: email == null
-                ? LoginScreen()
-                : email.toLowerCase() == 'admin@admin.com'
-                    ? AdminScreen()
-                    : LoginScreen(),
-          );
-        }
-      },
+    print(email);
+
+    return MaterialApp(
+      title: 'Pathfinder',
+      home: email == null
+          ? LoginScreen()
+          : email == 'admin@admin.com'
+              ? AdminScreen()
+              : HomeScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

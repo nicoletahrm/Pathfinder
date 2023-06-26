@@ -10,6 +10,7 @@ import '../models/trail.dart';
 import '../repositories/event_repository.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
+import '../widgets/custom_nav_bar.dart';
 import '../widgets/reusable_widget.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -90,177 +91,182 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Widget buildTrail(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-            child: Padding(
-      padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
-      child:
-          ListView(controller: _scrollController, shrinkWrap: false, children: [
-        Column(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Icon(Icons.arrow_back),
-              ),
-            ),
-            SizedBox(height: 20),
-            customButton(context, 'Date', () async {
-              final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2100),
-                builder: (BuildContext context, Widget? child) {
-                  return Theme(
-                    data: ThemeData.light().copyWith(
-                      primaryColor: Color.fromARGB(255, 18, 30, 19),
-                      hintColor: hexStringToColor("#f0f3f1"),
-                      colorScheme: ColorScheme.light(
-                        primary: Color.fromARGB(255, 18, 30, 19),
-                      ),
-                      buttonTheme: ButtonThemeData(
-                        textTheme: ButtonTextTheme.normal,
-                      ),
+      body: SafeArea(
+          child: Padding(
+        padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
+        child: ListView(
+            controller: _scrollController,
+            shrinkWrap: false,
+            children: [
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Icon(Icons.arrow_back),
                     ),
-                    child: child!,
-                  );
-                },
-              );
-              if (picked != null) {
-                setState(() {
-                  selectedDate = picked;
-                });
-              }
-            }),
-            Text(
-              DateFormat('dd-MM-yyyy').format(DateTime(
-                selectedDate.year,
-                selectedDate.month,
-                selectedDate.day,
-              )),
-            ),
-            SizedBox(height: 20),
-            customButton(context, 'Time', () async {
-              final TimeOfDay? picked = await showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.now(),
-                builder: (BuildContext context, Widget? child) {
-                  return Theme(
-                    data: ThemeData.light().copyWith(
-                      primaryColor: Color.fromARGB(255, 18, 30, 19),
-                      hintColor: Color.fromARGB(255, 18, 30, 19),
-                      colorScheme: ColorScheme.light(
-                          primary: Color.fromARGB(255, 18, 30, 19)),
-                      buttonTheme: ButtonThemeData(
-                        textTheme: ButtonTextTheme.primary,
+                  ),
+                  SizedBox(height: 20),
+                  customButton(context, 'Date', () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                      builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                          data: ThemeData.light().copyWith(
+                            primaryColor: Color.fromARGB(255, 18, 30, 19),
+                            hintColor: hexStringToColor("#f0f3f1"),
+                            colorScheme: ColorScheme.light(
+                              primary: Color.fromARGB(255, 18, 30, 19),
+                            ),
+                            buttonTheme: ButtonThemeData(
+                              textTheme: ButtonTextTheme.normal,
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        selectedDate = picked;
+                      });
+                    }
+                  }),
+                  Text(
+                    DateFormat('dd-MM-yyyy').format(DateTime(
+                      selectedDate.year,
+                      selectedDate.month,
+                      selectedDate.day,
+                    )),
+                  ),
+                  SizedBox(height: 20),
+                  customButton(context, 'Time', () async {
+                    final TimeOfDay? picked = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                      builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                          data: ThemeData.light().copyWith(
+                            primaryColor: Color.fromARGB(255, 18, 30, 19),
+                            hintColor: Color.fromARGB(255, 18, 30, 19),
+                            colorScheme: ColorScheme.light(
+                                primary: Color.fromARGB(255, 18, 30, 19)),
+                            buttonTheme: ButtonThemeData(
+                              textTheme: ButtonTextTheme.primary,
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        selectedTime = picked;
+                      });
+                    }
+                  }),
+                  Text(selectedTime.format(context)),
+                  SizedBox(height: 30),
+                  DropdownButtonFormField<String>(
+                    value: selectedTrail,
+                    onChanged: (String? newValue) async {
+                      setState(() async {
+                        selectedTrail = newValue;
+                        trailRef = await trailRepository
+                            .getRefTrailByTitle(selectedTrail!);
+                      });
+                    },
+                    items: trails.map((Trail trail) {
+                      return DropdownMenuItem<String>(
+                        value: trail.title,
+                        child: Text(trail.title),
+                      );
+                    }).toList(),
+                    decoration: InputDecoration(
+                      hintText: 'Trail',
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none),
                       ),
+                      filled: true,
+                      fillColor: hexStringToColor("#f0f3f1"),
+                      hintStyle: TextStyle(fontSize: 18),
                     ),
-                    child: child!,
-                  );
-                },
-              );
-              if (picked != null) {
-                setState(() {
-                  selectedTime = picked;
-                });
-              }
-            }),
-            Text(selectedTime.format(context)),
-            SizedBox(height: 30),
-            DropdownButtonFormField<String>(
-              value: selectedTrail,
-              onChanged: (String? newValue) async {
-                setState(() async {
-                  selectedTrail = newValue;
-                  trailRef =
-                      await trailRepository.getRefTrailByTitle(selectedTrail!);
-                });
-              },
-              items: trails.map((Trail trail) {
-                return DropdownMenuItem<String>(
-                  value: trail.title,
-                  child: Text(trail.title),
-                );
-              }).toList(),
-              decoration: InputDecoration(
-                hintText: 'Trail',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  borderSide: BorderSide(width: 0, style: BorderStyle.none),
-                ),
-                filled: true,
-                fillColor: hexStringToColor("#f0f3f1"),
-                hintStyle: TextStyle(fontSize: 18),
-              ),
-            ),
-            SizedBox(height: 20),
-            reusableIntTextField(
-              'Maximum participants',
-              Icons.group,
-              maxParticipantsController,
-              (int value) {
-                setState(() {
-                  maxParticipants = value;
-                });
-              },
-            ),
-            SizedBox(height: 20),
-            reusableNormalTextField(
-              'Meeting place',
-              Icons.location_pin,
-              meetingPlaceController,
-              true,
-              () {
-                meetigPlace = meetingPlaceController.text;
-              },
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 60,
-              margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
-              child: ElevatedButton(
-                onPressed: () async {
-                  final Time time =
-                      Time(date: selectedDate, time: selectedTime);
-
-                  await eventRepository.addEvent(
-                      trailRef, userRef, maxParticipants, meetigPlace!, time);
-                  setState(() {
-                    Navigator.of(context).pop();
-                  });
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                    (states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return Colors.black26;
-                      }
-                      return hexStringToColor("#44564a");
+                  ),
+                  SizedBox(height: 20),
+                  reusableIntTextField(
+                    'Maximum participants',
+                    Icons.group,
+                    maxParticipantsController,
+                    (int value) {
+                      setState(() {
+                        maxParticipants = value;
+                      });
                     },
                   ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                  SizedBox(height: 20),
+                  reusableNormalTextField(
+                    'Meeting place',
+                    Icons.location_pin,
+                    meetingPlaceController,
+                    true,
+                    () {
+                      meetigPlace = meetingPlaceController.text;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 60,
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final Time time =
+                            Time(date: selectedDate, time: selectedTime);
+
+                        await eventRepository.addEvent(trailRef, userRef,
+                            maxParticipants, meetigPlace!, time);
+                        setState(() {
+                          Navigator.of(context).pop();
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) {
+                            if (states.contains(MaterialState.pressed)) {
+                              return Colors.black26;
+                            }
+                            return hexStringToColor("#44564a");
+                          },
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Add hike',
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                child: Text(
-                  'Add hike',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ]),
-    )));
+            ]),
+      )),
+      bottomNavigationBar: CustomBottomNavBar(),
+    );
   }
 }

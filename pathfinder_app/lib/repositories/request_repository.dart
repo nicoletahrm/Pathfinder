@@ -14,7 +14,8 @@ class RequestRepository {
         .toList();
   }
 
-  addRequest(String title, String source, String sign, String filePath) async {
+  addRequest(String title, String source, String sign, String filePath,
+      String altitude, String distance, List<String> images) async {
     try {
       CollectionReference collectionRef = database.collection('request');
 
@@ -25,6 +26,9 @@ class RequestRepository {
         'source': source,
         'sign': sign,
         'filePath': filePath,
+        'altitude': altitude,
+        'distance': distance,
+        'images': images,
         'isAccepted': false,
       });
 

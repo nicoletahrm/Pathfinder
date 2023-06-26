@@ -6,6 +6,7 @@ import '../repositories/user_repository.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
 import 'custom_dialog.dart';
+import 'images_widget.dart';
 
 class ReviewWidget extends StatefulWidget {
   final String content;
@@ -58,42 +59,15 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   }
 
   Widget buildReview(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return InkWell(
       onTap: () {
         if (widget.images.isNotEmpty) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => ImageSliderScreen(images: widget.images),
-          //   ),
-          // );
-          showDialog(
-              context: context,
-              barrierColor: Colors.transparent,
-              builder: (BuildContext context) {
-                return Stack(
-                  children: [
-                    Container(
-                      color: Colors.transparent,
-                    ),
-                    PageView.builder(
-                      itemCount: widget.images.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: size.width,
-                          height: 300,
-                          child: Image.network(
-                            widget.images[index],
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ImageSliderScreen(images: widget.images),
+            ),
+          );
         } else {
           CustomDialog.show(context, "No Images", "No images available.");
         }

@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import '../repositories/review_repository.dart';
 import '../repositories/user_repository.dart';
-import '../storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
@@ -31,7 +31,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   final ReviewRepository reviewRepository = ReviewRepository();
   late DocumentReference userRef;
   late List<String> images = [];
-  late List<File> _selectedImages;
+  late List<File> selectedImages;
   late double rating;
 
   Future<void> init() async {
@@ -139,7 +139,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
     return Scaffold(
         body: Padding(
-      padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+      padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
       child:
           ListView(controller: _scrollController, shrinkWrap: false, children: [
         Align(
@@ -152,7 +152,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
         Column(
           children: [
             StarReviewWidget(onRatingNeeded: handleRating),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             textField(
               "What you want to write?",
               _reviewController,
@@ -175,10 +175,10 @@ class _AddReviewScreen extends State<AddReviewScreen> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: 60,
-              margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
               child: ElevatedButton(
                 onPressed: () {
-                  _uploadPhotos();
+                  uploadImagesToFirebase();
                   reviewRepository.addReview(
                     _reviewController.text,
                     images,
@@ -219,19 +219,6 @@ class _AddReviewScreen extends State<AddReviewScreen> {
     ));
   }
 
-  void _uploadPhotos() async {
-    for (var i = 0; i < _selectedImages.length; i++) {
-      try {
-        final String downloadUrl =
-            await upload(_selectedImages[i]);
-
-        print('Image uploaded: $downloadUrl');
-      } catch (e) {
-        print('Image upload failed: $e');
-      }
-    }
-  }
-
   Future<void> _getFromGallery() async {
     List<XFile> pickedFiles = await ImagePicker().pickMultiImage();
     List<File> selectedImages = [];
@@ -243,6 +230,28 @@ class _AddReviewScreen extends State<AddReviewScreen> {
         images.add(selectedImages[i].path);
       }
     });
+  }
+
+  Future<void> uploadImagesToFirebase() async {
+    for (var i = 0; i < selectedImages.length; i++) {
+      File image = selectedImages[i];
+      String fileName = image.path.split('/').last;
+
+      try {
+        firebase_storage.Reference ref = firebase_storage
+            .FirebaseStorage.instance
+            .ref()
+            .child('images/$fileName');
+        await ref.putFile(image);
+        String imageUrl = await ref.getDownloadURL();
+
+        setState(() {
+          images[i] = imageUrl;
+        });
+      } catch (error) {
+        print('Failed to upload image: $error');
+      }
+    }
   }
 
   void handleRating(double value) {

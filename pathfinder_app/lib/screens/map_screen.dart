@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pathfinder_app/screens/record_route_screen.dart';
+import '../controllers/location_controller.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
-import '../controllers/global_controller.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -21,8 +21,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen> {
-  final GlobalController _locationController =
-      Get.put(GlobalController(), permanent: true);
+  final LocationController _locationController =
+      Get.put(LocationController(), permanent: true);
   final firebaseStorage = firebase_storage.FirebaseStorage.instance;
   final currentUser = FirebaseAuth.instance.currentUser;
 
@@ -85,12 +85,38 @@ class MapScreenState extends State<MapScreen> {
               },
               myLocationEnabled: true,
             ),
+            Positioned(
+              bottom: 16,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  height: 64,
+                  width: 64,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black,
+                  ),
+                  child: ElevatedButton(
+                    onPressed: _toggleRecordingCoordinates,
+                    child: Icon(
+                      _isRecordingCoordinates ? Icons.stop : Icons.play_arrow,
+                      size: 32,
+                    ),
+                    style: ButtonStyle(
+                      elevation: MaterialStateProperty.all<double>(0),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.transparent),
+                      shape: MaterialStateProperty.all<CircleBorder>(
+                        CircleBorder(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _toggleRecordingCoordinates,
-        child: Icon(_isRecordingCoordinates ? Icons.stop : Icons.play_arrow),
       ),
     );
   }

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../controllers/location_controller.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
-import '../controllers/global_controller.dart';
 
 class DrawMapScreen extends StatefulWidget {
   final List<LatLng> list;
@@ -15,8 +15,8 @@ class DrawMapScreen extends StatefulWidget {
 }
 
 class DrawMapScreenState extends State<DrawMapScreen> {
-  final GlobalController _locationController =
-      Get.put(GlobalController(), permanent: true);
+  final LocationController _locationController =
+      Get.put(LocationController(), permanent: true);
 
   List<LatLng> polylineCoordinates = [];
   Set<Marker> markers = {};

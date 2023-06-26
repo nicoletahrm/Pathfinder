@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:pathfinder_app/controllers/global_controller.dart';
 import 'package:pathfinder_app/models/weather_data_daily.dart';
 import 'package:pathfinder_app/utils/constant_colors.dart';
+import '../controllers/weather_controller.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
@@ -36,7 +36,7 @@ class TrailDetailScreen extends StatefulWidget {
 }
 
 class _TrailDetailScreenState extends State<TrailDetailScreen> {
-  final GlobalController _globalController = GlobalController();
+  final WeatherController _weatherController = WeatherController();
   late ScrollController _scrollController;
   final TrailRepository trailRepository = TrailRepository();
   final ReviewRepository reviewRepository = ReviewRepository();
@@ -58,7 +58,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
     ref = await trailRepository.getRefTrailByTitle(widget.title);
 
     if (isConnected == true) {
-      weatherDataDaily = await await _globalController.getWeatherData(
+      weatherDataDaily = await await _weatherController.getWeatherData(
           trail.destination.latitude, trail.destination.longitude);
     } else {
       weatherDataDaily = [];

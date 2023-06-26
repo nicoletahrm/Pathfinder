@@ -1,25 +1,10 @@
 // ignore_for_file: deprecated_member_use, sdk_version_since
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:io';
 import 'package:xml/xml.dart' as xml;
 import 'package:http/http.dart' as http;
 
 final firebaseStorage = FirebaseStorage.instance;
-
-Future<String> upload(File file) async {
-  final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-  final Reference storageRef = firebaseStorage.ref().child(fileName);
-  final TaskSnapshot snapshot = await storageRef.putFile(file);
-
-  if (snapshot.state == TaskState.success) {
-    final String downloadUrl = await storageRef.getDownloadURL();
-    return downloadUrl;
-  }
-
-  throw Exception('Image upload failed.');
-}
-
 
   Future<void> downloadAndParseKmlFilee(String filePath, List<LatLng> polylineCoordinates, String routeName) async {
     final kmlFilePath = filePath;

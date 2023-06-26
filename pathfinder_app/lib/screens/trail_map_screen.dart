@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pathfinder_app/storage/firebase_storage.dart';
+import '../controllers/location_controller.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
-import '../controllers/global_controller.dart';
 
 class TrailMapScreen extends StatefulWidget {
   final GeoPoint destination;
@@ -19,8 +19,8 @@ class TrailMapScreen extends StatefulWidget {
 }
 
 class TrailMapScreenState extends State<TrailMapScreen> {
-  final GlobalController _locationController =
-      Get.put(GlobalController(), permanent: true);
+  final LocationController _locationController =
+      Get.put(LocationController(), permanent: true);
 
   late LatLng sourceLocation;
   late LatLng destination;

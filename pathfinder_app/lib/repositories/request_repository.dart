@@ -20,6 +20,7 @@ class RequestRepository {
       DocumentReference documentRef = collectionRef.doc();
 
       await documentRef.set({
+        'id': documentRef.id,
         'trailId': trailId,
         'route': route,
         'sign': sign,
@@ -30,6 +31,26 @@ class RequestRepository {
       print('Data added to Firestore successfully!');
     } catch (error) {
       print('Error adding data to Firestore: $error');
+    }
+  }
+
+  Future<void> updateRequest(String id, bool isAccepted) async {
+    try {
+      CollectionReference collectionRef =
+          FirebaseFirestore.instance.collection('request');
+
+      QuerySnapshot querySnapshot =
+          await collectionRef.where('id', isEqualTo: id).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        await collectionRef.doc(id).update({'isAccepted': isAccepted});
+
+        print('Request data updated successfully!');
+      } else {
+        print('Request not found!');
+      }
+    } catch (error) {
+      print('Error updating request data: $error');
     }
   }
 }

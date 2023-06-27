@@ -106,11 +106,48 @@ class AdminScreenState extends State<AdminScreen> {
                           await trailRepository.getTrailById(request.trailId);
 
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TrailMapScreen(
-                                  destination: trail.destination,
-                                  route: request.filePath)));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TrailMapScreen(
+                            destination: trail.destination,
+                            route: request.route,
+                          ),
+                        ),
+                      );
+                    },
+                    onLongPress: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Accept Route', style: darkBoldFont),
+                            content: Text('Do you want to accept this route?',
+                                style: darkNormalFont),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  requestRepository.updateRequest(
+                                      request.id, true);
+
+                                  trailRepository.updateTrailRoutes(
+                                      request.trailId,
+                                      request.route,
+                                      request.filePath);
+
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Accept', style: darkBoldFont),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancel', style: darkNormalFont),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                   );
                 },

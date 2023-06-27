@@ -7,6 +7,7 @@ import 'package:pathfinder_app/screens/home_screen.dart';
 import 'package:pathfinder_app/widgets/custom_nav_bar.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import '../models/user.dart';
+import '../widgets/custom_dialog.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import 'draw_route.dart';
 
@@ -158,5 +159,17 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
           ),
         ),
         bottomNavigationBar: CustomBottomNavBar());
+  }
+
+  void validation() async {
+
+    if (_routeController.text.isEmpty ||
+        _signController.text.isEmpty) {
+      CustomDialog.show(
+        context,
+        "Empty fields",
+        "Please fill in all fields.",
+      );
+    }
   }
 }

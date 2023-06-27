@@ -206,9 +206,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     Icons.group,
                     maxParticipantsController,
                     (int value) {
-                      setState(() {
-                        maxParticipants = value;
-                      });
+                      //setState(() {
+                      maxParticipants = value;
+                      //});
                     },
                   ),
                   SizedBox(height: 20),
@@ -222,45 +222,19 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     },
                   ),
                   SizedBox(height: 20),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 60,
-                    margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final Time time =
-                            Time(date: selectedDate, time: selectedTime);
+                  normalButton(
+                    context,
+                    'Add hike',
+                    () async {
+                      final Time time =
+                          Time(date: selectedDate, time: selectedTime);
 
-                        await eventRepository.addEvent(trailRef, userRef,
-                            maxParticipants, meetigPlace!, time);
-                        setState(() {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.black26;
-                            }
-                            return hexStringToColor("#44564a");
-                          },
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        'Add hike',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                      await eventRepository.addEvent(trailRef, userRef,
+                          maxParticipants, meetigPlace!, time);
+                      setState(() {
+                        Navigator.of(context).pop();
+                      });
+                    },
                   ),
                 ],
               ),

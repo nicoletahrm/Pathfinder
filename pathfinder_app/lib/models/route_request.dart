@@ -1,11 +1,13 @@
 class RouteRequest {
+  final String id;
   final String trailId;
   final String filePath;
   final String route;
   final String sign;
-  final bool isAccepted;
+  late final bool isAccepted;
 
   RouteRequest({
+    required this.id,
     required this.trailId,
     required this.filePath,
     required this.route,
@@ -15,6 +17,7 @@ class RouteRequest {
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "trailId": trailId,
       "filePath": filePath,
       "route": route,
@@ -27,6 +30,7 @@ class RouteRequest {
     final data = json;
 
     return RouteRequest(
+      id: data["id"],
       trailId: data["trailId"],
       filePath: data["filePath"],
       route: data["route"],

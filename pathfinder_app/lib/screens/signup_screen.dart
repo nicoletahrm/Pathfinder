@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pathfinder_app/repositories/user_repository.dart';
 import 'package:pathfinder_app/screens/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/covert.dart';
@@ -16,6 +17,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final UserRepository userRepository = UserRepository();
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
@@ -80,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             password: _passwordTextController.text,
           );
 
-          addUserDetails(
+          await userRepository.addUserDetails(
               _usernameTextController.text, _emailTextController.text);
 
           Navigator.push(
@@ -92,20 +94,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         showValidationDialog(
           context,
           "Signup failed",
-          "An error occurred during signup. Please try again.",
+          "An error occurred during sign up. Please try again.",
         );
       }
     }
-  }
-
-  Future addUserDetails(String username, String email) async {
-    await FirebaseFirestore.instance.collection("user").add({
-      'username': username,
-      'email': email,
-      'profilePhoto': 'assets/images/profile_photo,jpg',
-      'events': [],
-      'location': ''
-    });
   }
 
   bool passwordConfirmed() {

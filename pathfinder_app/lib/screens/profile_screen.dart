@@ -27,7 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
   bool _isEditing = false;
-  late String profilePhoto;
+  late String profilePhoto = '';
 
   Future<void> init() async {
     user = await userRepository.getUserByEmail(widget.email);
@@ -51,18 +51,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> uploadImagesToFirebase() async {
-    File image = _selectedImage!;
-    try {
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('images/$_selectedImage');
-      await ref.putFile(image);
-      String imageUrl = await ref.getDownloadURL();
+  Future<void> uploadImageToFirebase() async {
+    String path = _selectedImage!.path;
+    profilePhoto = path;
 
-      setState(() {
-        profilePhoto = imageUrl;
-      });
+    try {
+      firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.ref().child('$path');
+      await ref.putFile(_selectedImage!);
     } catch (error) {
       print('Failed to upload image: $error');
     }
@@ -78,6 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String username = _usernameController.text;
     String email = _emailController.text;
     String location = _locationController.text;
+
+    uploadImageToFirebase();
+    profilePhoto = _selectedImage!.path;
 
     await userRepository.updateUser(
         user.id, username, email, location, profilePhoto);
@@ -150,8 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backgroundColor: Colors.transparent,
                             backgroundImage: _selectedImage != null
                                 ? FileImage(_selectedImage!)
-                                    as ImageProvider<Object>?
-                                : AssetImage(user.profilePhoto),
+                                : FileImage(File(user.profilePhoto)),
                           ),
                           if (_isEditing)
                             Container(

@@ -1,14 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
-import 'package:pathfinder_app/screens/profile_screen.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:pathfinder_app/widgets/trail_widget.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
 import '../repositories/event_repository.dart';
+import '../screens/edit_event_screen.dart';
 import '../screens/events_screen.dart';
 import '../utils/covert.dart';
 import '../utils/fonts.dart';
@@ -76,6 +77,8 @@ class _EventWidgetState extends State<EventWidget> {
   }
 
   Widget buildEventWidget(BuildContext context) {
+    bool currentUserIsOrganizer = widget.event.organizer == currentUser.id;
+
     return Container(
       child: Padding(
         padding: EdgeInsets.all(20.0),
@@ -96,7 +99,7 @@ class _EventWidgetState extends State<EventWidget> {
                             child: CircleAvatar(
                               radius: 18.0,
                               backgroundImage:
-                                  AssetImage(organizer.profilePhoto),
+                                  FileImage(File(organizer.profilePhoto)),
                             ),
                           ),
                           SizedBox(width: 10),
@@ -110,6 +113,25 @@ class _EventWidgetState extends State<EventWidget> {
                           ),
                         ],
                       ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: currentUserIsOrganizer
+                          ? IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditEventScreen(
+                                      email: widget.email,
+                                      event: widget.event,
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : SizedBox(),
                     ),
                   ],
                 ),
@@ -196,27 +218,15 @@ class _EventWidgetState extends State<EventWidget> {
                                   itemCount: users.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ProfileScreen(
-                                              email: widget.email,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: ListTile(
-                                        leading: CircleAvatar(
-                                          radius: 20.0,
-                                          backgroundImage: AssetImage(
-                                              users[index]!.profilePhoto),
-                                        ),
-                                        title: Text(
-                                          users[index]!.username,
-                                          style: darkNormalFont,
-                                        ),
+                                    return ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 20.0,
+                                        backgroundImage: FileImage(
+                                            File(users[index]!.profilePhoto)),
+                                      ),
+                                      title: Text(
+                                        users[index]!.username,
+                                        style: darkNormalFont,
                                       ),
                                     );
                                   },
@@ -237,9 +247,9 @@ class _EventWidgetState extends State<EventWidget> {
                       child: Container(
                         margin: EdgeInsets.only(right: 5.0),
                         child: CircleAvatar(
-                          radius: 12.0,
+                          radius: 12,
                           backgroundImage:
-                              AssetImage(users[index]!.profilePhoto),
+                              FileImage(File(users[index]!.profilePhoto)),
                         ),
                       ),
                     );

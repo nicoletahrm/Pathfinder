@@ -10,7 +10,7 @@ class EventRepository {
 
   Future<List<Event>> getEvents() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await database.collection("event").get();
+        await database.collection("event").orderBy('timeAdded').get();
 
     return snapshot.docs
         .map((docSnapshot) => Event.fromJson(docSnapshot.data()))
@@ -55,5 +55,19 @@ class EventRepository {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
     return Event.fromJson(documentSnapshot.data() as Map<String, dynamic>);
+  }
+
+  Future<void> updateEvent(String eventId, String trailId, int maxParticipants,
+      String meetingPlace, Time time) async {
+    CollectionReference collectionRef = database.collection('event');
+    DocumentReference documentRef = collectionRef.doc(eventId);
+
+    await documentRef.update({
+      'trail': trailId,
+      'maxParticipants': maxParticipants,
+      'time': timeToTimestamp(time),
+      'timeAdded': FieldValue.serverTimestamp(),
+      'meetingPlace': meetingPlace
+    });
   }
 }

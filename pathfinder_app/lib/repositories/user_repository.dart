@@ -5,6 +5,21 @@ import 'package:pathfinder_app/models/user.dart';
 class UserRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
 
+  Future addUserDetails(String username, String email) async {
+    CollectionReference collectionRef = database.collection('review');
+    DocumentReference documentRef = collectionRef.doc();
+
+    await FirebaseFirestore.instance.collection("user").add({
+      'id': documentRef.id,
+      'username': username,
+      'email': email,
+      'profilePhoto':
+          '/data/user/0/com.example.pathfinder_app/cache/85dbf4a7-39df-4b80-a1d5-2e288854f72c/3656f16682220d776b33d9997083dd7e.jpg',
+      'events': [],
+      'location': '~'
+    });
+  }
+
   Future<User> getUserByEmail(String? email) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await database
         .collection("user")

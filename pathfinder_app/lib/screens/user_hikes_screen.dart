@@ -8,7 +8,6 @@ import '../widgets/custom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/event_widget.dart';
 import 'dart:async';
-import 'event_details_screen.dart';
 
 class UserHikesScreen extends StatefulWidget {
   final String email;
@@ -126,17 +125,7 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
               child: ListView.builder(
                 itemCount: events.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EventDetailsScreen(
-                              event: events[index], email: widget.email),
-                        ),
-                      );
-                    },
-                    child: Container(
+                  return Container(
                       margin: EdgeInsets.symmetric(vertical: 8.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -151,7 +140,7 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
                       ),
                       child: EventWidget(
                           event: events[index], email: widget.email),
-                    ),
+                    
                   );
                 },
               ),

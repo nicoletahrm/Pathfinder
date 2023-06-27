@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/screens/event_details_screen.dart';
 import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
 import '../repositories/event_repository.dart';
@@ -86,7 +85,7 @@ class _EventsScreenState extends State<EventsScreen> {
               ),
             ])),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: hexStringToColor("#44564a"),
+          backgroundColor: Colors.black,
           onPressed: () {
             Navigator.push(
               context,
@@ -135,33 +134,22 @@ class _EventsScreenState extends State<EventsScreen> {
                 child: ListView.builder(
                   itemCount: events.length,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EventDetailsScreen(
-                                  event: events[index],
-                                  email: currentUser!.email!),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 1),
-                                blurRadius: 5.0,
-                              ),
-                            ],
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            offset: Offset(0, 1),
+                            blurRadius: 5.0,
                           ),
-                          child: EventWidget(
-                              event: events[index], email: currentUser!.email!),
-                        ));
+                        ],
+                      ),
+                      child: EventWidget(
+                          email: currentUser!.email!, event: events[index]),
+                    );
                   },
                 ),
               ),
@@ -170,7 +158,7 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
+        backgroundColor: hexStringToColor("#44564a"),
         onPressed: () {
           Navigator.push(
             context,

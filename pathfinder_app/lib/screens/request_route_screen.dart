@@ -8,7 +8,6 @@ import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import '../models/user.dart';
 import '../widgets/custom_dialog.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
-import 'draw_route.dart';
 
 class RecordRouteScreen extends StatefulWidget {
   final String email, fileName, trailId;
@@ -119,14 +118,14 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
                       reusableNormalTextField('Sign', Icons.icecream_outlined,
                           _signController, true, () {}),
                       SizedBox(height: 15.0),
-                      Text(widget.fileName),
-                      normalButton(context, 'See trail on map', () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DrawMapScreen(list: widget.list)));
-                      }),
+                      // Text(widget.fileName),
+                      // normalButton(context, 'See trail on map', () async {
+                      //   Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) =>
+                      //               DrawMapScreen(list: widget.list)));
+                      // }),
                       SizedBox(height: 30.0),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

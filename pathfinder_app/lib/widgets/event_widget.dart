@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
+import 'package:pathfinder_app/screens/profile_screen.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:pathfinder_app/widgets/trail_widget.dart';
 import '../models/event.dart';
@@ -195,15 +196,27 @@ class _EventWidgetState extends State<EventWidget> {
                                   itemCount: users.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return ListTile(
-                                      leading: CircleAvatar(
-                                        radius: 20.0,
-                                        backgroundImage: AssetImage(
-                                            users[index]!.profilePhoto),
-                                      ),
-                                      title: Text(
-                                        users[index]!.username,
-                                        style: darkNormalFont,
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ProfileScreen(
+                                              email: widget.email,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: ListTile(
+                                        leading: CircleAvatar(
+                                          radius: 20.0,
+                                          backgroundImage: AssetImage(
+                                              users[index]!.profilePhoto),
+                                        ),
+                                        title: Text(
+                                          users[index]!.username,
+                                          style: darkNormalFont,
+                                        ),
                                       ),
                                     );
                                   },

@@ -5,12 +5,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pathfinder_app/screens/record_route_screen.dart';
+import 'package:pathfinder_app/screens/request_route_screen.dart';
 import '../controllers/location_controller.dart';
 import '../models/trail.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:retry/retry.dart';
 
 class MapScreen extends StatefulWidget {
   final Trail trail;
@@ -35,7 +36,6 @@ class MapScreenState extends State<MapScreen> {
 
   init() {
     _locationController.onInit();
-    main();
   }
 
   @override
@@ -141,6 +141,8 @@ class MapScreenState extends State<MapScreen> {
   }
 
   void _stopRecordingCoordinates() {
+    main();
+
     PolylineId polylineId = PolylineId('route');
     Polyline polyline = Polyline(
       polylineId: polylineId,
@@ -220,10 +222,22 @@ class MapScreenState extends State<MapScreen> {
   void main() async {
     final kmlContent = generateKmlContent(_recordedCoordinates, 'My route');
     final filePath = await getTemporaryFilePath();
-    await saveKmlFile(kmlContent, filePath);
 
-    await firebaseStorage
-        .ref(filePath)
-        .putString(kmlContent, format: firebase_storage.PutStringFormat.raw);
+    final retryOptions = RetryOptions(
+      maxAttempts: 3,
+      delayFactor: Duration(seconds: 2),
+      maxDelay: Duration(seconds: 10),
+    );
+
+    try {
+      await retryOptions.retry(() async {
+        await saveKmlFile(kmlContent, filePath);
+
+        await firebaseStorage.ref(filePath).putString(kmlContent,
+            format: firebase_storage.PutStringFormat.raw);
+      });
+    } catch (e) {
+      print('Failed to upload file: $e');
+    }
   }
 }

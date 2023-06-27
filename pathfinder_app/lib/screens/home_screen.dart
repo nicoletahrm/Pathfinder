@@ -1,9 +1,6 @@
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/constant_colors.dart';
-import '../utils/covert.dart';
-import '../utils/fonts.dart';
 import '../widgets/custom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import '../models/trail.dart';
@@ -12,7 +9,7 @@ import 'login_screen.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -25,9 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<Trail> filteredTrails = [];
   late String query;
   String selectedDifficulty = '';
-
-  static const IconData filter_list =
-      IconData(0xe280, fontFamily: 'MaterialIcons');
 
   Future<void> init() async {
     List<Trail> allTrails = await trailRepository.getAllTrails();
@@ -105,26 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
-                    SizedBox(width: 10.0),
-                    GestureDetector(
-                      onTap: () {
-                        showDifficultyFilterDialog();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 14.0,
-                          horizontal: 16.0,
-                        ),
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor,
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        child: Icon(
-                          filter_list,
-                          color: hexStringToColor("#f0f3f1"),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 SizedBox(height: 25.0),
@@ -146,58 +120,5 @@ class _HomeScreenState extends State<HomeScreen> {
         return trailTitle.contains(input);
       }).toList();
     });
-  }
-
-  void filterTrailsByDifficulty(String difficultyFilter) async {
-    setState(() {
-      filteredTrails = trails.where((trail) {
-        return trail.difficulty == stringToDifficulty(difficultyFilter);
-      }).toList();
-    });
-  }
-
-  void showDifficultyFilterDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Choose a difficulty:", style: darkBoldFont2),
-                  ListTile(
-                    title: Text('Easy', style: darkNormalFont),
-                    onTap: () {
-                      selectedDifficulty = 'easy';
-                      filterTrailsByDifficulty(selectedDifficulty);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Mediu', style: darkNormalFont),
-                    onTap: () {
-                      selectedDifficulty = 'mediu';
-                      filterTrailsByDifficulty(selectedDifficulty);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Hard', style: darkNormalFont),
-                    onTap: () {
-                      selectedDifficulty = 'hard';
-                      filterTrailsByDifficulty(selectedDifficulty);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ));
-      },
-    );
   }
 }

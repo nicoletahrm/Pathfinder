@@ -96,7 +96,6 @@ class AdminScreenState extends State<AdminScreen> {
                   final request = requests[index];
                   return ListTile(
                     title: Text(request.route, style: darkNormalFont),
-                    //subtitle: Text(request.filePath),
                     trailing: Icon(
                       request.isAccepted ? Icons.check_circle : Icons.cancel,
                       color: request.isAccepted ? Colors.green : Colors.red,
@@ -110,7 +109,7 @@ class AdminScreenState extends State<AdminScreen> {
                         MaterialPageRoute(
                           builder: (context) => TrailMapScreen(
                             destination: trail.destination,
-                            route: request.route,
+                            route: request.filePath,
                           ),
                         ),
                       );
@@ -119,33 +118,50 @@ class AdminScreenState extends State<AdminScreen> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Accept Route', style: darkBoldFont),
-                            content: Text('Do you want to accept this route?',
-                                style: darkNormalFont),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  requestRepository.updateRequest(
-                                      request.id, true);
+                          if (request.isAccepted == false) {
+                            return AlertDialog(
+                              title: null,
+                              content: Text('Do you want to accept this route?',
+                                  style: darkNormalFont),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    requestRepository.updateRequest(
+                                        request.id, true);
 
-                                  trailRepository.updateTrailRoutes(
-                                      request.trailId,
-                                      request.route,
-                                      request.filePath);
+                                    trailRepository.updateTrailRoutes(
+                                        request.trailId,
+                                        request.route,
+                                        request.filePath);
+                                    setState(() {});
+                                    
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Accept', style: darkBoldFont),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    requestRepository.deleteRequest(request.id);
 
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Accept', style: darkBoldFont),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Cancel', style: darkNormalFont),
-                              ),
-                            ],
-                          );
+                                    setState(() {});
+
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Delete', style: darkBoldFont),
+                                ),
+                                // TextButton(
+                                //   onPressed: () {
+                                //     Navigator.of(context).pop();
+                                //   },
+                                //   child: Text('Cancel', style: darkNormalFont),
+                                // ),
+                              ],
+                            );
+                          } else {
+                            return AlertDialog(
+                                title: null,
+                                content: Text('This request is accepted.'));
+                          }
                         },
                       );
                     },

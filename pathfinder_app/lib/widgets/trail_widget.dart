@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/trail.dart';
 import 'package:glassmorphism/glassmorphism.dart';
-import '../screens/trail_detail_screen.dart';
+import '../screens/trail_details_screen.dart';
 import '../utils/constant_colors.dart';
 
 class TrailWidget extends StatelessWidget {

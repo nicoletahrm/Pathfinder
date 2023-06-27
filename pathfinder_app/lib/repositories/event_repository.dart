@@ -42,8 +42,7 @@ class EventRepository {
       'maxParticipants': maxParticipants,
       'time': timeToTimestamp(time),
       'timeAdded': new Timestamp.now(),
-      'meetingPlace': meetingPlace,
-      'comments': [],
+      'meetingPlace': meetingPlace
     });
   }
 

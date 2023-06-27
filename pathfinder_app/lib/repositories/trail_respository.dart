@@ -14,6 +14,18 @@ class TrailRepository {
         .toList();
   }
 
+  Future<List<Trail>> getTrailsByDifficulty(String difficulty) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("trail")
+        .orderBy('title')
+        .where('difficulty', isEqualTo: difficulty)
+        .get();
+
+    return snapshot.docs
+        .map((docSnapshot) => Trail.fromJson(docSnapshot.data()))
+        .toList();
+  }
+
   Future<Trail> getTrailById(String trailId) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await database
         .collection("trail")
@@ -25,7 +37,7 @@ class TrailRepository {
     return Trail.fromJson(documentSnapshot.data() as Map<String, dynamic>);
   }
 
-   Future<Trail> getTrailByTitle(String title) async {
+  Future<Trail> getTrailByTitle(String title) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await database
         .collection("trail")
         .where('title', isEqualTo: title)

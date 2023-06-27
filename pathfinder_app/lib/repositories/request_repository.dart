@@ -53,4 +53,24 @@ class RequestRepository {
       print('Error updating request data: $error');
     }
   }
+
+  Future<void> deleteRequest(String id) async {
+    try {
+      CollectionReference collectionRef =
+          FirebaseFirestore.instance.collection('request');
+
+      QuerySnapshot querySnapshot =
+          await collectionRef.where('id', isEqualTo: id).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        await collectionRef.doc(id).delete();
+
+        print('Request deleted successfully!');
+      } else {
+        print('Request not found!');
+      }
+    } catch (error) {
+      print('Error deleting request: $error');
+    }
+  }
 }

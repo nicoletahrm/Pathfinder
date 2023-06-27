@@ -26,11 +26,8 @@ class TrailDetailScreen extends StatefulWidget {
   final Trail trail;
   final String heroTag;
 
-  TrailDetailScreen({
-    Key? key,
-    required this.trail,
-    required this.heroTag
-  }) : super(key: key);
+  TrailDetailScreen({Key? key, required this.trail, required this.heroTag})
+      : super(key: key);
 
   @override
   _TrailDetailScreenState createState() => _TrailDetailScreenState();
@@ -381,23 +378,6 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                             }).toList(),
                                           )),
                                     SizedBox(height: 18),
-                                    // customButton(context, 'Record route', () {
-                                    //   final timestamp =
-                                    //       DateTime.now().millisecondsSinceEpoch;
-                                    //   final random =
-                                    //       path.basenameWithoutExtension(
-                                    //           Uri.base.toString());
-                                    //   final fileName =
-                                    //       'route_$timestamp$random.kml';
-
-                                    //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) => MapScreen(
-                                    //               trail: widget.trail,
-                                    //               fileName: fileName)));
-                                    // }),
-                                    // SizedBox(height: 18),
                                     Text(
                                       widget.trail.content,
                                       style: darkNormalFont,
@@ -423,12 +403,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                               trail: widget.trail,
                                               email: currentUser!.email!),
                                         ),
-                                      ).then((result) {
-                                        setState(() async {
-                                          // widget.trail = await trailRepository
-                                          //     .getTrailByTitle(widget.trail.title);
-                                        });
-                                      });
+                                      );
                                     }),
                                     SizedBox(height: 20),
                                     SizedBox(

@@ -170,7 +170,7 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: hexStringToColor("#44564a"),
+        backgroundColor: Colors.black,
         onPressed: () {
           Navigator.push(
             context,

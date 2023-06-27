@@ -9,8 +9,10 @@ class EventRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
 
   Future<List<Event>> getEvents() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await database.collection("event").orderBy('timeAdded').get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("event")
+        .orderBy('timeAdded', descending: true)
+        .get();
 
     return snapshot.docs
         .map((docSnapshot) => Event.fromJson(docSnapshot.data()))

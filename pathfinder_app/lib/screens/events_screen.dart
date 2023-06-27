@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
 import '../repositories/event_repository.dart';
 import '../utils/fonts.dart';
@@ -158,7 +157,7 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: hexStringToColor("#44564a"),
+        backgroundColor: Colors.black,
         onPressed: () {
           Navigator.push(
             context,

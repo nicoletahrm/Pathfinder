@@ -210,9 +210,9 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   Future<void> uploadImagesToFirebase() async {
     for (var i = 0; i < selectedImages.length; i++) {
       File image = selectedImages[i];
-      String fileName = image.path.split('/').last;
 
       try {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
         firebase_storage.Reference ref = firebase_storage
             .FirebaseStorage.instance
             .ref()

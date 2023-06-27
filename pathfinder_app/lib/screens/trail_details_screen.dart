@@ -414,13 +414,8 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                         itemBuilder:
                                             (BuildContext context, int index) {
                                           return ReviewWidget(
-                                            content:
-                                                trailReviews[index].content,
-                                            images: trailReviews[index].images,
-                                            userId: trailReviews[index].user,
-                                            trailId: trailReviews[index].trail,
-                                            rating: trailReviews[index].rating,
-                                          );
+                                              review: trailReviews[index],
+                                              email: currentUser!.email!);
                                         },
                                       ),
                                     ),

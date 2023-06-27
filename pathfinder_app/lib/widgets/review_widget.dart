@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/review.dart';
 import '../models/user.dart';
 import '../repositories/user_repository.dart';
 import '../utils/constant_colors.dart';
@@ -8,19 +10,10 @@ import 'custom_dialog.dart';
 import 'images_widget.dart';
 
 class ReviewWidget extends StatefulWidget {
-  final String content;
-  final double rating;
-  final List<String> images;
-  final String userId;
-  final String trailId;
+  final Review review;
+  final String email;
 
-  const ReviewWidget(
-      {Key? key,
-      required this.content,
-      required this.rating,
-      required this.images,
-      required this.userId,
-      required this.trailId})
+  const ReviewWidget({Key? key, required this.review, required this.email})
       : super(key: key);
 
   @override
@@ -30,9 +23,11 @@ class ReviewWidget extends StatefulWidget {
 class _ReviewWidgetState extends State<ReviewWidget> {
   final UserRepository userRepository = UserRepository();
   late User user;
+  late User currentUser;
 
   Future<void> init() async {
-    user = await userRepository.getUserById(widget.userId);
+    user = await userRepository.getUserById(widget.review.user);
+    currentUser = await userRepository.getUserByEmail(widget.email);
   }
 
   @override
@@ -60,11 +55,12 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   Widget buildReview(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (widget.images.isNotEmpty) {
+        if (widget.review.images.isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ImageSliderScreen(images: widget.images),
+              builder: (context) =>
+                  ImageSliderScreen(images: widget.review.images),
             ),
           );
         } else {
@@ -79,7 +75,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundImage: AssetImage(user.profilePhoto),
+              backgroundImage: FileImage(File(user.profilePhoto)),
             ),
             SizedBox(width: 20),
             Expanded(
@@ -98,7 +94,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                       ),
                       SizedBox(width: 3.0),
                       Text(
-                        widget.rating.toString(),
+                        widget.review.rating.toString(),
                         style: GoogleFonts.poppins(
                           fontSize: 15.0,
                           fontWeight: FontWeight.normal,
@@ -112,7 +108,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                   Row(
                     children: [
                       Text(
-                        widget.content,
+                        widget.review.content,
                         style: GoogleFonts.poppins(
                           fontSize: 16.0,
                           fontWeight: FontWeight.normal,

@@ -50,6 +50,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         "Signup failed",
         "Passwords don't match.",
       );
+    } else if (!validateEmail(_emailTextController.text)) {
+      showValidationDialog(
+        context,
+        "Signup failed",
+        "Please enter a valid email address.",
+      );
+    } else if (!validatePassword(_passwordTextController.text)) {
+      showValidationDialog(
+        context,
+        "Signup failed",
+        "Password should contain at least 8 characters, including uppercase and lowercase letters, numbers, and special characters.",
+      );
     } else {
       try {
         final QuerySnapshot usernameSnapshot = await FirebaseFirestore.instance
@@ -98,6 +110,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
       }
     }
+  }
+
+  bool validateEmail(String email) {
+    // Email pattern: Valid format with @something.com
+    RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool validatePassword(String password) {
+    // Password pattern: At least 8 characters, including uppercase, lowercase, number, and special character
+    RegExp passwordRegex = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*(),.?":{}|<>]).{8,}$',
+    );
+    return passwordRegex.hasMatch(password);
   }
 
   bool passwordConfirmed() {

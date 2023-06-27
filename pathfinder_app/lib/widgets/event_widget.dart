@@ -257,41 +257,49 @@ class _EventWidgetState extends State<EventWidget> {
                 ),
               ),
             ),
-            normalButton(context, buttonText, () async {
-              if (widget.event.maxParticipants == 0) {
-                showValidationDialogWidget(
-                  context,
-                  'Sorry',
-                  'No free spots left.',
-                );
-              } else {
+            if (currentUserIsOrganizer == false)
+              normalButton(context, buttonText, () async {
                 bool isParticipant =
                     widget.event.participants.contains(currentUser.id);
 
-                if (isParticipant == true) {
-                  await eventRepository.removeParticipant(
-                      widget.event, currentUser.id);
-
-                  await userRepository.removeEventFromUser(
-                      currentUser, widget.event.id);
-                } else {
-                  await eventRepository.updateParticipants(
-                      widget.event, currentUser);
-
-                  await userRepository.addEventToUser(
-                      currentUser, widget.event.id);
-                }
-
-                setState(() {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EventsScreen(),
-                    ),
+                if (widget.event.participants.length ==
+                        widget.event.maxParticipants &&
+                    buttonText != "Don't go") {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return showValidationDialogWidget(
+                        context,
+                        'Sorry',
+                        'No free spots left.',
+                      );
+                    },
                   );
-                });
-              }
-            }),
+                } else {
+                  if (isParticipant == true) {
+                    await eventRepository.removeParticipant(
+                        widget.event, currentUser.id);
+
+                    await userRepository.removeEventFromUser(
+                        currentUser, widget.event.id);
+                  } else {
+                    await eventRepository.updateParticipants(
+                        widget.event, currentUser);
+
+                    await userRepository.addEventToUser(
+                        currentUser, widget.event.id);
+                  }
+
+                  setState(() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EventsScreen(),
+                      ),
+                    );
+                  });
+                }
+              }),
             SizedBox(height: 20),
           ],
         ),

@@ -156,8 +156,8 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
     List<Event> events = [];
 
     for (String eventId in user.events) {
-      Event comment = await eventRepository.getEventById(eventId);
-      events.add(comment);
+      Event event = await eventRepository.getEventById(eventId);
+      events.add(event);
     }
     return events;
   }

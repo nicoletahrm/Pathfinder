@@ -9,6 +9,8 @@ import '../models/user.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
+import '../widgets/custom_dialog.dart';
+
 class ProfileScreen extends StatefulWidget {
   final String email;
 
@@ -56,8 +58,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     profilePhoto = path;
 
     try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       firebase_storage.Reference ref =
-          firebase_storage.FirebaseStorage.instance.ref().child('$path');
+          firebase_storage.FirebaseStorage.instance.ref().child('/images/$fileName');
       await ref.putFile(_selectedImage!);
     } catch (error) {
       print('Failed to upload image: $error');
@@ -218,7 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                customButton(context, 'Save', _saveProfile),
+                                customButton(context, 'Save', validation),
                                 customButton(context, 'Cancel', _cancelEditing),
                               ],
                             )
@@ -231,5 +234,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         bottomNavigationBar: CustomBottomNavBar());
+  }
+
+  void validation() async {
+    if (_usernameController.text.isEmpty || _emailController.text.isEmpty) {
+      CustomDialog.show(
+        context,
+        "Empty fields",
+        "Please fill in required fields.",
+      );
+    } else {
+      _saveProfile();
+    }
   }
 }

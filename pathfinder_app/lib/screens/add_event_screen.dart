@@ -8,6 +8,7 @@ import '../models/user.dart';
 import '../repositories/event_repository.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
+import '../widgets/custom_dialog.dart';
 import '../widgets/custom_nav_bar.dart';
 import '../widgets/reusable_widget.dart';
 
@@ -24,8 +25,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final EventRepository eventRepository = EventRepository();
   final TrailRepository trailRepository = TrailRepository();
   final UserRepository userRepository = UserRepository();
-  final TextEditingController meetingPlaceController = TextEditingController();
-  final TextEditingController maxParticipantsController =
+  final TextEditingController _meetingPlaceController = TextEditingController();
+  final TextEditingController _maxParticipantsController =
       TextEditingController();
   late ScrollController _scrollController;
   late User user;
@@ -175,8 +176,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     onChanged: (String? newValue) async {
                       setState(() async {
                         selectedTrail = newValue;
-                        trail =
-                            await trailRepository.getTrailByTitle(selectedTrail!);
+                        trail = await trailRepository
+                            .getTrailByTitle(selectedTrail!);
                       });
                     },
                     items: trails.map((Trail trail) {
@@ -203,43 +204,47 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   reusableIntTextField(
                     'Maximum participants',
                     Icons.group,
-                    maxParticipantsController,
+                    _maxParticipantsController,
                     (int value) {
-                      //setState(() {
                       maxParticipants = value;
-                      //});
                     },
                   ),
                   SizedBox(height: 20),
                   reusableNormalTextField(
                     'Meeting place',
                     Icons.location_pin,
-                    meetingPlaceController,
+                    _meetingPlaceController,
                     true,
                     () {
-                      meetigPlace = meetingPlaceController.text;
+                      meetigPlace = _meetingPlaceController.text;
                     },
                   ),
                   SizedBox(height: 20),
-                  normalButton(
-                    context,
-                    'Add hike',
-                    () async {
-                      final Time time =
-                          Time(date: selectedDate, time: selectedTime);
-
-                      await eventRepository.addEvent(trail.id!, user.id,
-                          maxParticipants, meetigPlace!, time);
-                      setState(() {
-                        Navigator.of(context).pop();
-                      });
-                    },
-                  ),
+                  normalButton(context, 'Add hike', validation),
                 ],
               ),
             ]),
       )),
       bottomNavigationBar: CustomBottomNavBar(),
     );
+  }
+
+  void validation() async {
+    if (_meetingPlaceController.text.isEmpty ||
+        _maxParticipantsController.text.isEmpty) {
+      CustomDialog.show(
+        context,
+        "Empty fields",
+        "Please fill in required fields.",
+      );
+    } else {
+      final Time time = Time(date: selectedDate, time: selectedTime);
+
+      await eventRepository.addEvent(
+          trail.id!, user.id, maxParticipants, meetigPlace!, time);
+      setState(() {
+        Navigator.of(context).pop();
+      });
+    }
   }
 }

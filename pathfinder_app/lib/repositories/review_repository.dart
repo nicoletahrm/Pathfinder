@@ -59,7 +59,7 @@ class ReviewRepository {
         'images': images,
       });
 
-      await database.collection('trails').doc(trailId).update({
+      await database.collection('trail').doc(trailId).update({
         'rating': newRatingString,
       });
 

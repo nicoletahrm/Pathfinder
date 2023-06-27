@@ -19,10 +19,12 @@ class RequestRepository {
       CollectionReference collectionRef = database.collection('request');
       DocumentReference documentRef = collectionRef.doc();
 
+      String routeName = "[ $sign ] $route";
+
       await documentRef.set({
         'id': documentRef.id,
         'trailId': trailId,
-        'route': route,
+        'route': routeName,
         'sign': sign,
         'filePath': "data/user/0/com.example.pathfinder_app/cache/" + filePath,
         'isAccepted': false,

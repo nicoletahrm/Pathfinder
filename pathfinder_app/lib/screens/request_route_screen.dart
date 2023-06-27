@@ -32,6 +32,7 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
   TextEditingController _routeController = TextEditingController();
   TextEditingController _signController = TextEditingController();
   late ScrollController _scrollController;
+  final bool isValid = true;
 
   Future<void> init() async {
     user = await userRepository.getUserByEmail(widget.email);
@@ -115,38 +116,14 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
                       reusableNormalTextField(
                           'Route', Icons.hiking, _routeController, true, () {}),
                       SizedBox(height: 15.0),
-                      reusableNormalTextField('Sign', Icons.icecream_outlined,
-                          _signController, true, () {}),
-                      SizedBox(height: 15.0),
-                      // Text(widget.fileName),
-                      // normalButton(context, 'See trail on map', () async {
-                      //   Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) =>
-                      //               DrawMapScreen(list: widget.list)));
-                      // }),
+                      reusableNormalTextField(
+                          'Sign', Icons.album, _signController, true, () {}),
                       SizedBox(height: 30.0),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           normalButton(context, 'Request', () async {
-                            await requestRepository.addRequest(
-                                widget.trailId,
-                                _routeController.text,
-                                _signController.text,
-                                widget.fileName);
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text('Request has been send successfully!'),
-                              ),
-                            );
+                            validation();
                           }),
                         ],
                       )
@@ -166,6 +143,17 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
         context,
         "Empty fields",
         "Please fill in all fields.",
+      );
+    } else {
+      await requestRepository.addRequest(widget.trailId, _routeController.text,
+          _signController.text, widget.fileName);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Request has been send successfully!'),
+        ),
       );
     }
   }

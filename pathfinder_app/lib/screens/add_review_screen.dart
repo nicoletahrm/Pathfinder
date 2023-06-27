@@ -74,7 +74,8 @@ class _AddReviewScreen extends State<AddReviewScreen> {
             ],
           ));
         } else if (snapshot.hasError) {
-          return Text('Failed to initialize trails: ${snapshot.error}');
+          return Text(
+              'Failed to initialize AddReviewScreen: ${snapshot.error}');
         } else {
           return buildTrail(context);
         }

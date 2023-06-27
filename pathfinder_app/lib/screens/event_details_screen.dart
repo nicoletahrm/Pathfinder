@@ -27,7 +27,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final EventRepository eventRepository = EventRepository();
   final UserRepository userRepository = UserRepository();
   late User currentUser;
-  late Trail? trail;
+  late Trail trail;
   late List<User?> users;
   late String buttonText;
 
@@ -37,7 +37,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   Future<void> init() async {
-    trail = await trailRepository.getTrailById(widget.event.trail!.id);
+    trail = await trailRepository.getTrailById(widget.event.trail);
     users =
         await userRepository.getEventParticipants(widget.event.participants);
     currentUser = await userRepository.getUserByEmail(widget.email);
@@ -187,13 +187,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     if (isParticipant == true) {
                       await eventRepository.removeParticipant(
                           widget.event, currentUser.id);
-                      await userRepository.removeEventToUser(
-                          currentUser.id, widget.event.id);
+                      await userRepository.removeEventFromUser(
+                          currentUser, widget.event.id);
                     } else {
                       await eventRepository.updateParticipants(
-                          widget.event, currentUser.id);
+                          widget.event, currentUser);
                       await userRepository.addEventToUser(
-                          currentUser.id, widget.event.id);
+                          currentUser, widget.event.id);
                     }
 
                     setState(() {

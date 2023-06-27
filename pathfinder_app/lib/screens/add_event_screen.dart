@@ -36,7 +36,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late DateTime selectedDate = DateTime.now();
   late TimeOfDay selectedTime = TimeOfDay.now();
   int maxParticipants = 0;
-  late List<Trail> trails = [];
+  late List<Trail> trails;
 
   Future<void> init() async {
     trails = (await trailRepository.getAllTrails());
@@ -80,7 +80,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('Failed to initialize trails: ${snapshot.error}');
+          return Text('Failed to initialize AddEventScreen: ${snapshot.error}');
         } else {
           return buildTrail(context);
         }
@@ -176,7 +176,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       setState(() async {
                         selectedTrail = newValue;
                         trail =
-                            await trailRepository.getTrailById(selectedTrail!);
+                            await trailRepository.getTrailByTitle(selectedTrail!);
                       });
                     },
                     items: trails.map((Trail trail) {

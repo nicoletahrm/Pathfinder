@@ -25,6 +25,17 @@ class TrailRepository {
     return Trail.fromJson(documentSnapshot.data() as Map<String, dynamic>);
   }
 
+   Future<Trail> getTrailByTitle(String title) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("trail")
+        .where('title', isEqualTo: title)
+        .get();
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
+
+    return Trail.fromJson(documentSnapshot.data() as Map<String, dynamic>);
+  }
+
   Future<void> addNewTrail(Trail trail) async {
     try {
       CollectionReference trailsCollection =

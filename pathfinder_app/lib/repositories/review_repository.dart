@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pathfinder_app/repositories/user_repository.dart';
 import '../models/review.dart';
 import '../utils/covert.dart';
 
 class ReviewRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
-  final UserRepository userRepository = UserRepository();
-
   Future<List<Review>> getTrailReviewsById(String trailId) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
@@ -35,8 +32,6 @@ class ReviewRepository {
     String userId,
   ) async {
     try {
-      CollectionReference reviewCollection = database.collection('review');
-
       DocumentSnapshot trailSnapshot =
           await database.collection('trail').doc(trailId).get();
 
@@ -52,9 +47,11 @@ class ReviewRepository {
       double newRating = (stringToDouble(rating) + currentRating) / 2;
       String newRatingString = newRating.toStringAsFixed(2);
 
-      DocumentReference reviewDocRef = reviewCollection.doc();
+      CollectionReference collectionRef = database.collection('review');
+      DocumentReference documentRef = collectionRef.doc();
 
-      await reviewDocRef.set({
+      await documentRef.set({
+        'id': documentRef.id,
         'content': content,
         'rating': rating,
         'trail': trailId,

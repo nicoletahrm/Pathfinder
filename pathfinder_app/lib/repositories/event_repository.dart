@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/utils/covert.dart';
 import '../models/event.dart';
 import '../models/time.dart';
+import '../models/user.dart';
 
 class EventRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -16,9 +17,9 @@ class EventRepository {
         .toList();
   }
 
-  Future<void> updateParticipants(Event event, String participantId) async {
+  Future<void> updateParticipants(Event event, User user) async {
     await FirebaseFirestore.instance.collection('event').doc(event.id).update({
-      'participants': FieldValue.arrayUnion([participantId]),
+      'participants': FieldValue.arrayUnion([user.id]),
     });
   }
 

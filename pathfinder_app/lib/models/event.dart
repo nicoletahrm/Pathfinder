@@ -5,13 +5,12 @@ import '../utils/covert.dart';
 class Event {
   final String id;
   final String organizer;
-  late final DocumentReference<Object?>? trail;
+  late final String trail;
   final List<dynamic> participants;
   late final int maxParticipants;
   late final Time time;
   final Timestamp timeAdded;
   final String meetingPlace;
-  final List<dynamic> comments;
 
   Event({
     required this.id,
@@ -22,7 +21,6 @@ class Event {
     required this.time,
     required this.timeAdded,
     required this.meetingPlace,
-    required this.comments,
   });
 
   Map<String, dynamic> toJson() {
@@ -35,7 +33,6 @@ class Event {
       "time": timeToTimestamp(time),
       "timeAdded": timeAdded,
       "meetingPlace": meetingPlace,
-      "comments": comments,
     };
   }
 
@@ -46,12 +43,11 @@ class Event {
       id: data["id"],
       organizer: data["organizer"],
       trail: data["trail"],
-      participants: List<String>.from(data["participants"]),
+      participants: List<String>.from(data["participants"] ?? []),
       maxParticipants: data["maxParticipants"],
       time: timestampToTime(data["time"]),
       timeAdded: data["timeAdded"],
       meetingPlace: data["meetingPlace"],
-      comments: List<DocumentReference<Object>?>.from(data["comments"]),
     );
   }
 }

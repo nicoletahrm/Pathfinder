@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
+import 'package:pathfinder_app/widgets/trail_widget.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
 import '../models/user.dart';
@@ -35,7 +36,7 @@ class _EventWidgetState extends State<EventWidget> {
 
   Future<void> init() async {
     organizer = await userRepository.getUserById(widget.event.organizer);
-    trail = await trailRepository.getTrailById(widget.event.trail!.id);
+    trail = await trailRepository.getTrailById(widget.event.trail);
     users = await fetchParticipants();
     currentUser = await userRepository.getUserByEmail(widget.email);
 
@@ -49,7 +50,6 @@ class _EventWidgetState extends State<EventWidget> {
   @override
   void initState() {
     super.initState();
-    //init();
   }
 
   @override
@@ -160,16 +160,16 @@ class _EventWidgetState extends State<EventWidget> {
               ),
             ),
             SizedBox(height: 20),
-            // Container(
-            //   child: TrailWidget(
-            //     index: 0,
-            //     margin: 1,
-            //     trail: trail!,
-            //   ),
-            // ),
+            Container(
+              child: TrailWidget(
+                index: 0,
+                margin: 1,
+                trail: trail!,
+              ),
+            ),
             Container(
               margin: EdgeInsets.only(
-                top: 0.0,
+                top: 10.0,
                 bottom: 10.0,
                 left: 30.0,
                 right: 30.0,
@@ -238,7 +238,7 @@ class _EventWidgetState extends State<EventWidget> {
               if (widget.event.maxParticipants == 0) {
                 showValidationDialogWidget(
                   context,
-                  'Fail',
+                  'Sorry',
                   'No free spots left.',
                 );
               } else {
@@ -248,13 +248,15 @@ class _EventWidgetState extends State<EventWidget> {
                 if (isParticipant == true) {
                   await eventRepository.removeParticipant(
                       widget.event, currentUser.id);
-                  await userRepository.removeEventToUser(
-                      currentUser.id, widget.event.id);
+
+                  await userRepository.removeEventFromUser(
+                      currentUser, widget.event.id);
                 } else {
                   await eventRepository.updateParticipants(
-                      widget.event, currentUser.id);
+                      widget.event, currentUser);
+
                   await userRepository.addEventToUser(
-                      currentUser.id, widget.event.id);
+                      currentUser, widget.event.id);
                 }
 
                 setState(() {

@@ -13,6 +13,8 @@ class UserRepository {
 
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
+    print(User.fromJson(documentSnapshot.data() as Map<String, dynamic>));
+
     return User.fromJson(documentSnapshot.data() as Map<String, dynamic>);
   }
 
@@ -25,9 +27,7 @@ class UserRepository {
     return User.fromJson(documentSnapshot.data() as Map<String, dynamic>);
   }
 
-  Future<void> addEventToUser(String userId, String eventId) async {
-    User user = await getUserById(userId);
-    DocumentReference<Object>? eventRef = database.doc('event/$eventId');
+  Future<void> addEventToUser(User user, String eventId) async {
     CollectionReference collectionRef =
         FirebaseFirestore.instance.collection('user');
 
@@ -36,14 +36,12 @@ class UserRepository {
 
     if (querySnapshot.docs.isNotEmpty) {
       await collectionRef.doc(user.id).update({
-        'events': FieldValue.arrayUnion([eventRef]),
+        'events': FieldValue.arrayUnion([eventId]),
       });
     }
   }
 
-  Future<void> removeEventToUser(String userId, String eventId) async {
-    User user = await getUserById(userId);
-    DocumentReference<Object>? eventRef = database.doc('event/$eventId');
+  Future<void> removeEventFromUser(User user, String eventId) async {
     CollectionReference collectionRef =
         FirebaseFirestore.instance.collection('user');
 
@@ -51,9 +49,16 @@ class UserRepository {
         await collectionRef.where('id', isEqualTo: user.id).get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      await collectionRef.doc(user.id).update({
-        'events': FieldValue.arrayRemove([eventRef]),
-      });
+      DocumentSnapshot userSnapshot = querySnapshot.docs.first;
+      List<String> eventsList = List<String>.from(userSnapshot.get('events'));
+
+      if (eventsList.contains(eventId)) {
+        eventsList.remove(eventId);
+
+        await collectionRef.doc(userSnapshot.id).update({
+          'events': eventsList,
+        });
+      }
     }
   }
 

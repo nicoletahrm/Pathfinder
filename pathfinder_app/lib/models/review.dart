@@ -1,6 +1,7 @@
 import '../utils/covert.dart';
 
 class Review {
+  final String id;
   final String content;
   final double rating;
   final String user;
@@ -8,6 +9,7 @@ class Review {
   final List<String> images;
 
   Review({
+    required this.id,
     required this.content,
     required this.rating,
     required this.user,
@@ -17,6 +19,7 @@ class Review {
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "content": content,
       "rating": rating,
       "user": user,
@@ -29,6 +32,7 @@ class Review {
     final data = json;
 
     return Review(
+      id: data["id"],
       content: data["content"],
       user: data["user"],
       trail: data["trail"],

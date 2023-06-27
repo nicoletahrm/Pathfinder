@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../utils/covert.dart';
 
 class Review {
   final String content;
   final double rating;
-  final DocumentReference<Object?>? user;
-  final DocumentReference<Object?>? trail;
+  final String user;
+  final String trail;
   final List<String> images;
 
   Review({

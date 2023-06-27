@@ -8,11 +8,11 @@ class ReviewRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
   final UserRepository userRepository = UserRepository();
 
-  Future<List<Review>> getTrailReviewsByRef(DocumentReference ref) async {
+  Future<List<Review>> getTrailReviewsById(String trailId) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection('review')
-        .where('trail', isEqualTo: ref)
+        .where('trail', isEqualTo: trailId)
         .get();
 
     List<Review> reviews = [];
@@ -27,35 +27,48 @@ class ReviewRepository {
     return reviews;
   }
 
-  addReview(String content, List<String> images, String rating,
-      DocumentReference<Object?>? ref, DocumentReference<Object?>? user) async {
+  Future<void> addReview(
+    String content,
+    List<String> images,
+    String rating,
+    String trailId,
+    String userId,
+  ) async {
     try {
-      CollectionReference collectionRef = database.collection('review');
+      CollectionReference reviewCollection = database.collection('review');
 
-      DocumentReference documentRef = collectionRef.doc();
+      DocumentSnapshot trailSnapshot =
+          await database.collection('trail').doc(trailId).get();
 
-      await documentRef.set({
+      if (!trailSnapshot.exists) {
+        print('Trail with ID $trailId does not exist.');
+        return;
+      }
+
+      Map<String, dynamic>? trailData =
+          trailSnapshot.data() as Map<String, dynamic>?;
+      double currentRating = stringToDouble(trailData?['rating']);
+
+      double newRating = (stringToDouble(rating) + currentRating) / 2;
+      String newRatingString = newRating.toStringAsFixed(2);
+
+      DocumentReference reviewDocRef = reviewCollection.doc();
+
+      await reviewDocRef.set({
         'content': content,
         'rating': rating,
-        'trail': ref,
-        'user': user,
+        'trail': trailId,
+        'user': userId,
         'images': images,
       });
 
-      final trailSnapshot = await ref?.get();
+      await database.collection('trails').doc(trailId).update({
+        'rating': newRatingString,
+      });
 
-      Map<String, dynamic>? trailData =
-          trailSnapshot?.data() as Map<String, dynamic>?;
-      double currentRating = stringToDouble(trailData?['rating'] ?? 0);
-
-      double averageRating = (stringToDouble(rating) + currentRating) / 2;
-      String averageRatingString = averageRating.toString();
-
-      await ref?.update({'rating': averageRatingString});
-
-      print('Data added to Firestore successfully!');
+      print('Review added and trail rating updated successfully!');
     } catch (error) {
-      print('Error adding data to Firestore: $error');
+      print('Error adding review and updating trail rating: $error');
     }
   }
 }

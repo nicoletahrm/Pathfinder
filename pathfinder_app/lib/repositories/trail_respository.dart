@@ -14,51 +14,15 @@ class TrailRepository {
         .toList();
   }
 
-  Future<Trail> getTrailByTitle(String trailTitle) async {
+  Future<Trail> getTrailById(String trailId) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await database
         .collection("trail")
-        .where('title', isEqualTo: trailTitle)
+        .where('id', isEqualTo: trailId)
         .get();
-
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
-
-    Map<String, dynamic>? data = documentSnapshot.data();
-    return Trail.fromJson(data!);
-  }
-
-  Future<DocumentReference> getRefTrailByTitle(String trailTitle) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await database
-        .collection("trail")
-        .where('title', isEqualTo: trailTitle)
-        .get();
-
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
-
-    return documentSnapshot.reference;
-  }
-
-  Future<Trail> getTrailById(String id) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await database.collection("trail").where('id', isEqualTo: id).get();
 
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
     return Trail.fromJson(documentSnapshot.data() as Map<String, dynamic>);
-  }
-
-  Future<Trail?> getTrailByRef(DocumentReference<Object?>? ref) async {
-    if (ref == null) {
-      return null;
-    }
-
-    final trailSnapshot = await ref.get();
-
-    if (trailSnapshot.exists) {
-      final trailData = trailSnapshot.data() as Map<String, dynamic>;
-      return Trail.fromJson(trailData);
-    }
-
-    return null;
   }
 
   Future<void> addNewTrail(Trail trail) async {
@@ -102,18 +66,14 @@ class TrailRepository {
           await collectionRef.where('id', isEqualTo: id).get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        // Get the existing routes map
         Map<String, dynamic> existingRoutes =
             querySnapshot.docs.first.get('routes') ?? {};
 
-        // Cast the existing routes map to Map<String, String>
         Map<String, String> updatedRoutes =
             Map<String, String>.from(existingRoutes);
 
-        // Add the new route to the updated routes map
         updatedRoutes[filePath] = routeName;
 
-        // Update the Firestore document with the updated routes map
         await collectionRef.doc(id).update({'routes': updatedRoutes});
 
         print('Routes updated successfully!');

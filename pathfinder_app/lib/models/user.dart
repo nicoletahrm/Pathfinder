@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuth;
 
 class User {
@@ -7,7 +6,7 @@ class User {
   final String email;
   final String profilePhoto;
   final String location;
-  final List<DocumentReference<Object>?> events;
+  final List<dynamic> events;
 
   User(
       {required this.id,
@@ -24,7 +23,7 @@ class User {
       email: json['email'],
       profilePhoto: json['profilePhoto'],
       location: json['location'],
-      events: List<DocumentReference<Object>?>.from(json["events"]),
+      events: List<String>.from(json["events"]),
     );
   }
 

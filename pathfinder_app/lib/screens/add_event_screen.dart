@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
 import '../models/time.dart';
 import '../models/trail.dart';
+import '../models/user.dart';
 import '../repositories/event_repository.dart';
 import '../utils/constant_colors.dart';
 import '../utils/covert.dart';
@@ -14,25 +12,26 @@ import '../widgets/custom_nav_bar.dart';
 import '../widgets/reusable_widget.dart';
 
 class AddEventScreen extends StatefulWidget {
-  AddEventScreen({Key? key}) : super(key: key);
+  final String email;
+
+  AddEventScreen({Key? key, required this.email}) : super(key: key);
 
   @override
   _AddEventScreenState createState() => _AddEventScreenState();
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
-  final currentUser = FirebaseAuth.instance.currentUser;
   final EventRepository eventRepository = EventRepository();
   final TrailRepository trailRepository = TrailRepository();
   final UserRepository userRepository = UserRepository();
-  late DocumentReference<Object?> userRef;
   final TextEditingController meetingPlaceController = TextEditingController();
   final TextEditingController maxParticipantsController =
       TextEditingController();
   late ScrollController _scrollController;
+  late User user;
 
   String? selectedTrail;
-  late DocumentReference<Object?> trailRef;
+  late Trail trail;
   String? meetigPlace;
   late DateTime selectedDate = DateTime.now();
   late TimeOfDay selectedTime = TimeOfDay.now();
@@ -41,7 +40,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Future<void> init() async {
     trails = (await trailRepository.getAllTrails());
-    userRef = await userRepository.getUserRefByEmail(currentUser!.email);
+    user = await userRepository.getUserByEmail(widget.email);
 
     _scrollController = ScrollController();
 
@@ -176,8 +175,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     onChanged: (String? newValue) async {
                       setState(() async {
                         selectedTrail = newValue;
-                        trailRef = await trailRepository
-                            .getRefTrailByTitle(selectedTrail!);
+                        trail =
+                            await trailRepository.getTrailById(selectedTrail!);
                       });
                     },
                     items: trails.map((Trail trail) {
@@ -229,7 +228,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       final Time time =
                           Time(date: selectedDate, time: selectedTime);
 
-                      await eventRepository.addEvent(trailRef, userRef,
+                      await eventRepository.addEvent(trail.id!, user.id,
                           maxParticipants, meetigPlace!, time);
                       setState(() {
                         Navigator.of(context).pop();

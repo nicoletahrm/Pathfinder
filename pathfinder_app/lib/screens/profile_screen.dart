@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
@@ -8,6 +7,7 @@ import 'package:pathfinder_app/widgets/custom_nav_bar.dart';
 import 'package:pathfinder_app/widgets/reusable_widget.dart';
 import '../models/user.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class ProfileScreen extends StatefulWidget {
   final String email;
@@ -19,7 +19,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late DocumentReference ref;
   late User user;
   final UserRepository userRepository = UserRepository();
   late File? _selectedImage = null;
@@ -28,10 +27,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
   bool _isEditing = false;
+  late String profilePhoto;
 
   Future<void> init() async {
-    ref = await userRepository.getUserRefByEmail(widget.email);
-    user = await userRepository.getUserByRef(ref);
+    user = await userRepository.getUserByEmail(widget.email);
   }
 
   @override
@@ -52,6 +51,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> uploadImagesToFirebase() async {
+    File image = _selectedImage!;
+    try {
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('images/$_selectedImage');
+      await ref.putFile(image);
+      String imageUrl = await ref.getDownloadURL();
+
+      setState(() {
+        profilePhoto = imageUrl;
+      });
+    } catch (error) {
+      print('Failed to upload image: $error');
+    }
+  }
+
   void _editProfile() {
     setState(() {
       _isEditing = true;
@@ -63,7 +79,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String email = _emailController.text;
     String location = _locationController.text;
 
-    await userRepository.updateUser(user.id, username, email, location);
+    await userRepository.updateUser(
+        user.id, username, email, location, profilePhoto);
 
     setState(() {
       _isEditing = false;
@@ -111,15 +128,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildProfile(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10.0),
+                  SizedBox(height: size.height / 6),
                   Center(
                     child: GestureDetector(
                       onTap: _isEditing ? _pickImage : null,

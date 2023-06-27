@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pathfinder_app/repositories/request_repository.dart';
@@ -28,7 +27,6 @@ class RecordRouteScreen extends StatefulWidget {
 }
 
 class _RecordRouteScreenState extends State<RecordRouteScreen> {
-  late DocumentReference ref;
   late User user;
   final UserRepository userRepository = UserRepository();
   final RequestRepository requestRepository = RequestRepository();
@@ -37,8 +35,7 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
   late ScrollController _scrollController;
 
   Future<void> init() async {
-    ref = await userRepository.getUserRefByEmail(widget.email);
-    user = await userRepository.getUserByRef(ref);
+    user = await userRepository.getUserByEmail(widget.email);
 
     _scrollController = ScrollController();
 
@@ -135,8 +132,11 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           normalButton(context, 'Request', () async {
-                            await requestRepository.addRequest(widget.trailId, _routeController.text,
-                                _signController.text, widget.fileName);
+                            await requestRepository.addRequest(
+                                widget.trailId,
+                                _routeController.text,
+                                _signController.text,
+                                widget.fileName);
 
                             Navigator.push(
                                 context,
@@ -162,9 +162,7 @@ class _RecordRouteScreenState extends State<RecordRouteScreen> {
   }
 
   void validation() async {
-
-    if (_routeController.text.isEmpty ||
-        _signController.text.isEmpty) {
+    if (_routeController.text.isEmpty || _signController.text.isEmpty) {
       CustomDialog.show(
         context,
         "Empty fields",

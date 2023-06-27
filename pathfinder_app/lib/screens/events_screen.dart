@@ -57,47 +57,48 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget buildEvents(BuildContext context) {
     if (events.isEmpty) {
       return Scaffold(
-          body: Container(
-              padding: EdgeInsets.only(
-                top: 80.0,
-                bottom: 0.0,
-                left: 20.0,
-                right: 20.0,
-              ),
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Let's find some hikes!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 28.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "ProximaNovaBold",
-                      ),
+        body: Container(
+            padding: EdgeInsets.only(
+              top: 80.0,
+              bottom: 0.0,
+              left: 20.0,
+              right: 20.0,
+            ),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Let's find some hikes!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 28.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "ProximaNovaBold",
                     ),
-                  ],
-                ),
-                SizedBox(height: 25.0),
-                Center(
-                  child: Text("No hikes found.", style: darkBoldFont),
-                ),
-              ])),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: hexStringToColor("#44564a"),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddEventScreen(),
-                ),
-              );
-            },
-            child: Icon(Icons.add),
-          ),
-          bottomNavigationBar: CustomBottomNavBar(),
+                  ),
+                ],
+              ),
+              SizedBox(height: 25.0),
+              Center(
+                child: Text("No hikes found.", style: darkBoldFont),
+              ),
+            ])),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: hexStringToColor("#44564a"),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    AddEventScreen(email: currentUser!.email!),
+              ),
+            );
+          },
+          child: Icon(Icons.add),
+        ),
+        bottomNavigationBar: CustomBottomNavBar(),
       );
     }
 
@@ -158,7 +159,8 @@ class _EventsScreenState extends State<EventsScreen> {
                               ),
                             ],
                           ),
-                          child: EventWidget(event: events[index]),
+                          child: EventWidget(
+                              event: events[index], email: currentUser!.email!),
                         ));
                   },
                 ),
@@ -173,7 +175,7 @@ class _EventsScreenState extends State<EventsScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddEventScreen(),
+              builder: (context) => AddEventScreen(email: currentUser!.email!),
             ),
           );
         },

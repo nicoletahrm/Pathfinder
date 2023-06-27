@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pathfinder_app/models/event.dart';
 import 'package:pathfinder_app/repositories/event_repository.dart';
 import '../models/user.dart';
@@ -21,7 +20,6 @@ class UserHikesScreen extends StatefulWidget {
 }
 
 class _UserHikesScreenState extends State<UserHikesScreen> {
-  late DocumentReference ref;
   late User user;
   final UserRepository userRepository = UserRepository();
   final EventRepository eventRepository = EventRepository();
@@ -29,8 +27,7 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
 
   Future<void> init() async {
     print(widget.email);
-    ref = (await userRepository.getUserRefByEmail(widget.email));
-    user = await userRepository.getUserByRef(ref);
+    user = (await userRepository.getUserByEmail(widget.email));
     events = await fetchEvents();
   }
 
@@ -152,7 +149,8 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
                           ),
                         ],
                       ),
-                      child: EventWidget(event: events[index]),
+                      child: EventWidget(
+                          event: events[index], email: widget.email),
                     ),
                   );
                 },
@@ -168,11 +166,9 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
   Future<List<Event>> fetchEvents() async {
     List<Event> events = [];
 
-    for (DocumentReference<Object>? ref in user.events) {
-      if (ref != null) {
-        Event comment = await eventRepository.getEventByRef(ref);
-        events.add(comment);
-      }
+    for (String eventId in user.events) {
+      Event comment = await eventRepository.getEventById(eventId);
+      events.add(comment);
     }
     return events;
   }

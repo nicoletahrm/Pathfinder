@@ -1,22 +1,22 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
+import '../models/trail.dart';
+import '../models/user.dart';
 import '../repositories/review_repository.dart';
 import '../repositories/user_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../utils/constant_colors.dart';
-import '../utils/covert.dart';
 import '../widgets/reusable_widget.dart';
 import '../widgets/star_review_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddReviewScreen extends StatefulWidget {
-  final DocumentReference<Object?>? ref;
+  final String email;
+  final Trail trail;
 
-  const AddReviewScreen({Key? key, required this.ref}) : super(key: key);
+  const AddReviewScreen({Key? key, required this.trail, required this.email})
+      : super(key: key);
 
   @override
   _AddReviewScreen createState() => _AddReviewScreen();
@@ -25,17 +25,17 @@ class AddReviewScreen extends StatefulWidget {
 class _AddReviewScreen extends State<AddReviewScreen> {
   final TextEditingController _reviewController = TextEditingController();
   late ScrollController _scrollController;
-  final user = FirebaseAuth.instance.currentUser;
   final TrailRepository trailRepository = TrailRepository();
   final UserRepository userRepository = UserRepository();
   final ReviewRepository reviewRepository = ReviewRepository();
-  late DocumentReference userRef;
+  late User user;
+
   late List<String> images = [];
-  late List<File> selectedImages;
+  late List<File> selectedImages = [];
   late double rating;
 
   Future<void> init() async {
-    userRef = await userRepository.getUserRefByEmail(user?.email);
+    user = await userRepository.getUserByEmail(widget.email);
 
     _scrollController = ScrollController();
 
@@ -54,8 +54,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
   @override
   void initState() {
     super.initState();
-    userRepository.getUserRefByEmail(user?.email);
-    init();
+    //init();
   }
 
   @override
@@ -172,47 +171,22 @@ class _AddReviewScreen extends State<AddReviewScreen> {
               ),
             ),
             SizedBox(height: 18),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 60,
-              margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
-              child: ElevatedButton(
-                onPressed: () {
-                  uploadImagesToFirebase();
-                  reviewRepository.addReview(
-                    _reviewController.text,
-                    images,
-                    rating.toString(),
-                    widget.ref,
-                    userRef,
-                  );
-                  Navigator.of(context).pop();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                    (states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return Colors.black26;
-                      }
-                      return hexStringToColor("#44564a");
-                    },
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                ),
-                child: Text(
-                  'Add review',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+            customButton(
+              context,
+              "Add review",
+              () {
+                uploadImagesToFirebase();
+                reviewRepository.addReview(
+                  _reviewController.text,
+                  images,
+                  rating.toString(),
+                  widget.trail.id!,
+                  user.id,
+                );
+
+                Navigator.of(context).pop(true);
+              },
+            )
           ],
         ),
       ]),
@@ -221,7 +195,7 @@ class _AddReviewScreen extends State<AddReviewScreen> {
 
   Future<void> _getFromGallery() async {
     List<XFile> pickedFiles = await ImagePicker().pickMultiImage();
-    List<File> selectedImages = [];
+
     for (var i = 0; i < pickedFiles.length; i++) {
       selectedImages.add(File(pickedFiles[i].path));
     }

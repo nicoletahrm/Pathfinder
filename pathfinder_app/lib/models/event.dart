@@ -4,9 +4,9 @@ import '../utils/covert.dart';
 
 class Event {
   final String id;
-  final DocumentReference<Object>? organizer;
+  final String organizer;
   late final DocumentReference<Object?>? trail;
-  final List<DocumentReference<Object>?> participants;
+  final List<dynamic> participants;
   late final int maxParticipants;
   late final Time time;
   final Timestamp timeAdded;
@@ -46,7 +46,7 @@ class Event {
       id: data["id"],
       organizer: data["organizer"],
       trail: data["trail"],
-      participants: List<DocumentReference<Object>?>.from(data["participants"]),
+      participants: List<String>.from(data["participants"]),
       maxParticipants: data["maxParticipants"],
       time: timestampToTime(data["time"]),
       timeAdded: data["timeAdded"],

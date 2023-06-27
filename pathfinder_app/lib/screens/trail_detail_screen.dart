@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +8,6 @@ import 'package:pathfinder_app/utils/constant_colors.dart';
 import '../controllers/weather_controller.dart';
 import '../models/review.dart';
 import '../models/trail.dart';
-import '../models/user.dart';
 import '../repositories/review_repository.dart';
 import '../repositories/trail_respository.dart';
 import '../utils/covert.dart';
@@ -30,7 +29,7 @@ class TrailDetailScreen extends StatefulWidget {
   TrailDetailScreen({
     Key? key,
     required this.trail,
-    required this.heroTag,
+    required this.heroTag
   }) : super(key: key);
 
   @override
@@ -38,6 +37,7 @@ class TrailDetailScreen extends StatefulWidget {
 }
 
 class _TrailDetailScreenState extends State<TrailDetailScreen> {
+  final currentUser = FirebaseAuth.instance.currentUser;
   final WeatherController _weatherController = WeatherController();
   late ScrollController _scrollController;
   final TrailRepository trailRepository = TrailRepository();
@@ -48,14 +48,11 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
   final _dayFormatter = DateFormat('d');
   final _monthFormatter = DateFormat('MMM');
   late List<Review> trailReviews = [];
-  late User user;
-  late DocumentReference ref;
   late bool isConnected;
 
   Future<void> init() async {
     _scrollController = ScrollController();
     isConnected = await checkInternetConnectivity();
-    ref = await trailRepository.getRefTrailByTitle(widget.trail.title);
 
     if (isConnected == true) {
       weatherDataDaily = await await _weatherController.getWeatherData(
@@ -65,7 +62,7 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
       weatherDataDaily = [];
     }
 
-    trailReviews = await reviewRepository.getTrailReviewsByRef(ref);
+    trailReviews = await reviewRepository.getTrailReviewsById(widget.trail.id!);
 
     for (int i = 0; i < weatherDataDaily!.length; i = i + 1) {
       final date = currentDate.add(Duration(days: i));
@@ -133,6 +130,21 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
       child: Scaffold(
           resizeToAvoidBottomInset: true,
           backgroundColor: kLightColor,
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.black,
+            onPressed: () {
+              final timestamp = DateTime.now().millisecondsSinceEpoch;
+              final random = path.basenameWithoutExtension(Uri.base.toString());
+              final fileName = 'route_$timestamp$random.kml';
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MapScreen(trail: widget.trail, fileName: fileName)));
+            },
+            child: Icon(Icons.add),
+          ),
           body: SafeArea(
               child: ListView(
                   controller: _scrollController,
@@ -369,23 +381,23 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                             }).toList(),
                                           )),
                                     SizedBox(height: 18),
-                                    customButton(context, 'Record route', () {
-                                      final timestamp =
-                                          DateTime.now().millisecondsSinceEpoch;
-                                      final random =
-                                          path.basenameWithoutExtension(
-                                              Uri.base.toString());
-                                      final fileName =
-                                          'route_$timestamp$random.kml';
+                                    // customButton(context, 'Record route', () {
+                                    //   final timestamp =
+                                    //       DateTime.now().millisecondsSinceEpoch;
+                                    //   final random =
+                                    //       path.basenameWithoutExtension(
+                                    //           Uri.base.toString());
+                                    //   final fileName =
+                                    //       'route_$timestamp$random.kml';
 
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => MapScreen(
-                                                  trail: widget.trail,
-                                                  fileName: fileName)));
-                                    }),
-                                    SizedBox(height: 18),
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) => MapScreen(
+                                    //               trail: widget.trail,
+                                    //               fileName: fileName)));
+                                    // }),
+                                    // SizedBox(height: 18),
                                     Text(
                                       widget.trail.content,
                                       style: darkNormalFont,
@@ -407,8 +419,9 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                       Navigator.push<bool>(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReviewScreen(ref: ref),
+                                          builder: (context) => AddReviewScreen(
+                                              trail: widget.trail,
+                                              email: currentUser!.email!),
                                         ),
                                       ).then((result) {
                                         setState(() async {
@@ -429,8 +442,8 @@ class _TrailDetailScreenState extends State<TrailDetailScreen> {
                                             content:
                                                 trailReviews[index].content,
                                             images: trailReviews[index].images,
-                                            ref: trailReviews[index].user,
-                                            trailRef: trailReviews[index].trail,
+                                            userId: trailReviews[index].user,
+                                            trailId: trailReviews[index].trail,
                                             rating: trailReviews[index].rating,
                                           );
                                         },

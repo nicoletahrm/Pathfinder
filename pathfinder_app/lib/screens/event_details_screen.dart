@@ -1,10 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pathfinder_app/models/comment.dart';
-import 'package:pathfinder_app/repositories/comment_repositroy.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
 import 'package:pathfinder_app/repositories/user_repository.dart';
-import 'package:pathfinder_app/widgets/comment_widget.dart';
 import 'package:pathfinder_app/widgets/custom_nav_bar.dart';
 import '../models/event.dart';
 import '../models/trail.dart';
@@ -30,28 +26,23 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final TrailRepository trailRepository = TrailRepository();
   final EventRepository eventRepository = EventRepository();
   final UserRepository userRepository = UserRepository();
-  final CommentRepository commentRepository = CommentRepository();
-  late DocumentReference<Object?> currentUserRef;
+  late User currentUser;
   late Trail? trail;
   late List<User?> users;
   late String buttonText;
-  late List<Comment> comments;
-  bool shouldReloadScreen = false;
 
   @override
   void initState() {
     super.initState();
-    //init();
   }
 
   Future<void> init() async {
-    trail = await trailRepository.getTrailByRef(widget.event.trail);
+    trail = await trailRepository.getTrailById(widget.event.trail!.id);
     users =
         await userRepository.getEventParticipants(widget.event.participants);
-    currentUserRef = await userRepository.getUserRefByEmail(widget.email);
-    comments = await fetchComments();
+    currentUser = await userRepository.getUserByEmail(widget.email);
 
-    if (widget.event.participants.contains(currentUserRef)) {
+    if (widget.event.participants.contains(currentUser.id)) {
       buttonText = "Don't go";
     } else {
       buttonText = "Go";
@@ -112,9 +103,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       ),
                     ],
                   ),
-                  child: EventWidget(
-                    event: widget.event,
-                  ),
+                  child: EventWidget(event: widget.event, email: widget.email),
                 ),
                 Container(
                   margin: EdgeInsets.only(
@@ -193,40 +182,31 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     );
                   } else {
                     bool isParticipant =
-                        widget.event.participants.contains(currentUserRef);
+                        widget.event.participants.contains(currentUser.id);
 
                     if (isParticipant == true) {
                       await eventRepository.removeParticipant(
-                          widget.event, currentUserRef);
+                          widget.event, currentUser.id);
                       await userRepository.removeEventToUser(
-                          currentUserRef, widget.event.id);
+                          currentUser.id, widget.event.id);
                     } else {
                       await eventRepository.updateParticipants(
-                          widget.event, currentUserRef);
+                          widget.event, currentUser.id);
                       await userRepository.addEventToUser(
-                          currentUserRef, widget.event.id);
+                          currentUser.id, widget.event.id);
                     }
 
                     setState(() {
-                      shouldReloadScreen = true;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventDetailsScreen(
+                              event: widget.event, email: widget.email),
+                        ),
+                      );
                     });
                   }
                 }),
-                SizedBox(height: 20),
-                SizedBox(
-                  height: 400,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: comments.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return CommentWidget(
-                        content: comments[index].content,
-                        userRef: comments[index].user,
-                        eventRef: widget.event.id
-                      );
-                    },
-                  ),
-                ),
                 SizedBox(height: 20),
               ],
             ),
@@ -235,17 +215,5 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ),
       bottomNavigationBar: CustomBottomNavBar(),
     );
-  }
-
-  Future<List<Comment>> fetchComments() async {
-    List<Comment> comments = [];
-
-    for (DocumentReference<Object?>? commentRef in widget.event.comments) {
-      if (commentRef != null) {
-        Comment comment = await commentRepository.getCommentByRef(commentRef);
-        comments.add(comment);
-      }
-    }
-    return comments;
   }
 }

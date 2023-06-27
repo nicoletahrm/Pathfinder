@@ -5,18 +5,7 @@ import 'package:pathfinder_app/models/user.dart';
 class UserRepository {
   final FirebaseFirestore database = FirebaseFirestore.instance;
 
-  Future<User> getUserByRef(DocumentReference<Object?>? ref) async {
-    final userSnapshot = await ref!.get();
-
-    if (userSnapshot.exists) {
-      final userData = userSnapshot.data() as Map<String, dynamic>;
-      return User.fromJson(userData);
-    }
-
-    throw Exception('User not found.');
-  }
-
-  Future<DocumentReference> getUserRefByEmail(String? email) async {
+  Future<User> getUserByEmail(String? email) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await database
         .collection("user")
         .where('email', isEqualTo: email)
@@ -24,25 +13,20 @@ class UserRepository {
 
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
-    return documentSnapshot.reference;
+    return User.fromJson(documentSnapshot.data() as Map<String, dynamic>);
   }
 
-  Future<List<DocumentReference<Object>?>?> getUserEvents(String? email) async {
-    final userDocRef = await getUserRefByEmail(email);
-    final userDocSnapshot = await userDocRef.get();
+  Future<User> getUserById(String id) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await database.collection("user").where('id', isEqualTo: id).get();
 
-    if (userDocSnapshot.exists) {
-      final userData = userDocSnapshot.data() as Map<String, dynamic>;
-      final user = User.fromJson(userData);
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
-      return user.events;
-    }
-    return null;
+    return User.fromJson(documentSnapshot.data() as Map<String, dynamic>);
   }
 
-  Future<void> addEventToUser(
-      DocumentReference<Object?> userRef, String eventId) async {
-    User user = await getUserByRef(userRef);
+  Future<void> addEventToUser(String userId, String eventId) async {
+    User user = await getUserById(userId);
     DocumentReference<Object>? eventRef = database.doc('event/$eventId');
     CollectionReference collectionRef =
         FirebaseFirestore.instance.collection('user');
@@ -57,9 +41,8 @@ class UserRepository {
     }
   }
 
-  Future<void> removeEventToUser(
-      DocumentReference<Object?> userRef, String eventId) async {
-    User user = await getUserByRef(userRef);
+  Future<void> removeEventToUser(String userId, String eventId) async {
+    User user = await getUserById(userId);
     DocumentReference<Object>? eventRef = database.doc('event/$eventId');
     CollectionReference collectionRef =
         FirebaseFirestore.instance.collection('user');
@@ -74,8 +57,8 @@ class UserRepository {
     }
   }
 
-  Future<void> updateUser(
-      String id, String username, String email, String location) async {
+  Future<void> updateUser(String id, String username, String email,
+      String location, String profilePhoto) async {
     try {
       CollectionReference collectionRef =
           FirebaseFirestore.instance.collection('user');
@@ -88,6 +71,7 @@ class UserRepository {
           'username': username,
           'email': email,
           'location': location,
+          'profilePhoto': profilePhoto,
         });
 
         print('User data updated successfully!');
@@ -100,15 +84,14 @@ class UserRepository {
   }
 
   Future<List<User>> getEventParticipants(
-      List<DocumentReference<Object>?> eventParticipants) async {
+      List<dynamic> eventParticipants) async {
     List<User> participants = [];
 
-    for (DocumentReference<Object>? participantRef in eventParticipants) {
-      if (participantRef != null) {
-        User participant = await getUserByRef(participantRef);
-        participants.add(participant);
-      }
+    for (String id in eventParticipants) {
+      User participant = await getUserById(id);
+      participants.add(participant);
     }
+
     return participants;
   }
 }

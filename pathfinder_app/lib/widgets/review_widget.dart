@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user.dart';
@@ -12,16 +11,16 @@ class ReviewWidget extends StatefulWidget {
   final String content;
   final double rating;
   final List<String> images;
-  final DocumentReference<Object?>? ref;
-  final DocumentReference<Object?>? trailRef;
+  final String userId;
+  final String trailId;
 
   const ReviewWidget(
       {Key? key,
       required this.content,
       required this.rating,
       required this.images,
-      required this.ref,
-      required this.trailRef})
+      required this.userId,
+      required this.trailId})
       : super(key: key);
 
   @override
@@ -33,7 +32,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
   late User user;
 
   Future<void> init() async {
-    user = await userRepository.getUserByRef(widget.ref);
+    user = await userRepository.getUserById(widget.userId);
   }
 
   @override

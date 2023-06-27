@@ -16,29 +16,27 @@ class EventRepository {
         .toList();
   }
 
-  Future<void> updateParticipants(
-      Event event, DocumentReference<Object?> participantRef) async {
+  Future<void> updateParticipants(Event event, String participantId) async {
     await FirebaseFirestore.instance.collection('event').doc(event.id).update({
-      'participants': FieldValue.arrayUnion([participantRef]),
+      'participants': FieldValue.arrayUnion([participantId]),
     });
   }
 
-  Future<void> removeParticipant(
-      Event event, DocumentReference<Object?> participantRef) async {
+  Future<void> removeParticipant(Event event, String participantId) async {
     await FirebaseFirestore.instance.collection('event').doc(event.id).update({
-      'participants': FieldValue.arrayRemove([participantRef]),
+      'participants': FieldValue.arrayRemove([participantId]),
     });
   }
 
-  addEvent(DocumentReference<Object?> trail, DocumentReference<Object?> user,
-      int maxParticipants, String meetingPlace, Time time) async {
+  addEvent(String trailId, String userId, int maxParticipants,
+      String meetingPlace, Time time) async {
     CollectionReference collectionRef = database.collection('event');
     DocumentReference documentRef = collectionRef.doc();
 
     await documentRef.set({
       'id': documentRef.id,
-      'trail': trail,
-      'organizer': user,
+      'trail': trailId,
+      'organizer': userId,
       'participants': [],
       'maxParticipants': maxParticipants,
       'time': timeToTimestamp(time),
@@ -48,21 +46,14 @@ class EventRepository {
     });
   }
 
-  Future<Event> getEventByRef(DocumentReference<Object?>? ref) async {
-    final eventSnapshot = await ref!.get();
+  Future<Event> getEventById(String eventId) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await database
+        .collection("event")
+        .where('id', isEqualTo: eventId)
+        .get();
 
-    if (eventSnapshot.exists) {
-      final eventData = eventSnapshot.data() as Map<String, dynamic>;
-      return Event.fromJson(eventData);
-    }
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = snapshot.docs[0];
 
-    throw Exception('Event not found.');
-  }
-
-  Future<void> updateEvent(
-      String id, DocumentReference<Object?> userRef) async {
-    try {} catch (e) {
-      print('Error updating event: $e');
-    }
+    return Event.fromJson(documentSnapshot.data() as Map<String, dynamic>);
   }
 }

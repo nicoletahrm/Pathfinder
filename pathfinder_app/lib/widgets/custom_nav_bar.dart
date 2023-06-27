@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/events_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
+import '../screens/user_hikes_screen.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -63,7 +64,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                      MaterialPageRoute(builder: (context) => UserHikesScreen(email: currentUser!.email!)));
                 },
               ),
               IconButton(

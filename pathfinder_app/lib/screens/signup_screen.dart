@@ -12,7 +12,6 @@ class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
@@ -32,106 +31,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordTextController.dispose();
     _confirmPasswordTextController.dispose();
     super.dispose();
-  }
-
-  Future signUp() async {
-    if (_usernameTextController.text.isEmpty ||
-        _emailTextController.text.isEmpty ||
-        _passwordTextController.text.isEmpty ||
-        _confirmPasswordTextController.text.isEmpty) {
-      showValidationDialog(
-        context,
-        "Empty fields",
-        "Please fill in all fields.",
-      );
-    } else if (!passwordConfirmed()) {
-      showValidationDialog(
-        context,
-        "Signup failed",
-        "Passwords don't match.",
-      );
-    } else if (!validateEmail(_emailTextController.text)) {
-      showValidationDialog(
-        context,
-        "Signup failed",
-        "Please enter a valid email address.",
-      );
-    } else if (!validatePassword(_passwordTextController.text)) {
-      showValidationDialog(
-        context,
-        "Signup failed",
-        "Password should contain at least 8 characters, including uppercase and lowercase letters, numbers, and special characters.",
-      );
-    } else {
-      try {
-        final QuerySnapshot usernameSnapshot = await FirebaseFirestore.instance
-            .collection('user')
-            .where('username', isEqualTo: _usernameTextController.text)
-            .limit(1)
-            .get();
-
-        final QuerySnapshot emailSnapshot = await FirebaseFirestore.instance
-            .collection('user')
-            .where('email', isEqualTo: _emailTextController.text)
-            .limit(1)
-            .get();
-
-        if (usernameSnapshot.docs.isNotEmpty) {
-          showValidationDialog(
-            context,
-            "Signup failed",
-            "Username already exists.",
-          );
-        } else if (emailSnapshot.docs.isNotEmpty) {
-          showValidationDialog(
-            context,
-            "Signup failed",
-            "An account with this email already exists.",
-          );
-        } else {
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailTextController.text,
-            password: _passwordTextController.text,
-          );
-
-          await userRepository.addUserDetails(
-              _usernameTextController.text, _emailTextController.text);
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
-        }
-      } catch (error) {
-        showValidationDialog(
-          context,
-          "Signup failed",
-          "An error occurred during sign up. Please try again.",
-        );
-      }
-    }
-  }
-
-  bool validateEmail(String email) {
-    // Email pattern: Valid format with @something.com
-    RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
-    return emailRegex.hasMatch(email);
-  }
-
-  bool validatePassword(String password) {
-    // Password pattern: At least 8 characters, including uppercase, lowercase, number, and special character
-    RegExp passwordRegex = RegExp(
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*(),.?":{}|<>]).{8,}$',
-    );
-    return passwordRegex.hasMatch(password);
-  }
-
-  bool passwordConfirmed() {
-    if (_passwordTextController.text == _confirmPasswordTextController.text) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   @override
@@ -244,6 +143,106 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ],
           ),
         ));
+  }
+
+  Future signUp() async {
+    if (_usernameTextController.text.isEmpty ||
+        _emailTextController.text.isEmpty ||
+        _passwordTextController.text.isEmpty ||
+        _confirmPasswordTextController.text.isEmpty) {
+      showValidationDialog(
+        context,
+        "Empty fields",
+        "Please fill in all fields.",
+      );
+    } else if (!passwordConfirmed()) {
+      showValidationDialog(
+        context,
+        "Signup failed",
+        "Passwords don't match.",
+      );
+    } else if (!validateEmail(_emailTextController.text)) {
+      showValidationDialog(
+        context,
+        "Signup failed",
+        "Please enter a valid email address.",
+      );
+    } else if (!validatePassword(_passwordTextController.text)) {
+      showValidationDialog(
+        context,
+        "Signup failed",
+        "Password should contain at least 8 characters, including uppercase and lowercase letters, numbers, and special characters.",
+      );
+    } else {
+      try {
+        final QuerySnapshot usernameSnapshot = await FirebaseFirestore.instance
+            .collection('user')
+            .where('username', isEqualTo: _usernameTextController.text)
+            .limit(1)
+            .get();
+
+        final QuerySnapshot emailSnapshot = await FirebaseFirestore.instance
+            .collection('user')
+            .where('email', isEqualTo: _emailTextController.text)
+            .limit(1)
+            .get();
+
+        if (usernameSnapshot.docs.isNotEmpty) {
+          showValidationDialog(
+            context,
+            "Signup failed",
+            "Username already exists.",
+          );
+        } else if (emailSnapshot.docs.isNotEmpty) {
+          showValidationDialog(
+            context,
+            "Signup failed",
+            "An account with this email already exists.",
+          );
+        } else {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailTextController.text,
+            password: _passwordTextController.text,
+          );
+
+          await userRepository.addUserDetails(
+              _usernameTextController.text, _emailTextController.text);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        }
+      } catch (error) {
+        showValidationDialog(
+          context,
+          "Signup failed",
+          "An error occurred during sign up. Please try again.",
+        );
+      }
+    }
+  }
+
+  bool validateEmail(String email) {
+    // Email pattern: Valid format with @something.com
+    RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool validatePassword(String password) {
+    // Password pattern: At least 8 characters, including uppercase, lowercase, number, and special character
+    RegExp passwordRegex = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*(),.?":{}|<>]).{8,}$',
+    );
+    return passwordRegex.hasMatch(password);
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordTextController.text == _confirmPasswordTextController.text) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Row signUpOption(bool isLogin) {

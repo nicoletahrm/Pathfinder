@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pathfinder_app/repositories/trail_respository.dart';
@@ -99,7 +98,7 @@ class _EventWidgetState extends State<EventWidget> {
                             child: CircleAvatar(
                               radius: 18.0,
                               backgroundImage:
-                                  FileImage(File(organizer.profilePhoto)),
+                                  AssetImage(organizer.profilePhoto),
                             ),
                           ),
                           SizedBox(width: 10),
@@ -221,8 +220,8 @@ class _EventWidgetState extends State<EventWidget> {
                                     return ListTile(
                                       leading: CircleAvatar(
                                         radius: 20.0,
-                                        backgroundImage: FileImage(
-                                            File(users[index]!.profilePhoto)),
+                                        backgroundImage:
+                                            AssetImage(organizer.profilePhoto),
                                       ),
                                       title: Text(
                                         users[index]!.username,
@@ -249,7 +248,7 @@ class _EventWidgetState extends State<EventWidget> {
                         child: CircleAvatar(
                           radius: 12,
                           backgroundImage:
-                              FileImage(File(users[index]!.profilePhoto)),
+                              AssetImage(users[index]!.profilePhoto),
                         ),
                       ),
                     );

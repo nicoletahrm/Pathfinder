@@ -75,93 +75,98 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: hexStringToColor("#44564a"),
-      body: ListView(
-        shrinkWrap: false,
-        reverse: true,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Stack(
-                children: [
-                  logo("assets/images/auth_cover.jpg"),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: hexStringToColor("#ffffff"),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: hexStringToColor("#ffffff"),
+        body: ListView(
+          shrinkWrap: false,
+          reverse: true,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Stack(
+                  children: [
+                    logo("assets/images/auth_cover.jpg"),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: hexStringToColor("#ffffff"),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Forgot password",
+                              style: GoogleFonts.poppins(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: hexStringToColor("#44564a"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(15, 0, 0, 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  reusableNormalTextField("E-mail", Icons.email,
+                                      _emailTextController, true, (() {})),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  resetPasswordButton(context, forgotPassword),
+                                  Padding(
+                                    padding: EdgeInsets.all(0),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LoginScreen()));
+                                              },
+                                              child: Text(
+                                                'Log In',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 15,
+                                                  color: hexStringToColor(
+                                                      "#44564a"),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ))
+                                        ]),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Forgot password",
-                            style: GoogleFonts.poppins(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: hexStringToColor("#44564a"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(15, 0, 0, 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                reusableNormalTextField("E-mail", Icons.email,
-                                    _emailTextController, true, (() {})),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                resetPasswordButton(context, forgotPassword),
-                                Padding(
-                                  padding: EdgeInsets.all(0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          LoginScreen()));
-                                            },
-                                            child: Text(
-                                              'Log In',
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 15,
-                                                color:
-                                                    hexStringToColor("#44564a"),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ))
-                                      ]),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ],
+                  ],
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

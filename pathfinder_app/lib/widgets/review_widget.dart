@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/review.dart';
@@ -75,7 +74,7 @@ class _ReviewWidgetState extends State<ReviewWidget> {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundImage: FileImage(File(user.profilePhoto)),
+              backgroundImage: AssetImage(user.profilePhoto),
             ),
             SizedBox(width: 20),
             Expanded(

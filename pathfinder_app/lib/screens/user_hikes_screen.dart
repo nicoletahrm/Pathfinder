@@ -24,16 +24,16 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
   final EventRepository eventRepository = EventRepository();
   late List<Event> events;
 
-  Future<void> init() async {
-    print(widget.email);
-    user = (await userRepository.getUserByEmail(widget.email));
+  init() async {
+    user = await userRepository.getUserByEmail(widget.email);
     events = await fetchEvents();
+    //init();
   }
 
   @override
   void initState() {
     super.initState();
-    //init();
+    init();
   }
 
   @override
@@ -43,14 +43,16 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomCircularProgressIndicator(),
-            ],
-          ));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomCircularProgressIndicator(),
+              ],
+            ),
+          );
         } else if (snapshot.hasError) {
-          return Text('Failed to initialize hikes: ${snapshot.error}');
+          return Text(
+              'Failed to initialize UserHikesScreen: ${snapshot.error}');
         } else {
           return buildEventWidget(context);
         }
@@ -91,41 +93,40 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
             ])),
         bottomNavigationBar: CustomBottomNavBar(),
       );
-    }
-
-    return Scaffold(
-      backgroundColor: kDefaultIconLightColor,
-      body: Container(
-        padding: EdgeInsets.only(
-          top: 80.0,
-          bottom: 0.0,
-          left: 20.0,
-          right: 20.0,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Your hikes.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "ProximaNovaBold",
+    } else
+      return Scaffold(
+        backgroundColor: kDefaultIconLightColor,
+        body: Container(
+          padding: EdgeInsets.only(
+            top: 80.0,
+            bottom: 0.0,
+            left: 20.0,
+            right: 20.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Your hikes.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 28.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "ProximaNovaBold",
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 25.0),
-            Flexible(
-              child: ListView.builder(
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  return Container(
+                ],
+              ),
+              SizedBox(height: 25.0),
+              Flexible(
+                child: ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    return Container(
                       margin: EdgeInsets.symmetric(vertical: 8.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -140,16 +141,15 @@ class _UserHikesScreenState extends State<UserHikesScreen> {
                       ),
                       child: EventWidget(
                           event: events[index], email: widget.email),
-                    
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavBar(),
-    );
+        bottomNavigationBar: CustomBottomNavBar(),
+      );
   }
 
   Future<List<Event>> fetchEvents() async {

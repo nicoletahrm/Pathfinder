@@ -9,8 +9,6 @@ import '../models/user.dart';
 import '../widgets/custom_circular_progress_indicator.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import '../widgets/custom_dialog.dart';
-
 class ProfileScreen extends StatefulWidget {
   final String email;
 
@@ -23,7 +21,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late User user;
   final UserRepository userRepository = UserRepository();
-  late File? _selectedImage = null;
+  late File? _selectedImage;
   final ImagePicker _imagePicker = ImagePicker();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -33,78 +31,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> init() async {
     user = await userRepository.getUserByEmail(widget.email);
-  }
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _emailController.dispose();
-    _locationController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickImage() async {
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _selectedImage = File(pickedImage.path);
-      });
-    }
-  }
-
-  Future<void> uploadImageToFirebase() async {
-    String path = _selectedImage!.path;
-    profilePhoto = path;
-
-    try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      firebase_storage.Reference ref =
-          firebase_storage.FirebaseStorage.instance.ref().child('/images/$fileName');
-      await ref.putFile(_selectedImage!);
-    } catch (error) {
-      print('Failed to upload image: $error');
-    }
-  }
-
-  void _editProfile() {
-    setState(() {
-      _isEditing = true;
-    });
-  }
-
-  void _saveProfile() async {
-    String username = _usernameController.text;
-    String email = _emailController.text;
-    String location = _locationController.text;
-
-    uploadImageToFirebase();
-    profilePhoto = _selectedImage!.path;
-
-    await userRepository.updateUser(
-        user.id, username, email, location, profilePhoto);
-
-    setState(() {
-      _isEditing = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Profile updated successfully!'),
-      ),
-    );
-  }
-
-  void _cancelEditing() {
-    setState(() {
-      _isEditing = false;
-    });
+    _selectedImage = null;
   }
 
   @override
   initState() {
     super.initState();
-    init();
   }
 
   @override
@@ -152,7 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backgroundColor: Colors.transparent,
                             backgroundImage: _selectedImage != null
                                 ? FileImage(_selectedImage!)
-                                : FileImage(File(user.profilePhoto)),
+                                    as ImageProvider<Object>?
+                                : AssetImage(user.profilePhoto),
                           ),
                           if (_isEditing)
                             Container(
@@ -221,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                customButton(context, 'Save', validation),
+                                customButton(context, 'Save', _saveProfile),
                                 customButton(context, 'Cancel', _cancelEditing),
                               ],
                             )
@@ -236,15 +169,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
         bottomNavigationBar: CustomBottomNavBar());
   }
 
-  void validation() async {
-    if (_usernameController.text.isEmpty || _emailController.text.isEmpty) {
-      CustomDialog.show(
-        context,
-        "Empty fields",
-        "Please fill in required fields.",
-      );
-    } else {
-      _saveProfile();
+  void _editProfile() {
+    setState(() {
+      _isEditing = true;
+    });
+  }
+
+  void _saveProfile() async {
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String location = _locationController.text;
+
+    uploadImageToFirebase();
+    profilePhoto = _selectedImage!.path;
+
+    await userRepository.updateUser(
+        user.id, username, email, location, profilePhoto);
+
+    setState(() {
+      _isEditing = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Profile updated successfully!'),
+      ),
+    );
+  }
+
+  void _cancelEditing() {
+    setState(() {
+      _isEditing = false;
+    });
+  }
+
+  Future<void> _pickImage() async {
+    final pickedImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _selectedImage = File(pickedImage.path);
+      });
+    }
+  }
+
+  Future<void> uploadImageToFirebase() async {
+    String path = _selectedImage!.path;
+    profilePhoto = path;
+
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('/images/$fileName');
+      await ref.putFile(_selectedImage!);
+    } catch (error) {
+      print('Failed to upload image: $error');
     }
   }
 }

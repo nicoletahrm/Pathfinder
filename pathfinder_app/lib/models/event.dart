@@ -5,10 +5,10 @@ import '../utils/covert.dart';
 class Event {
   final String id;
   final String organizer;
-  late final String trail;
+  final String trail;
   final List<dynamic> participants;
-  late final int maxParticipants;
-  late final Time time;
+  final int maxParticipants;
+  final Time time;
   final Timestamp timeAdded;
   final String meetingPlace;
 

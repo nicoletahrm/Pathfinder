@@ -233,11 +233,13 @@ class MapScreenState extends State<MapScreen> {
       await retryOptions.retry(() async {
         await saveKmlFile(kmlContent, filePath);
 
-        await firebaseStorage.ref(filePath).putString(kmlContent,
-            format: firebase_storage.PutStringFormat.raw);
+        await firebaseStorage.ref(filePath).putString(
+              kmlContent,
+              format: firebase_storage.PutStringFormat.raw,
+            );
       });
-    } catch (e) {
-      print('Failed to upload file: $e');
+    } catch (error) {
+      print('Error uploading file: $error');
     }
   }
 }

@@ -134,7 +134,7 @@ class AdminScreenState extends State<AdminScreen> {
                                         request.route,
                                         request.filePath);
                                     setState(() {});
-                                    
+
                                     Navigator.of(context).pop();
                                   },
                                   child: Text('Accept', style: darkBoldFont),
@@ -149,12 +149,6 @@ class AdminScreenState extends State<AdminScreen> {
                                   },
                                   child: Text('Delete', style: darkBoldFont),
                                 ),
-                                // TextButton(
-                                //   onPressed: () {
-                                //     Navigator.of(context).pop();
-                                //   },
-                                //   child: Text('Cancel', style: darkNormalFont),
-                                // ),
                               ],
                             );
                           } else {
@@ -171,6 +165,16 @@ class AdminScreenState extends State<AdminScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AdminScreen()),
+          );
+        },
+        backgroundColor: Colors.black,
+        child: Icon(Icons.refresh),
       ),
     );
   }

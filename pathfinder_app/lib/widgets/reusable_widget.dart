@@ -190,7 +190,7 @@ Container resetPasswordButton(BuildContext context, Function onPressed) {
             }),
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)))),
-        child: Text('Reset password', style: darkBoldFont),
+        child: Text('Reset password', style: lightBoldFont),
       ));
 }
 
